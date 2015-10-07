@@ -4,6 +4,7 @@
 *.o
 *.obj
 *.pro.user
+build-*
 
 # Precompiled Headers
 *.gch
