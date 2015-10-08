@@ -1,7 +1,7 @@
 #include <QString>
 #include <QtTest>
 
-#include "archive.h"
+#include "serializer.h"
 
 class SerializerTest : public QObject
 {
@@ -11,19 +11,19 @@ public:
     SerializerTest();
 
 private Q_SLOTS:
-    void testCase1();
+    void testMethodIsSerilized();
 };
 
 SerializerTest::SerializerTest()
 {
 }
 
-void SerializerTest::testCase1()
+void SerializerTest::testMethodIsSerilized()
 {
-    Archive s;
-
-    int i = 0;
-    s << 1 << i << 1.5;
+    Serializer s;
+    int a {1};
+    float b {3.};
+    Archive archive = s.serialize(Serializer::MessageIds::eGLClear, a, b);
 
     QVERIFY2(true, "Failure");
 }
