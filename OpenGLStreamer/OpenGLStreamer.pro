@@ -1,4 +1,7 @@
 TEMPLATE=subdirs
 
 SUBDIRS=ClientApp ServerApp \
-    StreamerLib
+    StreamerLib \
+    OpenGlStreamerTest
+
+OpenGlStreamerTest.depends = StreamerLib
