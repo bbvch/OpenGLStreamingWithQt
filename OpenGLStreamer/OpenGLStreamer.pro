@@ -1,3 +1,4 @@
 TEMPLATE=subdirs
 
-SUBDIRS=ClientApp ServerApp
+SUBDIRS=ClientApp ServerApp \
+    StreamerLib
