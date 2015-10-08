@@ -1,7 +1,7 @@
 #include <QString>
 #include <QtTest>
 
-#include "serializer.h"
+#include "archive.h"
 
 class SerializerTest : public QObject
 {
@@ -20,7 +20,11 @@ SerializerTest::SerializerTest()
 
 void SerializerTest::testCase1()
 {
-    Serializer s;
+    Archive s;
+
+    int i = 0;
+    s << 1 << i << 1.5;
+
     QVERIFY2(true, "Failure");
 }
 

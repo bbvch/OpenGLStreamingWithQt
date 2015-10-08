@@ -1,8 +1,4 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2015-10-07T14:44:38
-#
-#-------------------------------------------------
+include(../config.pri)
 
 QT       -= gui
 
@@ -11,10 +7,12 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += \
-    src/serializer.cpp
+    src/serializer.cpp \
+    src/archive.cpp
 
 HEADERS += \
-    src/serializer.h
+    src/serializer.h \
+    src/archive.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

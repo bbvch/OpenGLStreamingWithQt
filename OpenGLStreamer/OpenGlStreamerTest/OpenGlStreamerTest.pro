@@ -3,6 +3,7 @@
 # Project created by QtCreator 2015-10-08T10:43:45
 #
 #-------------------------------------------------
+include(../config.pri)
 
 QT       += testlib
 

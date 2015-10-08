@@ -4,6 +4,4 @@
 Serializer::Serializer(QObject *parent)
     : QObject(parent)
 {
-
 }
-
