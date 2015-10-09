@@ -1,16 +1,9 @@
-#include "test_streamerlib.h"
 #include "gtest/gtest.h"
 
 #include "archive.h"
 
-
-test_StreamerLib::test_StreamerLib()
-{
-
-}
-
 TEST(Archiver, check__single_integer) {
-/*
+
     Archive s;
 
     s << 1;
@@ -22,7 +15,24 @@ TEST(Archiver, check__single_integer) {
 
     EXPECT_EQ(4, result.length());
     EXPECT_TRUE(std::equal(expected, expected+4, result.constData()));
-    */
+
+}
+
+
+TEST(Archiver, check__single_float) {
+
+    Archive s;
+
+    s << 2.f;
+
+    const QByteArray &result = s.getData();
+
+    // IEEE representation of 2.0f
+    const char expected[]{0,0,0,0x40};
+
+    EXPECT_EQ(4, result.length());
+    EXPECT_TRUE(std::equal(expected, expected+4, result.constData()));
+
 }
 
 
