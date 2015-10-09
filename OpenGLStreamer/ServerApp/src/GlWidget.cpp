@@ -70,64 +70,25 @@ QSize GlWidget::sizeHint() const
 
 void GlWidget::initializeGL()
 {
-    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-    f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-    mShaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vertexShader.vsh");
-    mShaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fragmentShader.fsh");
-
-    mVertices << QVector3D(-0.5, -0.5, 0.5)   << QVector3D( 0.5, -0.5, 0.5)   << QVector3D( 0.5, 0.5, 0.5) // Front
-    << QVector3D( 0.5, 0.5, 0.5)    << QVector3D(-0.5, 0.5, 0.5)    << QVector3D(-0.5, -0.5, 0.5)
-    << QVector3D( 0.5, -0.5, -0.5)  << QVector3D(-0.5, -0.5, -0.5)  << QVector3D(-0.5, 0.5, -0.5) // Back
-    << QVector3D(-0.5, 0.5, -0.5)   << QVector3D( 0.5, 0.5, -0.5)   << QVector3D( 0.5, -0.5, -0.5)
-    << QVector3D(-0.5, -0.5, -0.5)  << QVector3D(-0.5, -0.5, 0.5)   << QVector3D(-0.5, 0.5, 0.5) // Left
-    << QVector3D(-0.5, 0.5, 0.5)    << QVector3D(-0.5, 0.5, -0.5)   << QVector3D(-0.5, -0.5, -0.5)
-    << QVector3D( 0.5, -0.5, 0.5)   << QVector3D( 0.5, -0.5, -0.5)  << QVector3D( 0.5, 0.5, -0.5) // Right
-    << QVector3D( 0.5, 0.5, -0.5)   << QVector3D( 0.5, 0.5, 0.5)    << QVector3D( 0.5, -0.5, 0.5)
-    << QVector3D(-0.5, 0.5, 0.5)    << QVector3D( 0.5, 0.5, 0.5)    << QVector3D( 0.5, 0.5, -0.5) // Top
-    << QVector3D( 0.5, 0.5, -0.5)   << QVector3D(-0.5, 0.5, -0.5)   << QVector3D(-0.5, 0.5, 0.5)
-    << QVector3D(-0.5, -0.5, -0.5)  << QVector3D( 0.5, -0.5, -0.5)  << QVector3D( 0.5, -0.5, 0.5) // Bottom
-    << QVector3D( 0.5, -0.5, 0.5)   << QVector3D(-0.5, -0.5, 0.5)   << QVector3D(-0.5, -0.5, -0.5);
-
+    glClearColor (0.0, 0.0, 0.0, 0.0);
+    glClear (GL_COLOR_BUFFER_BIT);
+    glColor3f (0.0, 0.0, 1.0);
+    glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
 }
 
 void GlWidget::resizeGL(int width, int height)
 {
-    if( height == 0 )
-        height = 1;
 
-    // Update projection matrix and other size related settings:
-     mMatrix.setToIdentity();
-     mMatrix.perspective(60.0f, width / float(height), 0.01f, 100.0f);
-
-    glViewport(0, 0, width, height);
 }
 
 void GlWidget::paintGL()
 {
-    // Draw the scene:
-    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-    f->glClear(GL_COLOR_BUFFER_BIT);
-    QMatrix4x4 m_Matrix;
-    QMatrix4x4 p_Matrix;
+    glBegin(GL_POLYGON);
+    glVertex3f (0.25, 0.25, 0.0);
+    glVertex3f (0.75, 0.25, 0.0);
+    glVertex3f (0.75, 0.75, 0.0);
+    glVertex3f (0.25, 0.75, 0.0);
+    glEnd();
+    glFlush();
 
-    QMatrix4x4 cameraTransformation;
-    cameraTransformation.rotate(alpha, 0, 1, 0);
-    cameraTransformation.rotate(beta, 0, 1, 0);
-
-    QVector3D cameraPostion     = cameraTransformation * QVector3D(0, 0, distance);
-    QVector3D cameraUpDirection = cameraTransformation * QVector3D(0, 1, 0);
-
-    p_Matrix.lookAt(cameraPostion, QVector3D(0,0,0), cameraUpDirection);
-
-    mShaderProgram.bind();
-    mShaderProgram.setUniformValue("qt_ModelViewProjectionMatrix", mMatrix*p_Matrix*m_Matrix);
-    mShaderProgram.setUniformValue("color", QColor(Qt::white));
-    mShaderProgram.setAttributeArray("vertex", mVertices.constData());
-    mShaderProgram.enableAttributeArray("vertex");
-
-    glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
-
-    mShaderProgram.disableAttributeArray("vertex");
-    mShaderProgram.release();
 }
