@@ -22,14 +22,11 @@ public:
     explicit Serializer(QObject *parent = 0);
 
     template<typename... Args>
-    Archive serialize(MessageIds id, Args&&... args)
+    Archive serialize(Args &&...args)
     {
-        std::tuple<Args...> tup { std::forward<Args>(args)... };
         Archive ar;
 
-        ar << id;
-        serializeArguments<0, Args...>(ar, std::move(tup));
-
+        serializeArguments<0, Args...>(ar, std::forward_as_tuple(args...));
         return std::move(ar);
     }
 signals:
@@ -40,7 +37,7 @@ private:
     template <std::size_t I,
               typename... Args>
     inline typename std::enable_if < (I < sizeof...(Args)), void>::type
-       serializeArguments(Archive& ar, std::tuple<Args...> args)
+       serializeArguments(Archive &ar, std::tuple<Args...> args)
     {
         ar << std::get<I>(args);
         serializeArguments<I + 1, Args...>(ar, std::move(args));
@@ -49,7 +46,7 @@ private:
     template <std::size_t I,
               typename... Args>
     inline typename std::enable_if<(I == sizeof...(Args)), void>::type
-       serializeArguments(Archive&, std::tuple<Args...>)
+       serializeArguments(Archive &, std::tuple<Args...>)
     {}
 };
 

@@ -12,6 +12,7 @@ SOURCES += main.cpp \
 
 LIBS += /usr/lib/libgtest.a
 
+include(../config.pri)
 include(deployment.pri)
 qtcAddDeployment()
 
