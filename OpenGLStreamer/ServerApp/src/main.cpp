@@ -1,4 +1,5 @@
-#include <QtCore/QCoreApplication>
+/*
+ * #include <QtCore/QCoreApplication>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
 #include "echoserver.h"
@@ -24,6 +25,18 @@ int main(int argc, char *argv[])
 
     EchoServer *server = new EchoServer(port, debug);
     QObject::connect(server, &EchoServer::closed, &a, &QCoreApplication::quit);
+
+    return a.exec();
+}
+*/
+#include "GlWidget.h"
+#include <QApplication>
+
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    GlWidget w;
+    w.show();
 
     return a.exec();
 }

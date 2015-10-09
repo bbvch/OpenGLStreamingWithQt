@@ -1,18 +1,32 @@
 include(../config.pri)
 
 QT       += core websockets
-QT       -= gui
+QT       += core gui widgets
+
 
 TARGET  = ServerApp
-CONFIG += console
-CONFIG -= app_bundle
 
 TEMPLATE = app
 
 SOURCES += \
     src/echoserver.cpp \
+    src/GlWidget.cpp \
     src/main.cpp
 
 HEADERS += \
-    src/echoserver.h
+    src/echoserver.h \
+    src/GlWidget.h
+
+
+DISTFILES += \
+    src/vertexShader.vsh \
+    src/fragmentShader.fsh
+
+RESOURCES += \
+    src/Files.qrc
+
+
+
+
+
 
