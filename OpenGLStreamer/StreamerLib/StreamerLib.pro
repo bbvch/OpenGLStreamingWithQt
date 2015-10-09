@@ -7,8 +7,7 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += \
-    src/serializer.cpp \
-    src/archive.cpp
+    src/serializer.cpp
 
 HEADERS += \
     src/serializer.h \
