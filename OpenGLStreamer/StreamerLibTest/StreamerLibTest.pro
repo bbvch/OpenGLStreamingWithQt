@@ -6,9 +6,12 @@ CONFIG += c++11
 
 #QT      += core
 QT      -= gui
+QT      += websockets
 
 SOURCES += main.cpp \
-    test_streamerlib.cpp
+    SerializerTests.cpp \
+    ArchiveTests.cpp \
+    ChannelTests.cpp
 
 LIBS += /usr/lib/libgtest.a
 

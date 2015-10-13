@@ -7,12 +7,13 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += \
-    src/Serializer.cpp
+    src/Serializer.cpp \
+    src/Channel.cpp
 
 HEADERS += \
-    src/ChannelInterface.h \
     src/Archive.h \
-    src/Serializer.h
+    src/Serializer.h \
+    src/Channel.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
