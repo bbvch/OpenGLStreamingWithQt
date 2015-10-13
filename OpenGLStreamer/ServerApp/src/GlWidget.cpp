@@ -4,10 +4,13 @@
 
 #include <math.h>
 
-GlWidget::GlWidget(QWidget *parent)
-    : QOpenGLWidget(parent), geometries(0), texture(0), angularSpeed(0)
-{
-}
+GlWidget::GlWidget(QWidget *parent) :
+    QOpenGLWidget(parent),
+    mpGeometries(0),
+    texture(0),
+    angularSpeed(0),
+    mpOpenGLProxy(new OpenGLProxy())
+{}
 
 GlWidget::~GlWidget()
 {
@@ -15,7 +18,7 @@ GlWidget::~GlWidget()
     // and the buffers.
     makeCurrent();
     delete texture;
-    delete geometries;
+    delete mpGeometries;
     doneCurrent();
 }
 
@@ -70,20 +73,20 @@ QSize GlWidget::sizeHint() const
 
 void GlWidget::initializeGL()
 {
-    initializeOpenGLFunctions();
+    mpOpenGLProxy->initialize();
 
-    glClearColor(0, 0, 0, 1);
+    OPENGL_CALL(glClearColor, 0, 0, 0, 1);
 
     initShaders();
     initTextures();
 
     // Enable depth buffer
-    glEnable(GL_DEPTH_TEST);
+    OPENGL_CALL(glEnable, GL_DEPTH_TEST);
 
     // Enable back face culling
-    glEnable(GL_CULL_FACE);
+    OPENGL_CALL(glEnable, GL_CULL_FACE)
 
-    geometries = new GeometryEngine;
+    mpGeometries = new GeometryEngine(mpOpenGLProxy.get());
 
     // Use QBasicTimer because its faster than QTimer
     timer.start(12, this);
@@ -142,7 +145,7 @@ void GlWidget::initTextures()
 void GlWidget::paintGL()
 {
     // Clear color and depth buffer
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    OPENGL_CALL(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     texture->bind();
 
@@ -158,5 +161,5 @@ void GlWidget::paintGL()
     program.setUniformValue("texture", 0);
 
     // Draw cube geometry
-    geometries->drawCubeGeometry(&program);
+    mpGeometries->drawCubeGeometry(&program);
 }

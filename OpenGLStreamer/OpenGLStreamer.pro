@@ -1,7 +1,7 @@
 TEMPLATE=subdirs
 
 SUBDIRS=ClientApp ServerApp \
-    StreamerLib \
-    StreamerLibTest
+        StreamerLib \
+
 
 StreamerLibTest.depends = StreamerLib

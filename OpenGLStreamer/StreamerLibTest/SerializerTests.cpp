@@ -90,6 +90,27 @@ TEST(Serializer, PointerIsSerialized)
     EXPECT_EQ(expected, result);
 }
 
+TEST(Serializer, RValuesAreSerialized)
+{
+    Serializer s;
+
+    Archive a = s.serialize(1, 1.3);
+
+    auto i = 1;
+    auto f = 1.3;
+
+    const QByteArray &data = a.getData();
+
+    std::vector<char> expected;
+    expected.insert(expected.end(), (const char*)&i, (const char*)&i + sizeof(i));
+    expected.insert(expected.end(), (const char*)&f, (const char*)&f + sizeof(f));
+
+    std::vector<char> result(data.constBegin(), data.constEnd());
+
+    EXPECT_EQ(sizeof(i) + sizeof(f), data.length());
+    EXPECT_EQ(expected, result);
+}
+
 TEST(Serializer, PODTypesAreSerialized)
 {
     Serializer s;

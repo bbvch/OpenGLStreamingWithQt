@@ -1,11 +1,7 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
-
-#include "geometryengine.h"
-
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions>
 #include <QMatrix4x4>
 #include <QQuaternion>
 #include <QVector2D>
@@ -13,7 +9,12 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 
-class GlWidget : public QOpenGLWidget, protected QOpenGLFunctions
+#include <memory>
+
+#include "GeometryEngine.h"
+#include "OpenGLProxy.h"
+
+class GlWidget : public QOpenGLWidget
 {
     Q_OBJECT
 
@@ -38,7 +39,7 @@ protected:
 private:
     QBasicTimer timer;
     QOpenGLShaderProgram program;
-    GeometryEngine *geometries;
+    GeometryEngine *mpGeometries;
 
     QOpenGLTexture *texture;
 
@@ -48,6 +49,7 @@ private:
     QVector3D rotationAxis;
     qreal angularSpeed;
     QQuaternion rotation;
+    std::unique_ptr<OpenGLProxy> mpOpenGLProxy;
 };
 
 #endif // GLWIDGET_H

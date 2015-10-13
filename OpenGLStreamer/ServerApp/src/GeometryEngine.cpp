@@ -38,10 +38,12 @@
 **
 ****************************************************************************/
 
-#include "geometryengine.h"
+#include "GeometryEngine.h"
 
 #include <QVector2D>
 #include <QVector3D>
+
+#include "OpenGLProxy.h"
 
 struct VertexData
 {
@@ -49,11 +51,10 @@ struct VertexData
     QVector2D texCoord;
 };
 
-GeometryEngine::GeometryEngine()
+GeometryEngine::GeometryEngine(OpenGLProxy* pOpenGLProxy)
     : indexBuf(QOpenGLBuffer::IndexBuffer)
+    , mpOpenGLProxy(pOpenGLProxy)
 {
-    initializeOpenGLFunctions();
-
     // Generate 2 VBOs
     arrayBuf.create();
     indexBuf.create();
@@ -159,5 +160,5 @@ void GeometryEngine::drawCubeGeometry(QOpenGLShaderProgram *program)
     program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
 
     // Draw cube geometry using indices from VBO 1
-    glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
+    OPENGL_CALL(glDrawElements, GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
 }

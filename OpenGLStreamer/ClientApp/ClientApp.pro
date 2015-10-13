@@ -11,7 +11,7 @@ TEMPLATE = app
 
 SOURCES += \
     src/main.cpp \
-    src/echoclient.cpp
+    src/OpenGLClient.cpp
 
 HEADERS += \
-    src/echoclient.h
+    src/OpenGLClient.h

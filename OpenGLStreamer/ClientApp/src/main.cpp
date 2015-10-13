@@ -1,7 +1,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
-#include "echoclient.h"
+#include "OpenGLClient.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
     parser.process(a);
     bool debug = parser.isSet(dbgOption);
 
-    EchoClient client(QUrl(QStringLiteral("ws://localhost:1234")), debug);
-    QObject::connect(&client, &EchoClient::closed, &a, &QCoreApplication::quit);
+    GlClient client(QUrl(QStringLiteral("ws://localhost:1234")), debug);
+    QObject::connect(&client, &GlClient::closed, &a, &QCoreApplication::quit);
 
     return a.exec();
 }

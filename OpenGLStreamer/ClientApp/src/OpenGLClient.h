@@ -4,18 +4,18 @@
 #include <QtCore/QObject>
 #include <QtWebSockets/QWebSocket>
 
-class EchoClient : public QObject
+class GlClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit EchoClient(const QUrl &url, bool debug = false, QObject *parent = Q_NULLPTR);
+    explicit GlClient(const QUrl &url, bool debug = false, QObject *parent = Q_NULLPTR);
 
 Q_SIGNALS:
     void closed();
 
 private Q_SLOTS:
     void onConnected();
-    void onTextMessageReceived(QString message);
+    void onBinaryMessageReceived(const QByteArray &message);
 
 private:
     QWebSocket m_webSocket;

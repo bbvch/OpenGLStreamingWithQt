@@ -41,14 +41,15 @@
 #ifndef GEOMETRYENGINE_H
 #define GEOMETRYENGINE_H
 
-#include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
 
-class GeometryEngine : protected QOpenGLFunctions
+class OpenGLProxy;
+
+class GeometryEngine
 {
 public:
-    GeometryEngine();
+    GeometryEngine(OpenGLProxy* pOpenGLProxy);
     virtual ~GeometryEngine();
 
     void drawCubeGeometry(QOpenGLShaderProgram *program);
@@ -58,6 +59,8 @@ private:
 
     QOpenGLBuffer arrayBuf;
     QOpenGLBuffer indexBuf;
+
+    OpenGLProxy* mpOpenGLProxy;
 };
 
 #endif // GEOMETRYENGINE_H
