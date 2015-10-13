@@ -1,4 +1,4 @@
-#include "serializer.h"
+#include "Serializer.h"
 #include <GLES2/gl2.h>
 
 Serializer::Serializer(QObject *parent)

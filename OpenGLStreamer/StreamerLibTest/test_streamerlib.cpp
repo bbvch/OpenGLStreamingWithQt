@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "serializer.h"
+#include "Serializer.h"
 
-TEST(Archiver, check__single_integer) {
-
+TEST(Archiver, check__integer_is_serialized)
+{
     Archive s;
 
     s << 1;
@@ -17,8 +17,8 @@ TEST(Archiver, check__single_integer) {
     EXPECT_TRUE(std::equal(expected, expected+4, result.constData()));
 }
 
-TEST(Archiver, check__single_float) {
-
+TEST(Archiver, check__float_is_serialized)
+{
     Archive s;
 
     s << 2.f;
@@ -32,7 +32,7 @@ TEST(Archiver, check__single_float) {
     EXPECT_TRUE(std::equal(expected, expected+4, result.constData()));
 }
 
-TEST(Serializer, check__single_int)
+TEST(Serializer, check__int_is_serialized)
 {
    Serializer s;
 
@@ -49,7 +49,7 @@ TEST(Serializer, check__single_int)
    EXPECT_TRUE(std::equal(expected, expected+4, result.constData()));
 }
 
-TEST(Serializer, check__single_float)
+TEST(Serializer, check__float_is_serialized)
 {
     Serializer s;
 
@@ -66,7 +66,7 @@ TEST(Serializer, check__single_float)
     EXPECT_TRUE(std::equal(expected, expected+4, result.constData()));
 }
 
-TEST(Serializer, check__single_double)
+TEST(Serializer, check__double_is_serialized)
 {
     Serializer s;
 
@@ -83,7 +83,7 @@ TEST(Serializer, check__single_double)
     EXPECT_TRUE(std::equal(expected, expected+8, result.constData()));
 }
 
-TEST(Serializer, check__single_bool)
+TEST(Serializer, check__bool_is_serialized)
 {
     Serializer s;
 
@@ -100,7 +100,7 @@ TEST(Serializer, check__single_bool)
     EXPECT_TRUE(std::equal(expected, expected+1, result.constData()));
 }
 
-TEST(Serializer, check__single_pointer)
+TEST(Serializer, check__pointer_is_serialized)
 {
     Serializer s;
 
@@ -120,7 +120,7 @@ TEST(Serializer, check__single_pointer)
     EXPECT_EQ(expected, result);
 }
 
-TEST(Serializer, check_pod_types)
+TEST(Serializer, check_pod_types_are_serialized)
 {
     Serializer s;
 
@@ -189,4 +189,19 @@ TEST(Serializer, check_pod_types)
               sizeof(bool) +
               sizeof(Union), data.length());
     EXPECT_EQ(expected, result);
+}
+
+TEST(Serializer, check__QString_is_serialized)
+{
+    Serializer s;
+
+    QString str("StringToBeSerialized123+");
+
+    Archive a = s.serialize(str);
+
+    const QByteArray &result = a.getData();
+
+    EXPECT_EQ(str.length(), result.length());
+    EXPECT_EQ(str, QString(result.constData()));
+
 }

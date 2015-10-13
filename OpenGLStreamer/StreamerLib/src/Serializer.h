@@ -1,7 +1,7 @@
 #ifndef SERIALIZER_H
 #define SERIALIZER_H
 
-#include "archive.h"
+#include "Archive.h"
 
 #include <QObject>
 
@@ -11,14 +11,6 @@ class Serializer : public QObject
 {
     Q_OBJECT
 public:
-
-    // TODO akasi: move it from here
-    enum class MessageIds
-    {
-        eGLClear,
-        eGLClearColor
-    };
-
     explicit Serializer(QObject *parent = 0);
 
     template<typename... Args>
@@ -29,6 +21,7 @@ public:
         serializeArguments<0, Args...>(ar, std::forward_as_tuple(args...));
         return std::move(ar);
     }
+
 signals:
 
 public slots:

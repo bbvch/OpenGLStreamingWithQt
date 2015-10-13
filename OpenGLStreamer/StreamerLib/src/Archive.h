@@ -2,6 +2,7 @@
 #define ARCHIVE_H
 
 #include <QByteArray>
+#include <QString>
 #include <type_traits>
 
 class Archive
@@ -13,15 +14,20 @@ public:
     Archive &operator= (const Archive &) = delete;
     Archive &operator= (Archive &&) = delete;
 
-    template<
-             typename T,
-             class = typename std::enable_if<std::is_pod<T>::value>::type
-            >
-    Archive &operator<<(const T &v)
+    template<typename T>
+    typename std::enable_if <std::is_trivial<T>::value, Archive &>::type
+        operator<<(const T &value)
     {
-        mData.append((const char *)&v, sizeof(T));
+        mData.append((const char *)&value, sizeof(T));
         return *this;
     }
+
+    Archive &operator<<(const QString &value)
+    {
+        mData.append(value);
+        return *this;
+    }
+
 
     const QByteArray &getData() const
     {
