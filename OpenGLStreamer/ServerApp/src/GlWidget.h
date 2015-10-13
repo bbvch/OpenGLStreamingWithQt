@@ -1,11 +1,19 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
-#include <QOpenGLShaderProgram>
-#include <QOpenGLWidget>
-#include <QWidget>
 
-class GlWidget : public QOpenGLWidget
+#include "geometryengine.h"
+
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
+#include <QMatrix4x4>
+#include <QQuaternion>
+#include <QVector2D>
+#include <QBasicTimer>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLTexture>
+
+class GlWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 
@@ -15,23 +23,31 @@ public:
     QSize sizeHint() const;
 
 protected:
-    void initializeGL();
-    void resizeGL(int width, int height);
-    void paintGL();
-    void mousePressEvent(QMouseEvent* event);
-	void mouseMoveEvent(QMouseEvent *event);
-    void wheelEvent(QWheelEvent *event);
+    void initializeGL() Q_DECL_OVERRIDE;
+    void resizeGL(int width, int height) Q_DECL_OVERRIDE;
+    void paintGL() Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    //void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    //void wheelEvent(QWheelEvent *event);
+    void timerEvent(QTimerEvent *e) Q_DECL_OVERRIDE;
+
+    void initShaders();
+    void initTextures();
 
 private:
-    QMatrix4x4 mMatrix;
-    QOpenGLShaderProgram mShaderProgram;
-    QVector<QVector3D> mVertices;
-    QVector<QVector3D> colors;
+    QBasicTimer timer;
+    QOpenGLShaderProgram program;
+    GeometryEngine *geometries;
 
-	double alpha;
-	double beta;
-	double distance;
-	QPoint lastMousePosition;
+    QOpenGLTexture *texture;
+
+    QMatrix4x4 projection;
+
+    QVector2D mousePressPosition;
+    QVector3D rotationAxis;
+    qreal angularSpeed;
+    QQuaternion rotation;
 };
 
 #endif // GLWIDGET_H

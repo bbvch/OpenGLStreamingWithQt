@@ -3,6 +3,8 @@ include(../config.pri)
 QT       += core websockets
 QT       += core gui widgets
 
+CONFIG += c++11
+
 
 TARGET  = ServerApp
 
@@ -11,11 +13,13 @@ TEMPLATE = app
 SOURCES += \
     src/echoserver.cpp \
     src/GlWidget.cpp \
-    src/main.cpp
+    src/main.cpp \
+    src/geometryengine.cpp
 
 HEADERS += \
     src/echoserver.h \
-    src/GlWidget.h
+    src/GlWidget.h \
+    src/geometryengine.h
 
 
 DISTFILES += \
@@ -23,7 +27,8 @@ DISTFILES += \
     src/fragmentShader.fsh
 
 RESOURCES += \
-    src/Files.qrc
+    src/shaders.qrc \
+    src/textures.qrc
 
 
 
