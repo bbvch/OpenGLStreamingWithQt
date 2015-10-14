@@ -1,10 +1,20 @@
-#include <QtCore/QCoreApplication>
+/*#include <QtCore/QCoreApplication>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
 #include "OpenGLClient.h"
+*/
+
+#include "GlWidget.h"
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
+    QApplication a(argc, argv);
+    GlWidget w;
+    w.show();
+
+    return a.exec();
+    /*
     QCoreApplication a(argc, argv);
 
     QCommandLineParser parser;
@@ -21,4 +31,5 @@ int main(int argc, char *argv[])
     QObject::connect(&client, &OpenGLClient::closed, &a, &QCoreApplication::quit);
 
     return a.exec();
+*/
 }
