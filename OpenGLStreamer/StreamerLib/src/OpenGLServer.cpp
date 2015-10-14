@@ -5,7 +5,7 @@
 
 QT_USE_NAMESPACE
 
-GlServer::GlServer(quint16 port, bool debug, QObject *parent) :
+OpenGLServer::OpenGLServer(quint16 port, bool debug, QObject *parent) :
     QObject(parent),
     mpWebSocketServer(new QWebSocketServer(QStringLiteral("Echo Server"),
                                             QWebSocketServer::NonSecureMode, this)),
@@ -16,35 +16,35 @@ GlServer::GlServer(quint16 port, bool debug, QObject *parent) :
         if (mDebug)
             qDebug() << "Echoserver listening on port" << port;
         connect(mpWebSocketServer, &QWebSocketServer::newConnection,
-                this, &GlServer::onNewConnection);
-        connect(mpWebSocketServer, &QWebSocketServer::closed, this, &GlServer::closed);
+                this, &OpenGLServer::onNewConnection);
+        connect(mpWebSocketServer, &QWebSocketServer::closed, this, &OpenGLServer::closed);
     }
 }
 
-GlServer::~GlServer()
+OpenGLServer::~OpenGLServer()
 {
     mpWebSocketServer->close();
     qDeleteAll(mClients.begin(), mClients.end());
 }
 
-void GlServer::onNewConnection()
+void OpenGLServer::onNewConnection()
 {
     QWebSocket *pSocket = mpWebSocketServer->nextPendingConnection();
 
-    connect(pSocket, &QWebSocket::binaryMessageReceived, this, &GlServer::processBinaryMessage);
-    connect(pSocket, &QWebSocket::disconnected, this, &GlServer::socketDisconnected);
+    connect(pSocket, &QWebSocket::binaryMessageReceived, this, &OpenGLServer::processBinaryMessage);
+    connect(pSocket, &QWebSocket::disconnected, this, &OpenGLServer::socketDisconnected);
 
     mClients << pSocket;
 }
 
-void GlServer::sendBinaryMessage(const QByteArray &message)
+void OpenGLServer::sendBinaryMessage(const QByteArray &message)
 {
     foreach (QWebSocket *pClient, mClients) {
         pClient->sendBinaryMessage(message);
     }
 }
 
-void GlServer::processBinaryMessage(QByteArray message)
+void OpenGLServer::processBinaryMessage(QByteArray message)
 {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
     if (mDebug)
@@ -54,7 +54,7 @@ void GlServer::processBinaryMessage(QByteArray message)
     }
 }
 
-void GlServer::socketDisconnected()
+void OpenGLServer::socketDisconnected()
 {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
     if (mDebug)

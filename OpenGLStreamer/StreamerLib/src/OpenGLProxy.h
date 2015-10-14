@@ -60,7 +60,7 @@ private:
     inline void callHelper(FunctionPtrType funcPtr, QString funcName, ParameterType params, helper::seq<S...>)
     {
         (mpOpenGLFunctions->*funcPtr)(std::get<S>(params) ...);
-        mpOpenGLServer->sendBinaryMessage(mSerializer.serialize(funcName, std::get<S>(params) ...).getData());
+        mpOpenGLServer->sendBinaryMessage(mSerializer.serialize(funcName, std::get<S>(params)...).getData());
     }
 
 signals:
@@ -68,7 +68,7 @@ signals:
 public slots:
 private:
     Serializer mSerializer;
-    std::unique_ptr<GlServer> mpOpenGLServer;
+    std::unique_ptr<OpenGLServer> mpOpenGLServer;
     QOpenGLFunctions *mpOpenGLFunctions;
 };
 

@@ -3,27 +3,27 @@
 
 QT_USE_NAMESPACE
 
-GlClient::GlClient(const QUrl &url, bool debug, QObject *parent) :
+OpenGLClient::OpenGLClient(const QUrl &url, bool debug, QObject *parent) :
     QObject(parent),
     m_url(url),
     m_debug(debug)
 {
     if (m_debug)
         qDebug() << "WebSocket server:" << url;
-    connect(&m_webSocket, &QWebSocket::connected, this, &GlClient::onConnected);
-    connect(&m_webSocket, &QWebSocket::disconnected, this, &GlClient::closed);
+    connect(&m_webSocket, &QWebSocket::connected, this, &OpenGLClient::onConnected);
+    connect(&m_webSocket, &QWebSocket::disconnected, this, &OpenGLClient::closed);
     m_webSocket.open(QUrl(url));
 }
 
-void GlClient::onConnected()
+void OpenGLClient::onConnected()
 {
     if (m_debug)
         qDebug() << "WebSocket connected";
     connect(&m_webSocket, &QWebSocket::binaryMessageReceived,
-            this, &GlClient::onBinaryMessageReceived);
+            this, &OpenGLClient::onBinaryMessageReceived);
 }
 
-void GlClient::onBinaryMessageReceived(const QByteArray &message)
+void OpenGLClient::onBinaryMessageReceived(const QByteArray &message)
 {
     if (m_debug)
         qDebug() << "Message received:" << message;

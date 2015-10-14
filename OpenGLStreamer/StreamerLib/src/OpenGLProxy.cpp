@@ -3,7 +3,7 @@
 
 OpenGLProxy::OpenGLProxy(QObject *parent) :
     QObject(parent),
-    mpOpenGLServer(new GlServer(1234, true))
+    mpOpenGLServer(new OpenGLServer(1234, true))
 {
 }
 

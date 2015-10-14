@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
     parser.process(a);
     bool debug = parser.isSet(dbgOption);
 
-    GlClient client(QUrl(QStringLiteral("ws://localhost:1234")), debug);
-    QObject::connect(&client, &GlClient::closed, &a, &QCoreApplication::quit);
+    OpenGLClient client(QUrl(QStringLiteral("ws://localhost:1234")), debug);
+    QObject::connect(&client, &OpenGLClient::closed, &a, &QCoreApplication::quit);
 
     return a.exec();
 }

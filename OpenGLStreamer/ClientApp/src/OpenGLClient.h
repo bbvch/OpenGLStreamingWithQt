@@ -1,14 +1,14 @@
-#ifndef ECHOCLIENT_H
-#define ECHOCLIENT_H
+#ifndef OPENGLCLIENT_H
+#define OPENGLCLIENT_H
 
 #include <QtCore/QObject>
 #include <QtWebSockets/QWebSocket>
 
-class GlClient : public QObject
+class OpenGLClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit GlClient(const QUrl &url, bool debug = false, QObject *parent = Q_NULLPTR);
+    explicit OpenGLClient(const QUrl &url, bool debug = false, QObject *parent = Q_NULLPTR);
 
 Q_SIGNALS:
     void closed();
@@ -23,4 +23,4 @@ private:
     bool m_debug;
 };
 
-#endif // ECHOCLIENT_H
+#endif // OPENGLCLIENT_H

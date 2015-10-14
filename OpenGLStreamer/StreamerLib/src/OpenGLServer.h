@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef OPENGLSERVER_H
+#define OPENGLSERVER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QList>
@@ -8,12 +8,12 @@
 QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 QT_FORWARD_DECLARE_CLASS(QWebSocket)
 
-class GlServer : public QObject
+class OpenGLServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit GlServer(quint16 port, bool debug = false, QObject *parent = Q_NULLPTR);
-    ~GlServer();
+    explicit OpenGLServer(quint16 port, bool debug = false, QObject *parent = Q_NULLPTR);
+    ~OpenGLServer();
 
     void sendBinaryMessage(const QByteArray &message);
 
@@ -31,4 +31,4 @@ private:
     bool mDebug;
 };
 
-#endif //ECHOSERVER_H
+#endif //OPENGLSERVER_H
