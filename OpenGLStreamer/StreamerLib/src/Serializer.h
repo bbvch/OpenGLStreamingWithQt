@@ -14,9 +14,9 @@ public:
     explicit Serializer(QObject *parent = 0);
 
     template<typename... Args>
-    Archive serialize(Args &&...args)
+    Archive serialize(std::size_t lengthIfPtrPassed, Args &&...args)
     {
-        Archive ar;
+        Archive ar(lengthIfPtrPassed);
 
         serializeArguments<0, Args...>(ar, std::move(std::forward_as_tuple(args...)));
         return std::move(ar);
@@ -27,17 +27,15 @@ signals:
 public slots:
 
 private:
-    template <std::size_t I,
-              typename... Args>
-    inline typename std::enable_if < (I < sizeof...(Args)), void>::type
+    template <std::size_t I, typename... Args>
+    inline typename std::enable_if<(I < sizeof...(Args)), void>::type
        serializeArguments(Archive &ar, std::tuple<Args &...> &&args)
     {
         ar << std::get<I>(args);
         serializeArguments<I + 1, Args...>(ar, std::move(args));
     }
 
-    template <std::size_t I,
-              typename... Args>
+    template <std::size_t I, typename... Args>
     inline typename std::enable_if<(I == sizeof...(Args)), void>::type
        serializeArguments(Archive &, std::tuple<Args &...> &&)
     {}

@@ -14,7 +14,7 @@ OpenGLServer::OpenGLServer(quint16 port, bool debug, QObject *parent) :
 {
     if (mpWebSocketServer->listen(QHostAddress::Any, port)) {
         if (mDebug)
-            qDebug() << "Echoserver listening on port" << port;
+            qDebug() << "OpenGL server listening on port" << port;
         connect(mpWebSocketServer, &QWebSocketServer::newConnection,
                 this, &OpenGLServer::onNewConnection);
         connect(mpWebSocketServer, &QWebSocketServer::closed, this, &OpenGLServer::closed);

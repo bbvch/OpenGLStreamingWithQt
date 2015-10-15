@@ -79,7 +79,7 @@ TEST(Serializer, PointerIsSerialized)
 
     long long address = (long long)ptr;
 
-    Archive a = s.serialize(ptr);
+    Archive a = s.serialize(1, ptr);
 
     const QByteArray &data = a.getData();
 
@@ -160,7 +160,7 @@ TEST(Serializer, PODTypesAreSerialized)
     long long apsc = (long long)psc;
     long long apd = (long long)pd;
 
-    Archive a = s.serialize(podTypes, psi, psc, pd, b, unionData);
+    Archive a = s.serialize(1, podTypes, psi, psc, pd, b, unionData);
 
     const QByteArray &data = a.getData();
 
@@ -188,7 +188,7 @@ TEST(Serializer, QStringIsSerialized)
 
     QString str("StringToBeSerialized123+");
 
-    Archive a = s.serialize(str);
+    Archive a = s.serialize(1, str);
 
     const QByteArray &result = a.getData();
 

@@ -84,7 +84,7 @@ void GlWidget::initializeGL()
     OPENGL_CALL(glEnable, GL_DEPTH_TEST);
 
     // Enable back face culling
-    OPENGL_CALL(glEnable, GL_CULL_FACE)
+    OPENGL_CALL(glEnable, GL_CULL_FACE);
 
     mpGeometries = new GeometryEngine(mpOpenGLProxy.get());
 
@@ -155,10 +155,13 @@ void GlWidget::paintGL()
     matrix.rotate(rotation);
 
     // Set modelview-projection matrix
-    program.setUniformValue("mvp_matrix", projection * matrix);
+    //program.setUniformValue("mvp_matrix", projection * matrix);
+    OPENGL_CALL_V(glUniformMatrix, 4, f, OPENGL_CALL(glGetUniformLocation, program.programId(), "mvp_matrix"),
+                1, GL_FALSE, (projection * matrix).constData());
 
     // Use texture unit 0 which contains cube.png
-    program.setUniformValue("texture", 0);
+    //program.setUniformValue("texture", 0);
+    OPENGL_CALL(glUniform1i, OPENGL_CALL(glGetUniformLocation, program.programId(), "texture"), 0);
 
     // Draw cube geometry
     mpGeometries->drawCubeGeometry(&program);
