@@ -3,27 +3,30 @@
 
 #include <QObject>
 #include <QOpenGLFunctions>
+#include <QHash>
 
 #include <memory>
 #include <type_traits>
 
-#include "OpenGLServer.h"
 #include "Serializer.h"
+#include "OpenGLServer.h"
+#include "OpenGLClient.h"
 
-#define OPENGL_CALL(_func, ...) mpOpenGLProxy->glCall<1>(&QOpenGLFunctions::_func, QString(#_func), __VA_ARGS__)
-#define OPENGL_CALL_V(_func, _vsize, _type, ...) mpOpenGLProxy->glCall<_vsize>(&QOpenGLFunctions::_func##_vsize##_type##v, QString(#_func), __VA_ARGS__)
+#define STRINGIFY(STR) #STR
+#define OPENGL_CALL(NAME, ...) mpOpenGLProxy->glCall<1>(&QOpenGLFunctions::NAME, #NAME, __VA_ARGS__)
+#define OPENGL_CALL_V(NAME, VSIZE, DTYPE, ...) mpOpenGLProxy->glCall<VSIZE>(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), __VA_ARGS__)
 
 namespace helper
 {
     template<typename T>
-    struct FunctionTraits;
+    struct MethodTraits;
 
     template<class Class, typename Return, typename ... Args>
-    struct FunctionTraits<Return (Class::*)(Args...)>
+    struct MethodTraits<Return (Class::*)(Args...)>
     {
        using ClassType = Class;
        using ReturnType = Return;
-       using FunctionPtrType = Return (Class::*)(Args...);
+       using MethodPtrType = Return (Class::*)(Args...);
        using ParameterType = std::tuple<Args...>;
        using Arity = std::tuple_size<ParameterType>;
     };
@@ -40,64 +43,110 @@ namespace helper
     };
 }
 
-class OpenGLProxy : public QObject
+class OpenGLProxy : public QObject, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
-    explicit OpenGLProxy(QObject *parent = 0);
+    enum ProxyType
+    {
+        eProxyServer,
+        eProxyClient
+    };
+
+    explicit OpenGLProxy(ProxyType proxyType, bool debug = false, QObject *parent = 0);
 
     void initialize();
 
     template<std::size_t N, typename FunctionPtrType, typename... Args>
-    typename std::enable_if<std::is_void<typename helper::FunctionTraits<FunctionPtrType>::ReturnType>::value, void>::type
-    glCall(FunctionPtrType funcPtr, QString funcName, Args &&...args)
+    typename std::enable_if<std::is_void<typename helper::MethodTraits<FunctionPtrType>::ReturnType>::value, void>::type
+    glCall(FunctionPtrType funcPtr, const char *funcName, Args &&...args)
     {
-        using FunctionInfo = helper::FunctionTraits<decltype(funcPtr)>;
+        using FunctionInfo = helper::MethodTraits<decltype(funcPtr)>;
         auto s = typename helper::gens<FunctionInfo::Arity::value>::type();
         typename FunctionInfo::ParameterType params{std::forward<Args>(args)...};
 
-        callHelper<N>(std::move(funcPtr), std::move(funcName), std::move(params), s);
+        callHelper<N>(funcPtr, funcName, std::move(params), s);
     }
 
     template<std::size_t N, typename FunctionPtrType, typename... Args>
-    typename std::enable_if<!std::is_void<typename helper::FunctionTraits<FunctionPtrType>::ReturnType>::value,
-    typename helper::FunctionTraits<FunctionPtrType>::ReturnType>::type
-    glCall(FunctionPtrType funcPtr, QString funcName, Args &&...args)
+    typename std::enable_if<!std::is_void<typename helper::MethodTraits<FunctionPtrType>::ReturnType>::value,
+    typename helper::MethodTraits<FunctionPtrType>::ReturnType>::type
+    glCall(FunctionPtrType funcPtr, const char *funcName, Args &&...args)
     {
-        using FunctionInfo = helper::FunctionTraits<decltype(funcPtr)>;
+        using FunctionInfo = helper::MethodTraits<FunctionPtrType>;
         auto s = typename helper::gens<FunctionInfo::Arity::value>::type();
         typename FunctionInfo::ParameterType params{std::forward<Args>(args)...};
 
-        return callHelper<N>(std::move(funcPtr), std::move(funcName), std::move(params), s);
+        return callHelper<N>(funcPtr, funcName, std::move(params), s);
     }
 
 private:
     template<std::size_t N, typename FunctionPtrType, typename ParameterType, std::size_t ...S>
-    typename std::enable_if<std::is_void<typename helper::FunctionTraits<FunctionPtrType>::ReturnType>::value, void>::type
-    callHelper(FunctionPtrType funcPtr, QString funcName, ParameterType params, helper::seq<S...>)
+    typename std::enable_if<std::is_void<typename helper::MethodTraits<FunctionPtrType>::ReturnType>::value, void>::type
+    callHelper(FunctionPtrType funcPtr, const char *funcName, ParameterType params, helper::seq<S...>)
     {
-        (mpOpenGLFunctions->*funcPtr)(std::get<S>(params)...);
-        mpOpenGLServer->sendBinaryMessage(mSerializer.serialize(N, funcName, std::get<S>(params)...).getData());
+        (this->*funcPtr)(std::get<S>(params)...);
+        if (mProxyType == eProxyServer && mpOpenGLServer)
+        {
+            mpOpenGLServer->sendBinaryMessage(mSerializer.serialize(N, funcName, std::get<S>(params)...).getData());
+        }
     }
 
     template<std::size_t N, typename FunctionPtrType, typename ParameterType, std::size_t ...S>
-    typename std::enable_if<!std::is_void<typename helper::FunctionTraits<FunctionPtrType>::ReturnType>::value,
-    typename helper::FunctionTraits<FunctionPtrType>::ReturnType>::type
-    callHelper(FunctionPtrType funcPtr, QString funcName, ParameterType params, helper::seq<S...>)
+    typename std::enable_if<!std::is_void<typename helper::MethodTraits<FunctionPtrType>::ReturnType>::value,
+    typename helper::MethodTraits<FunctionPtrType>::ReturnType>::type
+    callHelper(FunctionPtrType funcPtr, const char *funcName, ParameterType params, helper::seq<S...>)
     {
-        auto result = (mpOpenGLFunctions->*funcPtr)(std::get<S>(params)...);
-        mpOpenGLServer->sendBinaryMessage(mSerializer.serialize(N, funcName, std::get<S>(params)...).getData());
-
+        auto result = (this->*funcPtr)(std::get<S>(params)...);
+        if (mProxyType == eProxyServer && mpOpenGLServer)
+        {
+            mpOpenGLServer->sendBinaryMessage(mSerializer.serialize(N, funcName, std::get<S>(params)...).getData());
+        }
         return result;
     }
 
-signals:
+    struct FunctionInvoker
+    {
+        virtual void glCall(const QByteArray &message) = 0;
+    };
 
-public slots:
+    template <std::size_t N, typename FunctionPtrType>
+    struct FunctionCallResolver : public FunctionInvoker
+    {
+        using FunctionInfo = helper::MethodTraits<FunctionPtrType>;
+        using ParameterType = typename FunctionInfo::ParameterType;
+
+        FunctionCallResolver(FunctionPtrType funcPtr, OpenGLProxy &openGLProxy)
+            : mFuncPtr(funcPtr)
+            , mOpenGLProxy(openGLProxy)
+        {}
+
+        virtual void glCall(const QByteArray &message) override
+        {
+            auto s = typename helper::gens<FunctionInfo::Arity::value>::type();
+            Archive ar = mSerializer.deserialize(message, N, mParams);
+            (void)ar;
+            mOpenGLProxy.callHelper<N>(mFuncPtr, "", mParams, s);
+        }
+
+    private:
+        FunctionPtrType mFuncPtr;
+        ParameterType mParams;
+        Serializer mSerializer;
+        OpenGLProxy &mOpenGLProxy;
+    };
+
+private slots:
+    void onBinaryMessageReceived(const QByteArray &message);
+
 private:
     Serializer mSerializer;
+    // akasi TODO client and server must have same interface and be created with factory method
     std::unique_ptr<OpenGLServer> mpOpenGLServer;
-    QOpenGLFunctions *mpOpenGLFunctions;
+    std::unique_ptr<OpenGLClient> mpOpenGLClient;
+    ProxyType mProxyType;
+    bool mDebug;
+    QHash<QString, std::shared_ptr<FunctionInvoker>> mOpenGLFunctionInvokers;
 };
 
 #endif // OPENGLPROXY_H

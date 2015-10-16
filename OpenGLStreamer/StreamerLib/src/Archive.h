@@ -3,6 +3,8 @@
 
 #include <QByteArray>
 #include <QString>
+
+#include <algorithm>
 #include <type_traits>
 
 class Archive
@@ -11,6 +13,13 @@ public:
     explicit Archive(std::size_t lengthIfPtrPassed = 1)
         : mLengthIfPtrPassed(lengthIfPtrPassed)
     {}
+
+    explicit Archive(const QByteArray &data, std::size_t lengthIfPtrPassed = 1)
+        : mData(data)
+        , mLengthIfPtrPassed(lengthIfPtrPassed)
+    {
+        mDataPointer = data.constData();
+    }
 
     Archive(Archive &&) = default;
     Archive(Archive &) = delete;
@@ -36,6 +45,7 @@ public:
         if (std::is_same<char, Type>::value)
         {
             mData.append(reinterpret_cast<const char *>(value));
+            mData.append('\0');
         }
         else if(std::is_same<void, Type>::value)
         {
@@ -49,9 +59,39 @@ public:
         return *this;
     }
 
-    Archive &operator<<(const QString &value)
+    template<typename T>
+    typename std::enable_if <std::is_trivial<T>::value && !std::is_pointer<T>::value , Archive &>::type
+        operator>>(T &value)
     {
-        mData.append(value);
+        std::copy(mDataPointer, mDataPointer + sizeof(T), (char*) &value);
+        mDataPointer += sizeof(T);
+        return *this;
+    }
+
+    template<typename T>
+    typename std::enable_if <std::is_trivial<T>::value && std::is_pointer<T>::value , Archive &>::type
+        operator>>(T &value)
+    {
+        using Type = typename std::remove_cv<
+                     typename std::remove_pointer<
+                     typename std::decay<T>::type>::type>::type;
+
+        if (std::is_same<char, Type>::value)
+        {
+            value = (const Type*)mDataPointer;
+            while(*(mDataPointer++) != '\0')
+            {}
+        }
+        else if(std::is_same<void, Type>::value)
+        {
+            std::copy(mDataPointer, mDataPointer + sizeof(quintptr), (char*) &value);
+            mDataPointer += sizeof(quintptr);
+        }
+        else
+        {
+            value = (const Type*)mDataPointer;
+            mDataPointer += sizeof(Type)*mLengthIfPtrPassed;
+        }
         return *this;
     }
 
@@ -64,6 +104,7 @@ public:
 private:
     QByteArray mData;
     std::size_t mLengthIfPtrPassed;
+    const char *mDataPointer{nullptr};
 };
 
 #endif // ARCHIVE_H

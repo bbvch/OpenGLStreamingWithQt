@@ -181,17 +181,3 @@ TEST(Serializer, PODTypesAreSerialized)
               sizeof(Union), data.length());
     EXPECT_EQ(expected, result);
 }
-
-TEST(Serializer, QStringIsSerialized)
-{
-    Serializer s;
-
-    QString str("StringToBeSerialized123+");
-
-    Archive a = s.serialize(1, str);
-
-    const QByteArray &result = a.getData();
-
-    EXPECT_EQ(str.length(), result.length());
-    EXPECT_EQ(str, QString(result.constData()));
-}

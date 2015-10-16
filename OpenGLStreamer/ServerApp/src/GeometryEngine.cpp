@@ -164,7 +164,7 @@ void GeometryEngine::drawCubeGeometry(QOpenGLShaderProgram *program)
     int texcoordLocation = OPENGL_CALL(glGetAttribLocation, program->programId(), "a_texcoord");
     //program->enableAttributeArray(texcoordLocation);
     OPENGL_CALL(glEnableVertexAttribArray, texcoordLocation);
-    program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
+    //program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
     OPENGL_CALL(glVertexAttribPointer, texcoordLocation, 2, GL_FLOAT, GL_TRUE, sizeof(VertexData), reinterpret_cast<const void *>(offset));
 
     // Draw cube geometry using indices from VBO 1

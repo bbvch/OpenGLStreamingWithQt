@@ -12,14 +12,15 @@
 #include <memory>
 
 #include "GeometryEngine.h"
-#include "OpenGLProxy.h"
 
-class GlWidget : public QOpenGLWidget, protected QOpenGLFunctions
+class OpenGLProxy;
+
+class GlWidget : public QOpenGLWidget
 {
     Q_OBJECT
 
 public:
-    GlWidget(QWidget *parent = 0);
+    GlWidget(bool debug = false, QWidget *parent = 0);
     ~GlWidget();
     QSize sizeHint() const;
 

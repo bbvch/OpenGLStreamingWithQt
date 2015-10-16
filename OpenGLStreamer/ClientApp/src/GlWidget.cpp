@@ -4,11 +4,14 @@
 
 #include <math.h>
 
-GlWidget::GlWidget(QWidget *parent) :
+#include "OpenGLProxy.h"
+
+GlWidget::GlWidget(bool debug, QWidget *parent) :
     QOpenGLWidget(parent),
     mpGeometries(0),
     texture(0),
-    angularSpeed(0)
+    angularSpeed(0),
+    mpOpenGLProxy(new OpenGLProxy(OpenGLProxy::eProxyClient, debug))
 {}
 
 GlWidget::~GlWidget()
@@ -72,7 +75,7 @@ QSize GlWidget::sizeHint() const
 
 void GlWidget::initializeGL()
 {
-    initializeOpenGLFunctions();
+    mpOpenGLProxy->initialize();
 
     glClearColor(0, 0, 0, 1);
 
@@ -143,7 +146,7 @@ void GlWidget::initTextures()
 
 void GlWidget::paintGL()
 {
-    texture->bind();
+/*    texture->bind();
 
     // Calculate model view transformation
     QMatrix4x4 matrix;
@@ -154,6 +157,6 @@ void GlWidget::paintGL()
     program.setUniformValue("mvp_matrix", projection * matrix);
 
     // Use texture unit 0 which contains cube.png
-    program.setUniformValue("texture", 0);
+    program.setUniformValue("texture", 0);*/
 
 }

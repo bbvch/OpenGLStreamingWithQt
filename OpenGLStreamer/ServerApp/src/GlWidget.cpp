@@ -9,7 +9,7 @@ GlWidget::GlWidget(QWidget *parent) :
     mpGeometries(0),
     texture(0),
     angularSpeed(0),
-    mpOpenGLProxy(new OpenGLProxy())
+    mpOpenGLProxy(new OpenGLProxy(OpenGLProxy::eProxyServer))
 {}
 
 GlWidget::~GlWidget()
@@ -75,16 +75,16 @@ void GlWidget::initializeGL()
 {
     mpOpenGLProxy->initialize();
 
-    OPENGL_CALL(glClearColor, 0, 0, 0, 1);
+    glClearColor(0, 0, 0, 1);
 
     initShaders();
     initTextures();
 
     // Enable depth buffer
-    OPENGL_CALL(glEnable, GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
 
     // Enable back face culling
-    OPENGL_CALL(glEnable, GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 
     mpGeometries = new GeometryEngine(mpOpenGLProxy.get());
 

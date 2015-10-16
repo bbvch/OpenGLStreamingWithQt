@@ -10,17 +10,17 @@ class OpenGLClient : public QObject
 public:
     explicit OpenGLClient(const QUrl &url, bool debug = false, QObject *parent = Q_NULLPTR);
 
-Q_SIGNALS:
+signals:
     void closed();
+    void binaryMessageReceived(const QByteArray &message);
 
-private Q_SLOTS:
+private slots:
     void onConnected();
-    void onBinaryMessageReceived(const QByteArray &message);
 
 private:
-    QWebSocket m_webSocket;
-    QUrl m_url;
-    bool m_debug;
+    QWebSocket mWebSocket;
+    QUrl mUrl;
+    bool mDebug;
 };
 
 #endif // OPENGLCLIENT_H

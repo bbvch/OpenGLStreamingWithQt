@@ -17,10 +17,10 @@ public:
 
     void sendBinaryMessage(const QByteArray &message);
 
-Q_SIGNALS:
+signals:
     void closed();
 
-private Q_SLOTS:
+private slots:
     void onNewConnection();
     void processBinaryMessage(QByteArray message);
     void socketDisconnected();
