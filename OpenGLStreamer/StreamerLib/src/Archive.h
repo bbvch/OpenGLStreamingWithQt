@@ -1,3 +1,9 @@
+/**************************************************************************
+**   Author: Oleksiy Kasilov, bbv Software Services AG
+**   Date:   10/17/2015
+**   Year:   2015
+**************************************************************************/
+
 #ifndef ARCHIVE_H
 #define ARCHIVE_H
 
@@ -6,6 +12,21 @@
 
 #include <algorithm>
 #include <type_traits>
+
+namespace helper
+{
+    template <typename T>
+    struct SizeOfHelper
+    {
+        constexpr static std::size_t value = sizeof(T);
+    };
+
+    template <>
+    struct SizeOfHelper<void>
+    {
+        constexpr static std::size_t value = 0;
+    };
+}
 
 class Archive
 {
@@ -54,7 +75,7 @@ public:
         }
         else
         {
-            mData.append(reinterpret_cast<const char *>(value), sizeof(Type)*mLengthIfPtrPassed);
+            mData.append(reinterpret_cast<const char *>(value), helper::SizeOfHelper<Type>::value*mLengthIfPtrPassed);
         }
         return *this;
     }
@@ -90,7 +111,7 @@ public:
         else
         {
             value = (const Type*)mDataPointer;
-            mDataPointer += sizeof(Type)*mLengthIfPtrPassed;
+            mDataPointer += helper::SizeOfHelper<Type>::value*mLengthIfPtrPassed;
         }
         return *this;
     }

@@ -1,3 +1,9 @@
+/**************************************************************************
+**   Author: Oleksiy Kasilov, bbv Software Services AG
+**   Date:   10/17/2015
+**   Year:   2015
+**************************************************************************/
+
 #ifndef OPENGLCLIENT_H
 #define OPENGLCLIENT_H
 

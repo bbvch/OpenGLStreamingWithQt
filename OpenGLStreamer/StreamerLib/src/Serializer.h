@@ -1,3 +1,9 @@
+/**************************************************************************
+**   Author: Oleksiy Kasilov, bbv Software Services AG
+**   Date:   10/17/2015
+**   Year:   2015
+**************************************************************************/
+
 #ifndef SERIALIZER_H
 #define SERIALIZER_H
 
@@ -11,7 +17,9 @@ class Serializer : public QObject
 {
     Q_OBJECT
 public:
-    explicit Serializer(QObject *parent = 0);
+    explicit Serializer(QObject *parent = 0)
+        : QObject(parent)
+    {}
 
     template<typename... Args>
     Archive serialize(std::size_t lengthIfPtrPassed, Args &&...args)

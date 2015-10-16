@@ -7,7 +7,6 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += \
-    src/Serializer.cpp \
     src/OpenGLServer.cpp \
     src/OpenGLClient.cpp \
     src/OpenGLProxy.cpp
@@ -17,7 +16,7 @@ HEADERS += \
     src/Serializer.h \
     src/OpenGLProxy.h \
     src/OpenGLServer.h \
-    src/OpenGLClient.h \
+    src/OpenGLClient.h
 
 unix {
     target.path = /usr/lib

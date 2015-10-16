@@ -1,3 +1,9 @@
+/**************************************************************************
+**   Author: Oleksiy Kasilov, bbv Software Services AG
+**   Date:   10/17/2015
+**   Year:   2015
+**************************************************************************/
+
 #include "OpenGLProxy.h"
 
 #include <QDataStream>
@@ -51,6 +57,6 @@ void OpenGLProxy::onBinaryMessageReceived(const QByteArray &message)
 
     if (invoker)
     {
-        invoker->glCall(message.remove(0, funcName.size() + 1));
+        invoker->glCall(const_cast<QByteArray&>(message).remove(0, funcName.size() + 1));
     }
 }
