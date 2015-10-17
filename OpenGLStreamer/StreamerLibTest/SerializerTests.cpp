@@ -110,7 +110,7 @@ TEST(Serializer, RValuesAreSerialized)
     EXPECT_EQ(sizeof(i) + sizeof(f), data.length());
     EXPECT_EQ(expected, result);
 }
-
+/*
 TEST(Serializer, PODTypesAreSerialized)
 {
     Serializer s;
@@ -180,4 +180,4 @@ TEST(Serializer, PODTypesAreSerialized)
               sizeof(bool) +
               sizeof(Union), data.length());
     EXPECT_EQ(expected, result);
-}
+}*/

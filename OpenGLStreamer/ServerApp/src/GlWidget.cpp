@@ -4,12 +4,12 @@
 
 #include <math.h>
 
-GlWidget::GlWidget(QWidget *parent) :
+GlWidget::GlWidget(bool debug, QWidget *parent) :
     QOpenGLWidget(parent),
     mpGeometries(0),
     texture(0),
     angularSpeed(0),
-    mpOpenGLProxy(new OpenGLProxy(OpenGLProxy::eProxyServer))
+    mpOpenGLProxy(new OpenGLProxy(OpenGLProxy::eProxyServer, debug))
 {}
 
 GlWidget::~GlWidget()

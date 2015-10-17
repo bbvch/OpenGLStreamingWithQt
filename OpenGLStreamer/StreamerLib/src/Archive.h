@@ -40,6 +40,8 @@ public:
         , mLengthIfPtrPassed(lengthIfPtrPassed)
     {
         mDataPointer = data.constData();
+        while(*(mDataPointer++) != '\0')
+        {}
     }
 
     Archive(Archive &&) = default;

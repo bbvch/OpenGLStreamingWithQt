@@ -66,6 +66,8 @@ void GlWidget::timerEvent(QTimerEvent *)
         // Request an update
         update();
     }
+
+    update();
 }
 
 QSize GlWidget::sizeHint() const

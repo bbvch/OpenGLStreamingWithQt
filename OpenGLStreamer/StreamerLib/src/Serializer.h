@@ -10,6 +10,7 @@
 #include "Archive.h"
 
 #include <QObject>
+#include <QDebug>
 
 #include <tuple>
 
@@ -17,8 +18,9 @@ class Serializer : public QObject
 {
     Q_OBJECT
 public:
-    explicit Serializer(QObject *parent = 0)
+    explicit Serializer(bool debug = false,  QObject *parent = 0)
         : QObject(parent)
+        , mDebug(debug)
     {}
 
     template<typename... Args>
@@ -49,6 +51,8 @@ private:
        serializeArguments(Archive &ar, std::tuple<Args &...> &&args)
     {
         ar << std::get<I>(args);
+        if (mDebug)
+            qDebug() << "with parameter" << I << ":" << std::get<I>(args);
         serializeArguments<I + 1, Args...>(ar, std::move(args));
     }
 
@@ -62,6 +66,8 @@ private:
        deserializeArguments(Archive &ar, std::tuple<Args ...> &args)
     {
         ar >> std::get<I>(args);
+        if (mDebug)
+            qDebug() << "with parameter" << I << ":" << std::get<I>(args);
         deserializeArguments<I + 1, Args...>(ar, args);
     }
 
@@ -70,6 +76,8 @@ private:
        deserializeArguments(Archive &, std::tuple<Args ...> &)
     {}
 
+private:
+    bool mDebug{false};
 };
 
 #endif // SERIALIZER_H

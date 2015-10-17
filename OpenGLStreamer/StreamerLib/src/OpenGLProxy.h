@@ -91,9 +91,15 @@ private:
     typename std::enable_if<std::is_void<typename helper::MethodTraits<FunctionPtrType>::ReturnType>::value, void>::type
     callHelper(FunctionPtrType funcPtr, const char *funcName, ParameterType params, helper::seq<S...>)
     {
+        if (mDebug)
+            qDebug() << "OpenGL function" << funcName << "called";
+
         (this->*funcPtr)(std::get<S>(params)...);
         if (mProxyType == eProxyServer && mpOpenGLServer)
         {
+            if (mDebug)
+                qDebug() << "OpenGL function" << funcName << "sent";
+
             mpOpenGLServer->sendBinaryMessage(mSerializer.serialize(N, funcName, std::get<S>(params)...).getData());
         }
     }
@@ -130,15 +136,14 @@ private:
         virtual void glCall(const QByteArray &message) override
         {
             auto s = typename helper::gens<FunctionInfo::Arity::value>::type();
-            Archive ar = mSerializer.deserialize(message, N, mParams);
+            Archive ar = mOpenGLProxy.mSerializer.deserialize(message, N, mParams);
             (void)ar;
-            mOpenGLProxy.callHelper<N>(mFuncPtr, "", mParams, s);
+            mOpenGLProxy.callHelper<N>(mFuncPtr, ar.getData().constData(), mParams, s);
         }
 
     private:
         FunctionPtrType mFuncPtr;
         ParameterType mParams;
-        Serializer mSerializer;
         OpenGLProxy &mOpenGLProxy;
     };
 
@@ -146,13 +151,13 @@ private slots:
     void onBinaryMessageReceived(const QByteArray &message);
 
 private:
-    Serializer mSerializer;
     // akasi TODO client and server must have same interface and be created with factory method
     std::unique_ptr<OpenGLServer> mpOpenGLServer;
     std::unique_ptr<OpenGLClient> mpOpenGLClient;
     ProxyType mProxyType;
     bool mDebug;
     QHash<QString, std::shared_ptr<FunctionInvoker>> mOpenGLFunctionInvokers;
+    Serializer mSerializer;
 };
 
 #endif // OPENGLPROXY_H

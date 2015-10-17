@@ -27,7 +27,9 @@ OpenGLProxy::OpenGLProxy(ProxyType proxyType, bool debug, QObject *parent) :
                             CREATE_INVOKER(glVertexAttribPointer),
                             CREATE_INVOKER(glDrawElements),
                             CREATE_INVOKER(glGetUniformLocation)
-                            })
+                            }),
+    mSerializer(debug)
+
 {
     // TODO replace this with factory method
     if (mProxyType == eProxyServer)
@@ -49,7 +51,7 @@ void OpenGLProxy::onBinaryMessageReceived(const QByteArray &message)
     QString funcName(message.data());
 
     if (mDebug)
-        qDebug() << "OpenGL function: "<< funcName;
+        qDebug() << "OpenGL function" << funcName << "received";
 
     auto& invoker = mOpenGLFunctionInvokers[funcName];
 
@@ -57,6 +59,6 @@ void OpenGLProxy::onBinaryMessageReceived(const QByteArray &message)
 
     if (invoker)
     {
-        invoker->glCall(const_cast<QByteArray&>(message).remove(0, funcName.size() + 1));
+        invoker->glCall(message);
     }
 }
