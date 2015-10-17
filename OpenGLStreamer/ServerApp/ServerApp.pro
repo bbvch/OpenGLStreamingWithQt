@@ -15,7 +15,6 @@ HEADERS += \
     src/GlWidget.h \
     src/GeometryEngine.h
 
-
 DISTFILES += \
     src/vertexShader.vsh \
     src/fragmentShader.fsh

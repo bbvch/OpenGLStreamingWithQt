@@ -20,7 +20,7 @@ class GlWidget : public QOpenGLWidget
     Q_OBJECT
 
 public:
-    GlWidget(bool debug = false, QWidget *parent = 0);
+    GlWidget(bool debug, QWidget *parent = 0);
     ~GlWidget();
     QSize sizeHint() const;
 
@@ -41,7 +41,6 @@ private:
     QBasicTimer timer;
     QOpenGLShaderProgram program;
     GeometryEngine *mpGeometries;
-    GeometryEngine *geometries;
 
     QOpenGLTexture *texture;
 

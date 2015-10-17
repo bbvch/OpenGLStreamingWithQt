@@ -52,8 +52,6 @@ public:
     GeometryEngine();
     virtual ~GeometryEngine();
 
-    void drawCubeGeometry(QOpenGLShaderProgram *program);
-
 private:
     void initCubeGeometry();
 

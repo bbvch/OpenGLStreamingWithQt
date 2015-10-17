@@ -147,7 +147,8 @@ void GlWidget::paintGL()
     // Clear color and depth buffer
     OPENGL_CALL(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    texture->bind();
+    //texture->bind();
+    OPENGL_CALL(glBindTexture, texture->target(), texture->textureId());
 
     // Calculate model view transformation
     QMatrix4x4 matrix;

@@ -91,16 +91,15 @@ private:
     typename std::enable_if<std::is_void<typename helper::MethodTraits<FunctionPtrType>::ReturnType>::value, void>::type
     callHelper(FunctionPtrType funcPtr, const char *funcName, ParameterType params, helper::seq<S...>)
     {
+        (this->*funcPtr)(std::get<S>(params)...);
         if (mDebug)
             qDebug() << "OpenGL function" << funcName << "called";
 
-        (this->*funcPtr)(std::get<S>(params)...);
         if (mProxyType == eProxyServer && mpOpenGLServer)
         {
+            mpOpenGLServer->sendBinaryMessage(mSerializer.serialize(N, funcName, std::get<S>(params)...).getData());
             if (mDebug)
                 qDebug() << "OpenGL function" << funcName << "sent";
-
-            mpOpenGLServer->sendBinaryMessage(mSerializer.serialize(N, funcName, std::get<S>(params)...).getData());
         }
     }
 
@@ -110,9 +109,14 @@ private:
     callHelper(FunctionPtrType funcPtr, const char *funcName, ParameterType params, helper::seq<S...>)
     {
         auto result = (this->*funcPtr)(std::get<S>(params)...);
+        if (mDebug)
+            qDebug() << "OpenGL function" << funcName << "called";
+
         if (mProxyType == eProxyServer && mpOpenGLServer)
         {
             mpOpenGLServer->sendBinaryMessage(mSerializer.serialize(N, funcName, std::get<S>(params)...).getData());
+            if (mDebug)
+                qDebug() << "OpenGL function" << funcName << "sent";
         }
         return result;
     }

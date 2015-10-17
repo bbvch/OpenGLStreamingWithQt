@@ -26,7 +26,8 @@ OpenGLProxy::OpenGLProxy(ProxyType proxyType, bool debug, QObject *parent) :
                             CREATE_INVOKER(glEnableVertexAttribArray),
                             CREATE_INVOKER(glVertexAttribPointer),
                             CREATE_INVOKER(glDrawElements),
-                            CREATE_INVOKER(glGetUniformLocation)
+                            CREATE_INVOKER(glGetUniformLocation),
+                            CREATE_INVOKER(glBindTexture)
                             }),
     mSerializer(debug)
 
