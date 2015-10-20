@@ -112,7 +112,7 @@ private:
     {
         auto result = (this->*funcPtr)(std::get<S>(params)...);
         if (mDebug)
-            qDebug() << "OpenGL function" << funcName << "called";
+            qDebug() << "OpenGL function" << funcName << "called with return value:" << result;
 
         if (mProxyType == eProxyServer && mpOpenGLServer)
         {
@@ -143,7 +143,6 @@ private:
         {
             auto s = typename helper::gens<FunctionInfo::Arity::value>::type();
             Archive ar = mOpenGLProxy.mSerializer.deserialize(message, N, mParams);
-            (void)ar;
             mOpenGLProxy.callHelper<N>(mFuncPtr, ar.getData().constData(), mParams, s);
         }
 
