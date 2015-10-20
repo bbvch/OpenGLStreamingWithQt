@@ -101,7 +101,7 @@ public:
 
         if (std::is_same<char, Type>::value)
         {
-            value = (const Type*)mDataPointer;
+            value = (Type *)mDataPointer;
             while(*(mDataPointer++) != '\0')
             {}
         }
@@ -112,7 +112,7 @@ public:
         }
         else
         {
-            value = (const Type*)mDataPointer;
+            value = (Type *)mDataPointer;
             mDataPointer += helper::SizeOfHelper<Type>::value*mLengthIfPtrPassed;
         }
         return *this;

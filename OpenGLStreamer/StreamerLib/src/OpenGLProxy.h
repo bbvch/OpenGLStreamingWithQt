@@ -8,7 +8,7 @@
 #define OPENGLPROXY_H
 
 #include <QObject>
-#include <QOpenGLFunctions>
+#include <QOpenGLFunctions_2_0>
 #include <QHash>
 #include <QQueue>
 
@@ -20,9 +20,9 @@
 #include "OpenGLClient.h"
 
 #define STRINGIFY(STR) #STR
-#define OPENGL_CALL(NAME, ...) mpOpenGLProxy->glCall<1>(&QOpenGLFunctions::NAME, #NAME, __VA_ARGS__)
-#define OPENGL_CALL_V(NAME, VSIZE, DTYPE, ...) mpOpenGLProxy->glCall<VSIZE>(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), __VA_ARGS__)
-#define OPENGL_CALL_M(NAME, VSIZE, DTYPE, ...) mpOpenGLProxy->glCall<VSIZE*VSIZE>(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), __VA_ARGS__)
+#define OPENGL_CALL(NAME, ...) mpOpenGLProxy->glCall<1>(&QOpenGLFunctions_2_0::NAME, #NAME, __VA_ARGS__)
+#define OPENGL_CALL_V(NAME, VSIZE, DTYPE, ...) mpOpenGLProxy->glCall<VSIZE>(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), __VA_ARGS__)
+#define OPENGL_CALL_M(NAME, VSIZE, DTYPE, ...) mpOpenGLProxy->glCall<VSIZE*VSIZE>(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), __VA_ARGS__)
 
 
 namespace helper
@@ -52,7 +52,7 @@ namespace helper
     };
 }
 
-class OpenGLProxy : public QObject, protected QOpenGLFunctions
+class OpenGLProxy : public QObject, protected QOpenGLFunctions_2_0
 {
     Q_OBJECT
 public:

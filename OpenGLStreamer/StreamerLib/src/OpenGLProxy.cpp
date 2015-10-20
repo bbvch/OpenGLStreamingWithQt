@@ -11,9 +11,9 @@
 #include <array>
 #include <cassert>
 
-#define CREATE_INVOKER(NAME) {#NAME, std::make_shared<FunctionCallResolver<1, decltype(&QOpenGLFunctions::NAME)>>(&QOpenGLFunctions::NAME, *this)}
-#define CREATE_INVOKER_V(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), std::make_shared<FunctionCallResolver<VSIZE, decltype(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v)>>(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v, *this)}
-#define CREATE_INVOKER_M(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), std::make_shared<FunctionCallResolver<VSIZE*VSIZE, decltype(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v)>>(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v, *this)}
+#define CREATE_INVOKER(NAME) {#NAME, std::make_shared<FunctionCallResolver<1, decltype(&QOpenGLFunctions_2_0::NAME)>>(&QOpenGLFunctions_2_0::NAME, *this)}
+#define CREATE_INVOKER_V(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), std::make_shared<FunctionCallResolver<VSIZE, decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this)}
+#define CREATE_INVOKER_M(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), std::make_shared<FunctionCallResolver<VSIZE*VSIZE, decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this)}
 
 OpenGLProxy::OpenGLProxy(ProxyType proxyType, bool debug, QObject *parent) :
     QObject(parent),
@@ -28,7 +28,8 @@ OpenGLProxy::OpenGLProxy(ProxyType proxyType, bool debug, QObject *parent) :
                             CREATE_INVOKER(glVertexAttribPointer),
                             CREATE_INVOKER(glDrawElements),
                             CREATE_INVOKER(glGetUniformLocation),
-                            CREATE_INVOKER(glBindTexture)
+                            CREATE_INVOKER(glBindTexture),
+                            CREATE_INVOKER(glGetBufferSubData)
                             }),
     mSerializer(debug)
 
