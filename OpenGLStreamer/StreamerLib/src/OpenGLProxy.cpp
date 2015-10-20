@@ -51,6 +51,8 @@ void OpenGLProxy::initialize()
 void OpenGLProxy::onBinaryMessageReceived(const QByteArray &message)
 {
     mMessageQueue.enqueue(message);
+    if (mDebug)
+        qDebug() << "Queue size:" << mMessageQueue.size();
 }
 
 void OpenGLProxy::update()
@@ -73,4 +75,9 @@ void OpenGLProxy::update()
             invoker->glCall(message);
         }
     }
+}
+
+bool OpenGLProxy::updatedNeeded()
+{
+    return !mMessageQueue.isEmpty();
 }

@@ -66,6 +66,7 @@ public:
 
     void initialize();
     void update();
+    bool updatedNeeded();
 
     template<std::size_t N, typename FunctionPtrType, typename... Args>
     typename std::enable_if<std::is_void<typename helper::MethodTraits<FunctionPtrType>::ReturnType>::value, void>::type

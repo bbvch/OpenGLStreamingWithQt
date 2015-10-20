@@ -53,7 +53,10 @@ void GlWidget::mouseReleaseEvent(QMouseEvent *e)
 
 void GlWidget::timerEvent(QTimerEvent *)
 {
-    update();
+    if (mpOpenGLProxy->updatedNeeded())
+    {
+        update();
+    }
 }
 
 QSize GlWidget::sizeHint() const
