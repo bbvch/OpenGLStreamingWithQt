@@ -50,17 +50,27 @@ void OpenGLProxy::initialize()
 
 void OpenGLProxy::onBinaryMessageReceived(const QByteArray &message)
 {
-    QString funcName(message.data());
+    mMessageQueue.enqueue(message);
+}
 
-    if (mDebug)
-        qDebug() << "OpenGL function" << funcName << "received";
-
-    auto& invoker = mOpenGLFunctionInvokers[funcName];
-
-    assert(invoker);
-
-    if (invoker)
+void OpenGLProxy::update()
+{
+    while (!mMessageQueue.isEmpty())
     {
-        invoker->glCall(message);
+        QByteArray message = mMessageQueue.takeFirst();
+
+        QString funcName(message.data());
+
+        if (mDebug)
+            qDebug() << "OpenGL function" << funcName << "received";
+
+        auto& invoker = mOpenGLFunctionInvokers[funcName];
+
+        assert(invoker);
+
+        if (invoker)
+        {
+            invoker->glCall(message);
+        }
     }
 }

@@ -10,6 +10,7 @@
 #include <QObject>
 #include <QOpenGLFunctions>
 #include <QHash>
+#include <QQueue>
 
 #include <memory>
 #include <type_traits>
@@ -64,6 +65,7 @@ public:
     explicit OpenGLProxy(ProxyType proxyType, bool debug = false, QObject *parent = 0);
 
     void initialize();
+    void update();
 
     template<std::size_t N, typename FunctionPtrType, typename... Args>
     typename std::enable_if<std::is_void<typename helper::MethodTraits<FunctionPtrType>::ReturnType>::value, void>::type
@@ -155,6 +157,7 @@ private:
 private slots:
     void onBinaryMessageReceived(const QByteArray &message);
 
+
 private:
     // akasi TODO client and server must have same interface and be created with factory method
     std::unique_ptr<OpenGLServer> mpOpenGLServer;
@@ -163,6 +166,7 @@ private:
     bool mDebug;
     QHash<QString, std::shared_ptr<FunctionInvoker>> mOpenGLFunctionInvokers;
     Serializer mSerializer;
+    QQueue<QByteArray> mMessageQueue;
 };
 
 #endif // OPENGLPROXY_H

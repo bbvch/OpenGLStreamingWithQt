@@ -134,5 +134,5 @@ void GlWidget::initTextures()
 
 void GlWidget::paintGL()
 {
-
+    mpOpenGLProxy->update();
 }
