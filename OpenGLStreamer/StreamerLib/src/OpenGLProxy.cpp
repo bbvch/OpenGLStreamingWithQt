@@ -13,13 +13,14 @@
 
 #define CREATE_INVOKER(NAME) {#NAME, std::make_shared<FunctionCallResolver<1, decltype(&QOpenGLFunctions::NAME)>>(&QOpenGLFunctions::NAME, *this)}
 #define CREATE_INVOKER_V(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), std::make_shared<FunctionCallResolver<VSIZE, decltype(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v)>>(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v, *this)}
+#define CREATE_INVOKER_M(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), std::make_shared<FunctionCallResolver<VSIZE*VSIZE, decltype(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v)>>(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v, *this)}
 
 OpenGLProxy::OpenGLProxy(ProxyType proxyType, bool debug, QObject *parent) :
     QObject(parent),
     mProxyType(proxyType),
     mDebug(debug),
     mOpenGLFunctionInvokers({CREATE_INVOKER(glClear),
-                            CREATE_INVOKER_V(glUniformMatrix, 4, f),
+                            CREATE_INVOKER_M(glUniformMatrix, 4, f),
                             CREATE_INVOKER(glUniform1i),
                             CREATE_INVOKER(glBindBuffer),
                             CREATE_INVOKER(glGetAttribLocation),

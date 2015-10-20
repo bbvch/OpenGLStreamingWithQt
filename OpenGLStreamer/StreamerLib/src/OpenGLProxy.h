@@ -21,6 +21,8 @@
 #define STRINGIFY(STR) #STR
 #define OPENGL_CALL(NAME, ...) mpOpenGLProxy->glCall<1>(&QOpenGLFunctions::NAME, #NAME, __VA_ARGS__)
 #define OPENGL_CALL_V(NAME, VSIZE, DTYPE, ...) mpOpenGLProxy->glCall<VSIZE>(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), __VA_ARGS__)
+#define OPENGL_CALL_M(NAME, VSIZE, DTYPE, ...) mpOpenGLProxy->glCall<VSIZE*VSIZE>(&QOpenGLFunctions::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), __VA_ARGS__)
+
 
 namespace helper
 {

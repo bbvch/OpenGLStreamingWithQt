@@ -157,7 +157,7 @@ void GlWidget::paintGL()
 
     // Set modelview-projection matrix
     //program.setUniformValue("mvp_matrix", projection * matrix);
-    OPENGL_CALL_V(glUniformMatrix, 4, f, OPENGL_CALL(glGetUniformLocation, program.programId(), "mvp_matrix"),
+    OPENGL_CALL_M(glUniformMatrix, 4, f, OPENGL_CALL(glGetUniformLocation, program.programId(), "mvp_matrix"),
                 1, GL_FALSE, (projection * matrix).constData());
 
     // Use texture unit 0 which contains cube.png
