@@ -8,7 +8,7 @@ TEST(Serializer, IntIsSerialized)
 
    int i = 123456;
 
-   Archive a = s.serialize(i);
+   Archive a = s.serialize(1, i);
 
    const QByteArray &result = a.getData();
 
@@ -25,7 +25,7 @@ TEST(Serializer, FloatIsSerialized)
 
     float f = 123456.1234;
 
-    Archive a = s.serialize(f);
+    Archive a = s.serialize(1, f);
 
     const QByteArray &result = a.getData();
 
@@ -42,7 +42,7 @@ TEST(Serializer, DoubleIsSerialized)
 
     double d = 14.5e-14;
 
-    Archive a = s.serialize(d);
+    Archive a = s.serialize(1, d);
 
     const QByteArray &result = a.getData();
 
@@ -59,7 +59,7 @@ TEST(Serializer, BoolIsSerialized)
 
     bool b = true;
 
-    Archive a = s.serialize(b);
+    Archive a = s.serialize(1, b);
 
     const QByteArray &result = a.getData();
 
@@ -70,12 +70,27 @@ TEST(Serializer, BoolIsSerialized)
     EXPECT_TRUE(std::equal(expected, expected+1, result.constData()));
 }
 
-TEST(Serializer, PointerIsSerialized)
+TEST(Serializer, PtrCharIsSerialized)
+{
+    Serializer s;
+
+    Archive a = s.serialize(1, "some_string");
+
+    const QByteArray &data = a.getData();
+
+    QString expected("some_string");
+    QString result(data.constBegin());
+
+    EXPECT_EQ(12, data.length());
+    EXPECT_EQ(expected, result);
+}
+
+TEST(Serializer, PtrVoidIsSerialized)
 {
     Serializer s;
 
     int d = 15;
-    int *ptr = &d;
+    void *ptr = &d;
 
     long long address = (long long)ptr;
 
@@ -90,11 +105,29 @@ TEST(Serializer, PointerIsSerialized)
     EXPECT_EQ(expected, result);
 }
 
+TEST(Serializer, PtrFloatIsSerialized)
+{
+    Serializer s;
+
+    std::array<float, 4> f{1.6, 1.7, 1e-4, 456.9};
+    float *ptr = &f[0];
+
+    Archive a = s.serialize(f.size(), ptr);
+
+    const QByteArray &data = a.getData();
+
+    std::vector<char> expected((const char*)&f[0], (const char*)&f[0] + sizeof(f));
+    std::vector<char> result(data.constBegin(), data.constEnd());
+
+    EXPECT_EQ(sizeof(f), data.length());
+    EXPECT_EQ(expected, result);
+}
+
 TEST(Serializer, RValuesAreSerialized)
 {
     Serializer s;
 
-    Archive a = s.serialize(1, 1.3);
+    Archive a = s.serialize(1, 1, 1.3);
 
     auto i = 1;
     auto f = 1.3;
@@ -110,74 +143,3 @@ TEST(Serializer, RValuesAreSerialized)
     EXPECT_EQ(sizeof(i) + sizeof(f), data.length());
     EXPECT_EQ(expected, result);
 }
-/*
-TEST(Serializer, PODTypesAreSerialized)
-{
-    Serializer s;
-
-    struct PodTypes
-    {
-        unsigned char      uc;
-        signed char        sc;
-        unsigned short     us;
-        signed short       ss;
-        unsigned int       ui;
-        signed int         si;
-        unsigned long long ul;
-        signed long long   sl;
-        float              f ;
-        double             d ;
-    };
-
-    union Union
-    {
-        double             d;
-        unsigned char      uc;
-    };
-
-    PodTypes podTypes;
-    Union unionData;
-
-    podTypes.uc  = 255;
-    podTypes.sc  = -128;
-    podTypes.us  = 65535;
-    podTypes.ss  = -32768;
-    podTypes.ui  = 4294967295;
-    podTypes.si  = -2147483648;
-    podTypes.ul  = 184467440737091615;
-    podTypes.sl  = -92233720368545808;
-    podTypes.f   = -3.4e-38;
-    podTypes.d   = 1.7e+308;
-
-    unionData.d = 0.56e5;
-
-    int *psi = &podTypes.si;
-    signed char *psc = &podTypes.sc;
-    double *pd = &podTypes.d;
-    bool b = true;
-
-    long long apsi = (long long)psi;
-    long long apsc = (long long)psc;
-    long long apd = (long long)pd;
-
-    Archive a = s.serialize(1, podTypes, psi, psc, pd, b, unionData);
-
-    const QByteArray &data = a.getData();
-
-    std::vector<char> expected;
-    expected.insert(expected.end(), (const char*)&podTypes, (const char*)&podTypes + sizeof(PodTypes));
-    expected.insert(expected.end(), (const char*)&apsi, (const char*)&apsi + sizeof(apsi));
-    expected.insert(expected.end(), (const char*)&apsc, (const char*)&apsc + sizeof(apsc));
-    expected.insert(expected.end(), (const char*)&apd, (const char*)&apd + sizeof(apd));
-    expected.insert(expected.end(), b);
-    expected.insert(expected.end(), (const char*)&unionData, (const char*)&unionData + sizeof(Union));
-    std::vector<char> result(data.constBegin(), data.constEnd());
-
-    EXPECT_EQ(sizeof(PodTypes) +
-              sizeof(int*) +
-              sizeof(signed char*) +
-              sizeof(double*) +
-              sizeof(bool) +
-              sizeof(Union), data.length());
-    EXPECT_EQ(expected, result);
-}*/
