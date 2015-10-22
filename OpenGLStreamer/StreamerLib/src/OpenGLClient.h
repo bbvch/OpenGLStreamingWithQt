@@ -24,12 +24,15 @@ public:
     void update();
     bool updatedNeeded();
 
+    bool eventFilter(QObject *obj, QEvent *ev) override;
+
 private slots:
     void onConnected();
     void onDisconnected();
     void onBinaryMessageReceived(const QByteArray &message);
 
 private:
+    QObject* mObj;
     QWebSocket mWebSocket;
     QUrl mUrl;
     bool mDebug;

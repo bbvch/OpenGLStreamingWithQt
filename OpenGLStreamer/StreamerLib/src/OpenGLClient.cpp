@@ -5,8 +5,13 @@
 **************************************************************************/
 
 #include "OpenGLClient.h"
+#include "EventSerialization.h"
+#include "Events.h"
+
 #include <QDebug>
 #include <QApplication>
+#include <QDataStream>
+#include <QInputEvent>
 
 #include <cassert>
 
@@ -14,6 +19,7 @@ QT_USE_NAMESPACE
 
 OpenGLClient::OpenGLClient(const QUrl &url, bool debug, QObject *parent) :
     OpenGLProxy(debug, parent),
+    mObj(parent),
     mUrl(url),
     mDebug(debug),
     mOpenGLFunctionInvokers({CREATE_INVOKER(glClear),
@@ -44,7 +50,7 @@ void OpenGLClient::onConnected()
     QObject::connect(&mWebSocket, &QWebSocket::binaryMessageReceived,
             this, &OpenGLClient::onBinaryMessageReceived);
 
-    //qApp->installEventFilter(this);
+    qApp->installEventFilter(this);
 }
 
 void OpenGLClient::onBinaryMessageReceived(const QByteArray &message)
@@ -56,26 +62,27 @@ void OpenGLClient::onBinaryMessageReceived(const QByteArray &message)
 
 void OpenGLClient::onDisconnected()
 {
-    //qApp->removeEventFilter(this);
+    qApp->removeEventFilter(this) ;
 }
 
-/*bool OpenGLClient::eventFilter(QObject *obj, QEvent *ev)
+bool OpenGLClient::eventFilter(QObject *obj , QEvent *ev)
 {
-    if (!isChild(obj, m_Obj))
-        return false;
+    (void)obj;
 
-    QEvent *clonedEv = cloneEvent(ev);
-
-    if (clonedEv)
+    if (dynamic_cast<const QMouseEvent*>(ev))
     {
-        int timeOffset;
-        QDateTime curDt(QDateTime::currentDateTime());
-        timeOffset = m_RecordingStartTime.daysTo(curDt) * 24 * 3600 * 1000 + m_RecordingStartTime.time().msecsTo(curDt.time());
-        m_Recording.push_back(EventDelivery(timeOffset, obj, clonedEv));
-    }
+        const QMouseEvent& mouseEvent = *static_cast<const QMouseEvent*>(ev);
 
+        if (mDebug)
+            qDebug() << "Serializing mouse event";
+
+        Archive ar = mSerializer.serialize(1, EventTypes::eMouseEvent, mouseEvent.type(),
+                                           mouseEvent.localPos(), mouseEvent.windowPos(), mouseEvent.screenPos(),
+                                           mouseEvent.button(), (quint32)mouseEvent.buttons(), (quint32)mouseEvent.modifiers());
+        mWebSocket.sendBinaryMessage(ar.getData());
+    }
     return false;
-}*/
+}
 
 void OpenGLClient::update()
 {

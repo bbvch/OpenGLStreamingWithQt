@@ -8,6 +8,7 @@
 #define ARCHIVE_H
 
 #include <QByteArray>
+#include <QPointF>
 
 #include <algorithm>
 #include <type_traits>
@@ -34,13 +35,16 @@ public:
         : mNumElemsIfPtr(numElemsIfPtr)
     {}
 
-    explicit Archive(const QByteArray &data, const std::size_t &numElemsIfPtr = 1)
+    explicit Archive(const QByteArray &data, const std::size_t &numElemsIfPtr = 1, bool skipFunctionName = true)
         : mData(data)
         , mNumElemsIfPtr(numElemsIfPtr)
     {
         mDataPointer = data.constData();
-        while(*(mDataPointer++) != '\0')
-        {}
+        if (skipFunctionName)
+        {
+            while(*(mDataPointer++) != '\0')
+            {}
+        }
     }
 
     Archive(Archive &&) = default;
@@ -81,6 +85,13 @@ public:
         return *this;
     }
 
+    Archive &operator<<(const QPointF &value)
+    {
+        operator<<(value.x());
+        operator<<(value.y());
+        return *this;
+    }
+
     template<typename T>
     typename std::enable_if <std::is_trivial<T>::value && !std::is_pointer<T>::value , Archive &>::type
         operator>>(T &value)
@@ -117,6 +128,12 @@ public:
         return *this;
     }
 
+    Archive &operator>>(QPointF &value)
+    {
+        operator>>(value.rx());
+        operator>>(value.ry());
+        return *this;
+    }
 
     const QByteArray &getData() const
     {

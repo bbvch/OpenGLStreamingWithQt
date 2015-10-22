@@ -5,10 +5,15 @@
 **************************************************************************/
 
 #include "OpenGLServer.h"
+#include "Events.h"
 
 #include <QWebSocketServer>
 #include <QWebSocket>
+#include <QEvent>
 #include <QDebug>
+
+#include <tuple>
+#include <cassert>
 
 QT_USE_NAMESPACE
 
@@ -52,14 +57,11 @@ void OpenGLServer::sendBinaryMessage(const QByteArray &message)
     }
 }
 
-void OpenGLServer::processBinaryMessage(QByteArray message)
+void OpenGLServer::processBinaryMessage(const QByteArray &message)
 {
-    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    if (mDebug)
-        qDebug() << "Binary Message received:" << message;
-    if (pClient) {
-        pClient->sendBinaryMessage(message);
-    }
+    Archive ar(message);
+    QEvent* event = mSerializer.deserializeEvent(message);
+    assert(event != nullptr);
 }
 
 void OpenGLServer::socketDisconnected()

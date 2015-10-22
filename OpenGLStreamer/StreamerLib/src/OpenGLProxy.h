@@ -154,7 +154,7 @@ private:
         return (this->*funcPtr)(std::get<S>(params)...);
     }
 
-private:
+protected:
     bool mDebug;
     Serializer mSerializer;
 };

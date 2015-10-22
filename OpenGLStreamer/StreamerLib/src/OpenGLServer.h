@@ -27,7 +27,7 @@ signals:
 
 private slots:
     void onNewConnection();
-    void processBinaryMessage(QByteArray message);
+    void processBinaryMessage(const QByteArray &message);
     void socketDisconnected();
     void sendBinaryMessage(const QByteArray &message);
 

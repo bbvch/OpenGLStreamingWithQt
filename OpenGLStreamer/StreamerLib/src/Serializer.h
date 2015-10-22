@@ -38,6 +38,8 @@ public:
         return std::move(ar);
     }
 
+    QEvent *deserializeEvent(const QByteArray &data);
+
 private:
     template <std::size_t I, typename... Args>
     inline typename std::enable_if<(I < sizeof...(Args)), void>::type
