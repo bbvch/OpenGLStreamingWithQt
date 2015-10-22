@@ -8,8 +8,7 @@ CONFIG += staticlib
 
 SOURCES += \
     src/OpenGLServer.cpp \
-    src/OpenGLClient.cpp \
-    src/OpenGLProxy.cpp
+    src/OpenGLClient.cpp
 
 HEADERS += \
     src/Archive.h \

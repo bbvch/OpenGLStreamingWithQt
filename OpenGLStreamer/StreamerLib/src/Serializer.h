@@ -9,41 +9,34 @@
 
 #include "Archive.h"
 
-#include <QObject>
 #include <QDebug>
 
 #include <tuple>
 
-class Serializer : public QObject
+class Serializer
 {
-    Q_OBJECT
 public:
-    explicit Serializer(bool debug = false,  QObject *parent = 0)
-        : QObject(parent)
-        , mDebug(debug)
+    explicit Serializer(bool debug = false)
+        : mDebug(debug)
     {}
 
     template<typename... Args>
-    Archive serialize(std::size_t lengthIfPtrPassed, Args &&...args)
+    Archive serialize(std::size_t numElemsIfPtr, Args &&...args)
     {
-        Archive ar(lengthIfPtrPassed);
+        Archive ar(numElemsIfPtr);
         serializeArguments<0, Args...>(ar, std::move(std::forward_as_tuple(args...)));
 
         return std::move(ar);
     }
 
     template<typename... Args>
-    Archive deserialize(const QByteArray &data, std::size_t lengthIfPtrPassed, std::tuple<Args...> &params)
+    Archive deserialize(const QByteArray &data, std::size_t numElemsIfPtr, std::tuple<Args...> &params)
     {
-        Archive ar(data, lengthIfPtrPassed);
+        Archive ar(data, numElemsIfPtr);
         deserializeArguments<0, Args...>(ar, params);
 
         return std::move(ar);
     }
-
-signals:
-
-public slots:
 
 private:
     template <std::size_t I, typename... Args>

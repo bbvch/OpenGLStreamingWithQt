@@ -7,26 +7,35 @@
 #ifndef OPENGLCLIENT_H
 #define OPENGLCLIENT_H
 
-#include <QtCore/QObject>
-#include <QtWebSockets/QWebSocket>
+#include "OpenGLProxy.h"
 
-class OpenGLClient : public QObject
+#include <QWebSocket>
+#include <QHash>
+#include <QQueue>
+
+#include <memory>
+
+class OpenGLClient : public OpenGLProxy
 {
     Q_OBJECT
 public:
     explicit OpenGLClient(const QUrl &url, bool debug = false, QObject *parent = Q_NULLPTR);
 
-signals:
-    void closed();
-    void binaryMessageReceived(const QByteArray &message);
+    void update();
+    bool updatedNeeded();
 
 private slots:
     void onConnected();
+    void onDisconnected();
+    void onBinaryMessageReceived(const QByteArray &message);
 
 private:
     QWebSocket mWebSocket;
     QUrl mUrl;
     bool mDebug;
+    QHash<QString, std::shared_ptr<OpenGLProxy::FunctionInvoker>> mOpenGLFunctionInvokers;
+    QQueue<QByteArray> mMessageQueue;
+
 };
 
 #endif // OPENGLCLIENT_H

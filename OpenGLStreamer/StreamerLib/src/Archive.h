@@ -8,7 +8,6 @@
 #define ARCHIVE_H
 
 #include <QByteArray>
-#include <QString>
 
 #include <algorithm>
 #include <type_traits>
@@ -31,13 +30,13 @@ namespace helper
 class Archive
 {
 public:
-    explicit Archive(std::size_t lengthIfPtrPassed = 1)
-        : mLengthIfPtrPassed(lengthIfPtrPassed)
+    explicit Archive(std::size_t numElemsIfPtr = 1)
+        : mNumElemsIfPtr(numElemsIfPtr)
     {}
 
-    explicit Archive(const QByteArray &data, std::size_t lengthIfPtrPassed = 1)
+    explicit Archive(const QByteArray &data, std::size_t numElemsIfPtr = 1)
         : mData(data)
-        , mLengthIfPtrPassed(lengthIfPtrPassed)
+        , mNumElemsIfPtr(numElemsIfPtr)
     {
         mDataPointer = data.constData();
         while(*(mDataPointer++) != '\0')
@@ -77,7 +76,7 @@ public:
         }
         else
         {
-            mData.append(reinterpret_cast<const char *>(value), helper::SizeOfHelper<Type>::value*mLengthIfPtrPassed);
+            mData.append(reinterpret_cast<const char *>(value), helper::SizeOfHelper<Type>::value*mNumElemsIfPtr);
         }
         return *this;
     }
@@ -113,7 +112,7 @@ public:
         else
         {
             value = (Type *)mDataPointer;
-            mDataPointer += helper::SizeOfHelper<Type>::value*mLengthIfPtrPassed;
+            mDataPointer += helper::SizeOfHelper<Type>::value*mNumElemsIfPtr;
         }
         return *this;
     }
@@ -126,7 +125,7 @@ public:
 
 private:
     QByteArray mData;
-    std::size_t mLengthIfPtrPassed;
+    std::size_t mNumElemsIfPtr;
     const char *mDataPointer{nullptr};
 };
 

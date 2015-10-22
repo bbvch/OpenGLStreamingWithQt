@@ -13,7 +13,7 @@
 
 #include "GeometryEngine.h"
 
-class OpenGLProxy;
+class OpenGLClient;
 
 class GlWidget : public QOpenGLWidget
 {
@@ -50,7 +50,7 @@ private:
     QVector3D rotationAxis;
     qreal angularSpeed;
     QQuaternion rotation;
-    std::unique_ptr<OpenGLProxy> mpOpenGLProxy;
+    std::unique_ptr<OpenGLClient> mpOpenGLClient;
 };
 
 #endif // GLWIDGET_H

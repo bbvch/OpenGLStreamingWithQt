@@ -44,12 +44,12 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
 
-class OpenGLProxy;
+class OpenGLServer;
 
 class GeometryEngine
 {
 public:
-    GeometryEngine(OpenGLProxy* pOpenGLProxy);
+    GeometryEngine(OpenGLServer* pOpenGLServer);
     virtual ~GeometryEngine();
 
     void drawCubeGeometry(QOpenGLShaderProgram *program);
@@ -60,7 +60,7 @@ private:
     QOpenGLBuffer arrayBuf;
     QOpenGLBuffer indexBuf;
 
-    OpenGLProxy* mpOpenGLProxy;
+    OpenGLServer* mpOpenGLServer;
 };
 
 #endif // GEOMETRYENGINE_H

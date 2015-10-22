@@ -43,7 +43,7 @@
 #include <QVector2D>
 #include <QVector3D>
 
-#include "OpenGLProxy.h"
+#include "OpenGLServer.h"
 
 struct VertexData
 {
@@ -51,9 +51,9 @@ struct VertexData
     QVector2D texCoord;
 };
 
-GeometryEngine::GeometryEngine(OpenGLProxy* pOpenGLProxy)
+GeometryEngine::GeometryEngine(OpenGLServer* pOpenGLServer)
     : indexBuf(QOpenGLBuffer::IndexBuffer)
-    , mpOpenGLProxy(pOpenGLProxy)
+    , mpOpenGLServer(pOpenGLServer)
 {
     // Generate 2 VBOs
     arrayBuf.create();

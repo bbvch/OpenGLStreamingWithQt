@@ -4,14 +4,14 @@
 
 #include <math.h>
 
-#include "OpenGLProxy.h"
+#include "OpenGLClient.h"
 
 GlWidget::GlWidget(bool debug, QWidget *parent) :
     QOpenGLWidget(parent),
     mpGeometries(0),
     texture(0),
     angularSpeed(0),
-    mpOpenGLProxy(new OpenGLProxy(OpenGLProxy::eProxyClient, debug))
+    mpOpenGLClient(new OpenGLClient(QUrl(QStringLiteral("ws://localhost:1234")), debug, parent ? parent : this))
 {}
 
 GlWidget::~GlWidget()
@@ -29,7 +29,6 @@ void GlWidget::mousePressEvent(QMouseEvent* event)
     // Save mouse press position
     mousePressPosition = QVector2D(event->localPos());
 }
-
 
 void GlWidget::mouseReleaseEvent(QMouseEvent *e)
 {
@@ -53,7 +52,7 @@ void GlWidget::mouseReleaseEvent(QMouseEvent *e)
 
 void GlWidget::timerEvent(QTimerEvent *)
 {
-    if (mpOpenGLProxy->updatedNeeded())
+    if (mpOpenGLClient->updatedNeeded())
     {
         update();
     }
@@ -66,7 +65,7 @@ QSize GlWidget::sizeHint() const
 
 void GlWidget::initializeGL()
 {
-    mpOpenGLProxy->initialize();
+    mpOpenGLClient->initialize();
 
     glClearColor(0, 0, 0, 1);
 
@@ -137,5 +136,5 @@ void GlWidget::initTextures()
 
 void GlWidget::paintGL()
 {
-    mpOpenGLProxy->update();
+    mpOpenGLClient->update();
 }

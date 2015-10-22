@@ -5,14 +5,15 @@
 **************************************************************************/
 
 #include "OpenGLServer.h"
-#include "QtWebSockets/qwebsocketserver.h"
-#include "QtWebSockets/qwebsocket.h"
-#include <QtCore/QDebug>
+
+#include <QWebSocketServer>
+#include <QWebSocket>
+#include <QDebug>
 
 QT_USE_NAMESPACE
 
 OpenGLServer::OpenGLServer(quint16 port, bool debug, QObject *parent) :
-    QObject(parent),
+    OpenGLProxy(debug, parent),
     mpWebSocketServer(new QWebSocketServer(QStringLiteral("Echo Server"),
                                             QWebSocketServer::NonSecureMode, this)),
     mClients(),
@@ -24,6 +25,7 @@ OpenGLServer::OpenGLServer(quint16 port, bool debug, QObject *parent) :
         connect(mpWebSocketServer, &QWebSocketServer::newConnection,
                 this, &OpenGLServer::onNewConnection);
         connect(mpWebSocketServer, &QWebSocketServer::closed, this, &OpenGLServer::closed);
+        connect(this, &OpenGLProxy::glFunctionSerialized, this, &OpenGLServer::sendBinaryMessage);
     }
 }
 
