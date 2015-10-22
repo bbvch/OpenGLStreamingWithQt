@@ -21,7 +21,7 @@ public:
     {}
 
     template<typename... Args>
-    Archive serialize(std::size_t numElemsIfPtr, Args &&...args)
+    Archive serialize(const std::size_t &numElemsIfPtr, Args &&...args)
     {
         Archive ar(numElemsIfPtr);
         serializeArguments<0, Args...>(ar, std::move(std::forward_as_tuple(args...)));
@@ -30,10 +30,10 @@ public:
     }
 
     template<typename... Args>
-    Archive deserialize(const QByteArray &data, std::size_t numElemsIfPtr, std::tuple<Args...> &params)
+    Archive deserialize(const QByteArray &data, const std::size_t &numElemsIfPtr, std::tuple<Args ...> &params)
     {
         Archive ar(data, numElemsIfPtr);
-        deserializeArguments<0, Args...>(ar, params);
+        deserializeArguments<0, Args ...>(ar, params);
 
         return std::move(ar);
     }

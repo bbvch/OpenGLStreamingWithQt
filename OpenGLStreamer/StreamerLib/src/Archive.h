@@ -30,11 +30,11 @@ namespace helper
 class Archive
 {
 public:
-    explicit Archive(std::size_t numElemsIfPtr = 1)
+    explicit Archive(const std::size_t &numElemsIfPtr = 1)
         : mNumElemsIfPtr(numElemsIfPtr)
     {}
 
-    explicit Archive(const QByteArray &data, std::size_t numElemsIfPtr = 1)
+    explicit Archive(const QByteArray &data, const std::size_t &numElemsIfPtr = 1)
         : mData(data)
         , mNumElemsIfPtr(numElemsIfPtr)
     {

@@ -33,8 +33,8 @@ namespace helper
     {
        using ClassType = Class;
        using ReturnType = Return;
-       using MethodPtrType = Return (Class::*)(Args...);
-       using ParameterType = std::tuple<Args...>;
+       using MethodPtrType = Return (Class::*)(Args ...);
+       using ParameterType = std::tuple<Args ...>;
        using Arity = std::tuple_size<ParameterType>;
     };
 
