@@ -64,8 +64,8 @@ void OpenGLServer::processBinaryMessage(const QByteArray &message)
     QInputEvent* event = mSerializer.deserializeEvent(message);
     assert(event != nullptr);
     assert(mObj != nullptr);
-
-    qDebug() << "Posing event to" << mObj->metaObject()->className();
+    if (mDebug)
+        qDebug() << "Posing event to" << mObj->metaObject()->className();
     qApp->postEvent(mObj, event);
 }
 
