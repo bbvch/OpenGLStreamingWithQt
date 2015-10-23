@@ -8,12 +8,12 @@
 #define OPENGLSERVER_H
 
 #include <QList>
-#include <QByteArray>
 
 #include "OpenGLProxy.h"
 
 QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 QT_FORWARD_DECLARE_CLASS(QWebSocket)
+QT_FORWARD_DECLARE_CLASS(QByteArray)
 
 class OpenGLServer : public OpenGLProxy
 {
@@ -32,10 +32,10 @@ private slots:
     void sendBinaryMessage(const QByteArray &message);
 
 private:
-    QObject* mObj;
+    QObject* mObj{nullptr};
     QWebSocketServer *mpWebSocketServer;
     QList<QWebSocket *> mClients;
-    bool mDebug;
+    bool mDebug{false};
 };
 
 #endif //OPENGLSERVER_H

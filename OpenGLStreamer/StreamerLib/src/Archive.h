@@ -9,6 +9,7 @@
 
 #include <QByteArray>
 #include <QPointF>
+#include <QFlag>
 
 #include <algorithm>
 #include <type_traits>
@@ -92,6 +93,12 @@ public:
         return *this;
     }
 
+    template <typename T>
+    Archive &operator<<(const QFlags<T> &value)
+    {
+        return operator<<((typename QFlags<T>::Int)value);
+    }
+
     template<typename T>
     typename std::enable_if <std::is_trivial<T>::value && !std::is_pointer<T>::value , Archive &>::type
         operator>>(T &value)
@@ -132,6 +139,15 @@ public:
     {
         operator>>(value.rx());
         operator>>(value.ry());
+        return *this;
+    }
+
+    template <typename T>
+    Archive &operator>>(QFlags<T> &value)
+    {
+        typename QFlags<T>::Int flags;
+        operator>>(flags);
+        value = QFlags<T>(flags);
         return *this;
     }
 

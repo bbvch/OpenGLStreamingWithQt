@@ -11,6 +11,7 @@
 #include <QCoreApplication>
 #include <QWebSocket>
 #include <QInputEvent>
+#include <QByteArray>
 #include <QDebug>
 
 #include <tuple>
@@ -61,7 +62,7 @@ void OpenGLServer::sendBinaryMessage(const QByteArray &message)
 
 void OpenGLServer::processBinaryMessage(const QByteArray &message)
 {
-    QInputEvent* event = mSerializer.deserializeEvent(message);
+    QInputEvent* event = mSerializer.deserialize(message);
     assert(event != nullptr);
     assert(mObj != nullptr);
     if (mDebug)

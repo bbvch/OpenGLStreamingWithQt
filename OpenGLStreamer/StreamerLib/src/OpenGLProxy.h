@@ -52,7 +52,6 @@ public:
         typename FunctionInfo::ParameterType params{std::forward<Args>(args)...};
 
         callHelper(funcPtr, params, s);
-
         if (mDebug)
             qDebug() << "OpenGL function" << funcName << "called";
 
@@ -129,7 +128,7 @@ private:
     }
 
 protected:
-    bool mDebug;
+    bool mDebug{false};
     Serializer mSerializer;
 };
 

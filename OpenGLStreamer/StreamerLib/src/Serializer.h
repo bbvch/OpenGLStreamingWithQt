@@ -41,7 +41,7 @@ public:
         return std::move(ar);
     }
 
-    QInputEvent *deserializeEvent(const QByteArray &data);
+    QInputEvent *deserialize(const QByteArray &data);
 
 private:
     template <std::size_t I, typename... Args>
@@ -75,18 +75,18 @@ private:
     {}
 
     template <typename T, typename ...Args>
-    QInputEvent *createEvent(Archive &ar)
+    inline QInputEvent *deserializeEvent(Archive &ar)
     {
         std::tuple<Args ...> params;
 
         deserializeArguments<0>(ar, params);
         auto s = typename helper::gens<std::tuple_size<decltype(params)>::value>::type();
 
-        return createEventHelper<T>(params, s);
+        return createEvent<T>(params, s);
     }
 
     template <typename T, typename ...Args, std::size_t ...S>
-    inline QInputEvent *createEventHelper(std::tuple<Args ...> &params, helper::seq<S...>)
+    inline QInputEvent *createEvent(std::tuple<Args ...> &params, helper::seq<S...>)
     {
         return new T(std::get<S>(params)...);
     }

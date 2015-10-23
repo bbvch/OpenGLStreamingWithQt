@@ -75,7 +75,7 @@ bool OpenGLClient::eventFilter(QObject *obj , QEvent *ev)
 
         Archive ar = mSerializer.serialize(1, EventTypes::eMouseEvent, mouseEvent.type(),
                                            mouseEvent.localPos(), mouseEvent.windowPos(), mouseEvent.screenPos(),
-                                           mouseEvent.button(), (quint32)mouseEvent.buttons(), (quint32)mouseEvent.modifiers());
+                                           mouseEvent.button(), mouseEvent.buttons(), mouseEvent.modifiers());
         mWebSocket.sendBinaryMessage(ar.getData());
     }
     return false;

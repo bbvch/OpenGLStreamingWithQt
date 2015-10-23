@@ -35,7 +35,7 @@ private:
     QObject* mObj;
     QWebSocket mWebSocket;
     QUrl mUrl;
-    bool mDebug;
+    bool mDebug{false};
     QHash<QString, std::shared_ptr<OpenGLProxy::FunctionInvoker>> mOpenGLFunctionInvokers;
     QQueue<QByteArray> mMessageQueue;
 
