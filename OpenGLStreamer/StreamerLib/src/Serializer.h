@@ -8,10 +8,13 @@
 #define SERIALIZER_H
 
 #include "Archive.h"
+#include "Helpers.h"
 
 #include <QDebug>
 
 #include <tuple>
+
+class QInputEvent;
 
 class Serializer
 {
@@ -38,7 +41,7 @@ public:
         return std::move(ar);
     }
 
-    QEvent *deserializeEvent(const QByteArray &data);
+    QInputEvent *deserializeEvent(const QByteArray &data);
 
 private:
     template <std::size_t I, typename... Args>
@@ -70,6 +73,23 @@ private:
     inline typename std::enable_if<(I == sizeof...(Args)), void>::type
        deserializeArguments(Archive &, std::tuple<Args ...> &)
     {}
+
+    template <typename T, typename ...Args>
+    QInputEvent *createEvent(Archive &ar)
+    {
+        std::tuple<Args ...> params;
+
+        deserializeArguments<0>(ar, params);
+        auto s = typename helper::gens<std::tuple_size<decltype(params)>::value>::type();
+
+        return createEventHelper<T>(params, s);
+    }
+
+    template <typename T, typename ...Args, std::size_t ...S>
+    inline QInputEvent *createEventHelper(std::tuple<Args ...> &params, helper::seq<S...>)
+    {
+        return new T(std::get<S>(params)...);
+    }
 
 private:
     bool mDebug{false};

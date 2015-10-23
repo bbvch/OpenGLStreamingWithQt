@@ -9,9 +9,9 @@
 
 #include <QMouseEvent>
 
-QEvent *Serializer::deserializeEvent(const QByteArray &data)
+QInputEvent *Serializer::deserializeEvent(const QByteArray &data)
 {
-    QEvent *event = nullptr;
+    QInputEvent *event = nullptr;
     Archive ar(data, 1, false);
     EventTypes eventType;
 
@@ -22,19 +22,20 @@ QEvent *Serializer::deserializeEvent(const QByteArray &data)
 
     if (eventType == EventTypes::eMouseEvent)
     {
-        std::tuple<QEvent::Type,
-                   QPointF, QPointF, QPointF,
-                   Qt::MouseButton, Qt::MouseButtons::Int, Qt::KeyboardModifiers::Int> eventData;
-        deserializeArguments<0>(ar, eventData);
-
-        event = new QMouseEvent(std::get<0>(eventData),
-                                std::get<1>(eventData),
-                                std::get<2>(eventData),
-                                std::get<3>(eventData),
-                                std::get<4>(eventData),
-                                (Qt::MouseButtons)std::get<5>(eventData),
-                                (Qt::KeyboardModifiers)std::get<6>(eventData));
+        event = createEvent<QMouseEvent,
+                            QEvent::Type,
+                            QPointF, QPointF, QPointF,
+                            Qt::MouseButton,
+                            Qt::MouseButtons::Int,
+                            Qt::KeyboardModifiers::Int>(ar);
     }
+    //TODO akasi: add other events here
+    /*else if (eventType == EventTypes::eKeyEvent)
+    {
+
+
+    }*/
+
     return event;
 }
 

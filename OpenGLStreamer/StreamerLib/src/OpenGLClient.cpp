@@ -5,7 +5,6 @@
 **************************************************************************/
 
 #include "OpenGLClient.h"
-#include "EventSerialization.h"
 #include "Events.h"
 
 #include <QDebug>
@@ -67,14 +66,12 @@ void OpenGLClient::onDisconnected()
 
 bool OpenGLClient::eventFilter(QObject *obj , QEvent *ev)
 {
-    (void)obj;
-
     if (dynamic_cast<const QMouseEvent*>(ev))
     {
         const QMouseEvent& mouseEvent = *static_cast<const QMouseEvent*>(ev);
 
         if (mDebug)
-            qDebug() << "Serializing mouse event";
+            qDebug() << "Serializing mouse event from" << obj->metaObject()->className();
 
         Archive ar = mSerializer.serialize(1, EventTypes::eMouseEvent, mouseEvent.type(),
                                            mouseEvent.localPos(), mouseEvent.windowPos(), mouseEvent.screenPos(),

@@ -8,8 +8,9 @@
 #include "Events.h"
 
 #include <QWebSocketServer>
+#include <QCoreApplication>
 #include <QWebSocket>
-#include <QEvent>
+#include <QInputEvent>
 #include <QDebug>
 
 #include <tuple>
@@ -19,6 +20,7 @@ QT_USE_NAMESPACE
 
 OpenGLServer::OpenGLServer(quint16 port, bool debug, QObject *parent) :
     OpenGLProxy(debug, parent),
+    mObj(parent),
     mpWebSocketServer(new QWebSocketServer(QStringLiteral("Echo Server"),
                                             QWebSocketServer::NonSecureMode, this)),
     mClients(),
@@ -59,9 +61,12 @@ void OpenGLServer::sendBinaryMessage(const QByteArray &message)
 
 void OpenGLServer::processBinaryMessage(const QByteArray &message)
 {
-    Archive ar(message);
-    QEvent* event = mSerializer.deserializeEvent(message);
+    QInputEvent* event = mSerializer.deserializeEvent(message);
     assert(event != nullptr);
+    assert(mObj != nullptr);
+
+    qDebug() << "Posing event to" << mObj->metaObject()->className();
+    qApp->postEvent(mObj, event);
 }
 
 void OpenGLServer::socketDisconnected()

@@ -9,7 +9,12 @@
 
 enum EventTypes
 {
-    eMouseEvent = 1,
+    eContextMenuEvent = 1,
+    eKeyEvent,
+    eMouseEvent,
+    eTabletEvent,
+    eTouchEvent,
+    eWheelEvent
 };
 
 #endif // EVENTS_H

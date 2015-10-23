@@ -32,6 +32,7 @@ private slots:
     void sendBinaryMessage(const QByteArray &message);
 
 private:
+    QObject* mObj;
     QWebSocketServer *mpWebSocketServer;
     QList<QWebSocket *> mClients;
     bool mDebug;

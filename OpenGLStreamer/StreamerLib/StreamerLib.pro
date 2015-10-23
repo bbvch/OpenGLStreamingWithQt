@@ -17,7 +17,8 @@ HEADERS += \
     src/OpenGLProxy.h \
     src/OpenGLServer.h \
     src/OpenGLClient.h \
-    src/Events.h
+    src/Events.h \
+    src/Helpers.h
 
 unix {
     target.path = /usr/lib
