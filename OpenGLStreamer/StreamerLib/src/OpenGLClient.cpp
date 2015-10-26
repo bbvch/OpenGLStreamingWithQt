@@ -72,7 +72,7 @@ void OpenGLClient::onDisconnected()
 
 bool OpenGLClient::eventFilter(QObject *obj , QEvent *ev)
 {
-    if (dynamic_cast<const QMouseEvent*>(ev))
+    if (dynamic_cast<const QMouseEvent*>(ev) && findOpenGLWidget(obj->metaObject()->className()))
     {
         if (mDebug)
             qDebug() << "Serializing mouse event";

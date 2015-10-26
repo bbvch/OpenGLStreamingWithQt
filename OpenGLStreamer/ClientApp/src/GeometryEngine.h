@@ -44,8 +44,6 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
 
-class OpenGLProxy;
-
 class GeometryEngine
 {
 public:
@@ -57,8 +55,6 @@ private:
 
     QOpenGLBuffer arrayBuf;
     QOpenGLBuffer indexBuf;
-
-    OpenGLProxy* mpOpenGLProxy;
 };
 
 #endif // GEOMETRYENGINE_H

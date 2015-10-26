@@ -43,8 +43,6 @@
 #include <QVector2D>
 #include <QVector3D>
 
-#include "OpenGLProxy.h"
-
 struct VertexData
 {
     QVector3D position;

@@ -8,16 +8,18 @@
 #define OPENGLPROXY_H
 
 #include <QObject>
+#include <QOpenGLContext>
 #include <QOpenGLFunctions_2_0>
 #include <QOpenGLWidget>
 #include <QList>
 
 #include <type_traits>
+#include <cassert>
 
 #include "Serializer.h"
 #include "Helpers.h"
 
-class OpenGLProxy : public QObject, protected QOpenGLFunctions_2_0
+class OpenGLProxy : public QObject
 {
     Q_OBJECT
 
@@ -33,7 +35,9 @@ public:
 
     void initialize()
     {
-        initializeOpenGLFunctions();
+        QOpenGLContext *context = QOpenGLContext::currentContext();
+        assert(context != nullptr);
+        mOpenGLFuncs = context->versionFunctions<QOpenGLFunctions_2_0>();
     }
 
     void registerOpenGLWidget(QOpenGLWidget *widget)
@@ -134,13 +138,14 @@ private:
     typename helper::MethodTraits<FunctionPtrType>::ReturnType
     inline callHelper(FunctionPtrType funcPtr, ParameterType &params, helper::seq<S...>)
     {
-        return (this->*funcPtr)(std::get<S>(params)...);
+        return (mOpenGLFuncs->*funcPtr)(std::get<S>(params)...);
     }
 
 protected:
     QList<QOpenGLWidget*> mWidgets;
     bool mDebug{false};
     Serializer mSerializer;
+    QOpenGLFunctions_2_0 *mOpenGLFuncs;
 };
 
 #endif // OPENGLPROXY_H

@@ -24,32 +24,6 @@ GlWidget::~GlWidget()
     doneCurrent();
 }
 
-/*void GlWidget::mousePressEvent(QMouseEvent* event)
-{
-    // Save mouse press position
-    mousePressPosition = QVector2D(event->localPos());
-}*/
-
-/*void GlWidget::mouseReleaseEvent(QMouseEvent *e)
-{
-    // Mouse release position - mouse press position
-    QVector2D diff = QVector2D(e->localPos()) - mousePressPosition;
-
-    // Rotation axis is perpendicular to the mouse position difference
-    // vector
-    QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
-
-    // Accelerate angular speed relative to the length of the mouse sweep
-    qreal acc = diff.length() / 100.0;
-
-    // Calculate new rotation axis as weighted sum
-    rotationAxis = (rotationAxis * angularSpeed + n * acc).normalized();
-
-    // Increase angular speed
-    angularSpeed += acc;
-}*/
-
-
 void GlWidget::timerEvent(QTimerEvent *)
 {
     if (OpenGLClient::get().updatedNeeded())
@@ -84,21 +58,6 @@ void GlWidget::initializeGL()
     // Use QBasicTimer because its faster than QTimer
     timer.start(12, this);
 }
-
-/*void GlWidget::resizeGL(int width, int height)
-{
-    // Calculate aspect ratio
-    qreal aspect = qreal(width) / qreal(height ? height : 1);
-
-    // Set near plane to 3.0, far plane to 7.0, field of view 45 degrees
-    const qreal zNear = 3.0, zFar = 7.0, fov = 45.0;
-
-    // Reset projection
-    projection.setToIdentity();
-
-    // Set perspective projection
-    projection.perspective(fov, aspect, zNear, zFar);
-}*/
 
 void GlWidget::initShaders()
 {
