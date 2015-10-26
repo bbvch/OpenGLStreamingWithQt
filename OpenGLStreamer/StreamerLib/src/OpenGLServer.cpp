@@ -50,6 +50,15 @@ void OpenGLServer::onNewConnection()
     connect(pSocket, &QWebSocket::disconnected, this, &OpenGLServer::socketDisconnected);
 
     mClients << pSocket;
+
+    updateWidgets();
+}
+
+void OpenGLServer::updateWidgets()
+{
+    foreach (QOpenGLWidget *pWidget, mWidgets) {
+        pWidget->update();
+    }
 }
 
 void OpenGLServer::sendBinaryMessage(const QByteArray &message)

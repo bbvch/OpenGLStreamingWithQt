@@ -8,7 +8,6 @@
 #include "Events.h"
 
 #include <QMouseEvent>
-#include <QPaintEvent>
 
 QEvent *Serializer::deserialize(Archive &ar)
 {
@@ -27,13 +26,6 @@ QEvent *Serializer::deserialize(Archive &ar)
                                  Qt::MouseButton,
                                  Qt::MouseButtons,
                                  Qt::KeyboardModifiers>(ar);
-    }
-    else if (eventType == EventTypes::eUpdateEvent)
-    {
-        if (mDebug)
-            qDebug() << "UpdateEvent was received";
-
-        event = new QPaintEvent(QRegion());
     }
     //TODO akasi: add other events here
     /*else if (eventType == EventTypes::eKeyEvent)

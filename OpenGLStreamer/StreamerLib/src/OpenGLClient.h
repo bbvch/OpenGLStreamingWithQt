@@ -13,8 +13,7 @@
 #include <QWebSocket>
 #include <QHash>
 #include <QQueue>
-
-#include <memory>
+#include <QSharedPointer>
 
 class OpenGLClient : public OpenGLProxy
 {
@@ -43,12 +42,11 @@ private:
     QWebSocket mWebSocket;
     QUrl mUrl;
     bool mDebug{false};
-    QHash<QString, std::shared_ptr<OpenGLProxy::FunctionInvoker>> mOpenGLFunctionInvokers;
+    QHash<QString, QSharedPointer<OpenGLProxy::FunctionInvoker>> mOpenGLFunctionInvokers;
     QQueue<QByteArray> mMessageQueue;
 
     template <typename T>
     friend class Singleton;
-
 };
 
 #endif // OPENGLCLIENT_H

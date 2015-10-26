@@ -9,7 +9,6 @@
 
 enum EventTypes
 {
-    eUpdateEvent = 1,
     eContextMenuEvent,
     eKeyEvent,
     eMouseEvent,

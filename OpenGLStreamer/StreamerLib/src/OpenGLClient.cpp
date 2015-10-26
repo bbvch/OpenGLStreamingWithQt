@@ -16,9 +16,9 @@
 
 QT_USE_NAMESPACE
 
-#define CREATE_INVOKER(NAME) {#NAME, std::make_shared<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME)>>(&QOpenGLFunctions_2_0::NAME, *this)}
-#define CREATE_INVOKER_V(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), std::make_shared<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE)}
-#define CREATE_INVOKER_M(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), std::make_shared<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE*VSIZE)}
+#define CREATE_INVOKER(NAME) {#NAME, QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME)>>::create(&QOpenGLFunctions_2_0::NAME, *this)}
+#define CREATE_INVOKER_V(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>::create(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE)}
+#define CREATE_INVOKER_M(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>::create(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE*VSIZE)}
 
 OpenGLClient::OpenGLClient(const QUrl &url, bool debug, QObject *parent) :
     OpenGLProxy(debug, parent),
@@ -53,9 +53,6 @@ void OpenGLClient::onConnected()
             this, &OpenGLClient::onBinaryMessageReceived);
 
     qApp->installEventFilter(this);
-
-    //mWebSocket.sendBinaryMessage(mSerializer.serialize(1, EventTypes::eUpdateEvent).getData());
-
 }
 
 void OpenGLClient::onBinaryMessageReceived(const QByteArray &message)
@@ -72,7 +69,10 @@ void OpenGLClient::onDisconnected()
 
 bool OpenGLClient::eventFilter(QObject *obj , QEvent *ev)
 {
-    if (dynamic_cast<const QMouseEvent*>(ev) && findOpenGLWidget(obj->metaObject()->className()))
+    if (!findOpenGLWidget(obj->metaObject()->className()))
+        return false;
+
+    if (dynamic_cast<const QMouseEvent*>(ev))
     {
         if (mDebug)
             qDebug() << "Serializing mouse event";
@@ -84,6 +84,7 @@ bool OpenGLClient::eventFilter(QObject *obj , QEvent *ev)
                                            mouseEvent.button(), mouseEvent.buttons(), mouseEvent.modifiers());
         mWebSocket.sendBinaryMessage(ar.getData());
     }
+
     return false;
 }
 
