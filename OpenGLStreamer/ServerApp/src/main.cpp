@@ -2,6 +2,7 @@
 #include <QtCore/QCommandLineOption>
 #include <QApplication>
 
+#include "OpenGLServer.h"
 #include "GlWidget.h"
 
 int main(int argc, char *argv[])
@@ -18,7 +19,9 @@ int main(int argc, char *argv[])
     parser.process(a);
     bool debug = parser.isSet(dbgOption);
 
-    GlWidget w(debug);
+    Singleton<OpenGLServer>::createInstance(1234, debug);
+    GlWidget w;
+
     w.show();
 
     return a.exec();

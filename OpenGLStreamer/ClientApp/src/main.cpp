@@ -3,6 +3,7 @@
 #include <QtCore/QCommandLineOption>
 
 #include "GlWidget.h"
+#include "OpenGLClient.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +19,9 @@ int main(int argc, char *argv[])
     parser.process(a);
     bool debug = parser.isSet(dbgOption);
 
-    GlWidget w(debug);
+    Singleton<OpenGLClient>::createInstance(QUrl(QStringLiteral("ws://localhost:1234")), debug);
+
+    GlWidget w;
     w.show();
 
     return a.exec();

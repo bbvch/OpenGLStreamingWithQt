@@ -7,6 +7,8 @@
 #ifndef HELPERS
 #define HELPERS
 
+#define STRINGIFY(STR) #STR
+
 namespace helper
 {
     template<typename T>

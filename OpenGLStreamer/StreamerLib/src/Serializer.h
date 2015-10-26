@@ -14,7 +14,7 @@
 
 #include <tuple>
 
-class QInputEvent;
+class QEvent;
 
 class Serializer
 {
@@ -41,7 +41,7 @@ public:
         return std::move(ar);
     }
 
-    QInputEvent *deserialize(const QByteArray &data);
+    QEvent *deserialize(Archive &ar);
 
 private:
     template <std::size_t I, typename... Args>
@@ -75,7 +75,7 @@ private:
     {}
 
     template <typename T, typename ...Args>
-    inline QInputEvent *deserializeEvent(Archive &ar)
+    inline QEvent *deserializeEvent(Archive &ar)
     {
         std::tuple<Args ...> params;
 
@@ -86,7 +86,7 @@ private:
     }
 
     template <typename T, typename ...Args, std::size_t ...S>
-    inline QInputEvent *createEvent(std::tuple<Args ...> &params, helper::seq<S...>)
+    inline QEvent *createEvent(std::tuple<Args ...> &params, helper::seq<S...>)
     {
         return new T(std::get<S>(params)...);
     }

@@ -18,7 +18,8 @@ HEADERS += \
     src/OpenGLServer.h \
     src/OpenGLClient.h \
     src/Events.h \
-    src/Helpers.h
+    src/Helpers.h \
+    src/Singleton.h
 
 unix {
     target.path = /usr/lib

@@ -21,7 +21,6 @@ QT_USE_NAMESPACE
 
 OpenGLServer::OpenGLServer(quint16 port, bool debug, QObject *parent) :
     OpenGLProxy(debug, parent),
-    mObj(parent),
     mpWebSocketServer(new QWebSocketServer(QStringLiteral("Echo Server"),
                                             QWebSocketServer::NonSecureMode, this)),
     mClients(),
@@ -62,12 +61,16 @@ void OpenGLServer::sendBinaryMessage(const QByteArray &message)
 
 void OpenGLServer::processBinaryMessage(const QByteArray &message)
 {
-    QInputEvent* event = mSerializer.deserialize(message);
-    assert(event != nullptr);
-    assert(mObj != nullptr);
-    if (mDebug)
-        qDebug() << "Posing event to" << mObj->metaObject()->className();
-    qApp->postEvent(mObj, event);
+    Archive ar(message);
+
+    if (QObject *obj = findOpenGLWidget(ar.getData().constData()))
+    {
+        QEvent* event = mSerializer.deserialize(ar);
+        assert(event != nullptr);
+        if (mDebug)
+            qDebug() << "Posting event to" << obj->metaObject()->className();
+        qApp->postEvent(obj, event);
+    }
 }
 
 void OpenGLServer::socketDisconnected()

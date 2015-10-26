@@ -20,18 +20,13 @@ class GlWidget : public QOpenGLWidget
     Q_OBJECT
 
 public:
-    GlWidget(bool debug, QWidget *parent = 0);
+    GlWidget(QWidget *parent = 0);
     ~GlWidget();
     QSize sizeHint() const;
 
 protected:
     void initializeGL() Q_DECL_OVERRIDE;
-    void resizeGL(int width, int height) Q_DECL_OVERRIDE;
     void paintGL() Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    //void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    //void wheelEvent(QWheelEvent *event);
     void timerEvent(QTimerEvent *e) Q_DECL_OVERRIDE;
 
     void initShaders();
@@ -43,14 +38,6 @@ private:
     GeometryEngine *mpGeometries;
 
     QOpenGLTexture *texture;
-
-    QMatrix4x4 projection;
-
-    QVector2D mousePressPosition;
-    QVector3D rotationAxis;
-    qreal angularSpeed;
-    QQuaternion rotation;
-    std::unique_ptr<OpenGLClient> mpOpenGLClient;
 };
 
 #endif // GLWIDGET_H

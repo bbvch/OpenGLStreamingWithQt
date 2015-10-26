@@ -9,20 +9,13 @@
 
 #include <QObject>
 #include <QOpenGLFunctions_2_0>
+#include <QOpenGLWidget>
+#include <QList>
 
 #include <type_traits>
 
 #include "Serializer.h"
 #include "Helpers.h"
-
-#define STRINGIFY(STR) #STR
-#define OPENGL_CALL(NAME, ...) mpOpenGLServer->glCall(&QOpenGLFunctions_2_0::NAME, #NAME, 1, __VA_ARGS__)
-#define OPENGL_CALL_V(NAME, VSIZE, DTYPE, ...) mpOpenGLServer->glCall(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), VSIZE, __VA_ARGS__)
-#define OPENGL_CALL_M(NAME, VSIZE, DTYPE, ...) mpOpenGLServer->glCall(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), VSIZE*VSIZE, __VA_ARGS__)
-
-#define CREATE_INVOKER(NAME) {#NAME, std::make_shared<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME)>>(&QOpenGLFunctions_2_0::NAME, *this)}
-#define CREATE_INVOKER_V(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), std::make_shared<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE)}
-#define CREATE_INVOKER_M(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), std::make_shared<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE*VSIZE)}
 
 class OpenGLProxy : public QObject, protected QOpenGLFunctions_2_0
 {
@@ -41,6 +34,23 @@ public:
     void initialize()
     {
         initializeOpenGLFunctions();
+    }
+
+    void registerOpenGLWidget(QOpenGLWidget *widget)
+    {
+        mWidgets.append(widget);
+    }
+
+    QOpenGLWidget *findOpenGLWidget(QString name)
+    {
+        foreach (QOpenGLWidget *pWidget, mWidgets)
+        {
+            if (name == pWidget->metaObject()->className())
+            {
+                return pWidget;
+            }
+        }
+        return nullptr;
     }
 
     template<typename FunctionPtrType, typename... Args>
@@ -128,6 +138,7 @@ private:
     }
 
 protected:
+    QList<QOpenGLWidget*> mWidgets;
     bool mDebug{false};
     Serializer mSerializer;
 };

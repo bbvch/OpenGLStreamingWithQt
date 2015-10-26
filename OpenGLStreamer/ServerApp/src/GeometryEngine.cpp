@@ -51,9 +51,8 @@ struct VertexData
     QVector2D texCoord;
 };
 
-GeometryEngine::GeometryEngine(OpenGLServer* pOpenGLServer)
+GeometryEngine::GeometryEngine()
     : indexBuf(QOpenGLBuffer::IndexBuffer)
-    , mpOpenGLServer(pOpenGLServer)
 {
     // Generate 2 VBOs
     arrayBuf.create();

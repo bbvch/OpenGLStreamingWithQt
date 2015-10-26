@@ -6,13 +6,14 @@
 
 #include "OpenGLServer.h"
 
-GlWidget::GlWidget(bool debug, QWidget *parent) :
+GlWidget::GlWidget(QWidget *parent) :
     QOpenGLWidget(parent),
     mpGeometries(0),
     texture(0),
-    angularSpeed(0),
-    mpOpenGLServer(new OpenGLServer(1234, debug, parent ? parent : this))
-{}
+    angularSpeed(0)
+{
+    OpenGLServer::get().registerOpenGLWidget(this);
+}
 
 GlWidget::~GlWidget()
 {
@@ -75,7 +76,7 @@ QSize GlWidget::sizeHint() const
 
 void GlWidget::initializeGL()
 {
-    mpOpenGLServer->initialize();
+    OpenGLServer::get().initialize();
 
     glClearColor(0, 0, 0, 1);
 
@@ -88,7 +89,7 @@ void GlWidget::initializeGL()
     // Enable back face culling
     glEnable(GL_CULL_FACE);
 
-    mpGeometries = new GeometryEngine(mpOpenGLServer.get());
+    mpGeometries = new GeometryEngine();
 
     // Use QBasicTimer because its faster than QTimer
     timer.start(12, this);

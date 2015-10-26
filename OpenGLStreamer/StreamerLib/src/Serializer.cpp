@@ -8,11 +8,11 @@
 #include "Events.h"
 
 #include <QMouseEvent>
+#include <QPaintEvent>
 
-QInputEvent *Serializer::deserialize(const QByteArray &data)
+QEvent *Serializer::deserialize(Archive &ar)
 {
-    QInputEvent *event = nullptr;
-    Archive ar(data, 1, false);
+    QEvent *event = nullptr;
     EventTypes eventType;
 
     ar >> eventType;
@@ -20,14 +20,20 @@ QInputEvent *Serializer::deserialize(const QByteArray &data)
     if (eventType == EventTypes::eMouseEvent)
     {
         if (mDebug)
-            qDebug() << "Deserializing mouse event";
-
+            qDebug() << "MouseEvent was received";
         event = deserializeEvent<QMouseEvent,
                                  QEvent::Type,
                                  QPointF, QPointF, QPointF,
                                  Qt::MouseButton,
                                  Qt::MouseButtons,
                                  Qt::KeyboardModifiers>(ar);
+    }
+    else if (eventType == EventTypes::eUpdateEvent)
+    {
+        if (mDebug)
+            qDebug() << "UpdateEvent was received";
+
+        event = new QPaintEvent(QRegion());
     }
     //TODO akasi: add other events here
     /*else if (eventType == EventTypes::eKeyEvent)

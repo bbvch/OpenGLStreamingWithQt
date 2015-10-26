@@ -7,6 +7,7 @@
 #ifndef OPENGLCLIENT_H
 #define OPENGLCLIENT_H
 
+#include "Singleton.h"
 #include "OpenGLProxy.h"
 
 #include <QWebSocket>
@@ -18,8 +19,15 @@
 class OpenGLClient : public OpenGLProxy
 {
     Q_OBJECT
-public:
+private:
     explicit OpenGLClient(const QUrl &url, bool debug = false, QObject *parent = Q_NULLPTR);
+
+public:
+
+    static OpenGLClient &get()
+    {
+        return Singleton<OpenGLClient>::instance();
+    }
 
     void update();
     bool updatedNeeded();
@@ -32,12 +40,14 @@ private slots:
     void onBinaryMessageReceived(const QByteArray &message);
 
 private:
-    QObject* mObj;
     QWebSocket mWebSocket;
     QUrl mUrl;
     bool mDebug{false};
     QHash<QString, std::shared_ptr<OpenGLProxy::FunctionInvoker>> mOpenGLFunctionInvokers;
     QQueue<QByteArray> mMessageQueue;
+
+    template <typename T>
+    friend class Singleton;
 
 };
 

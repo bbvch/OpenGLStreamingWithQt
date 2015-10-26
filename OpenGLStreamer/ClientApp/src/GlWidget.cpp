@@ -6,13 +6,13 @@
 
 #include "OpenGLClient.h"
 
-GlWidget::GlWidget(bool debug, QWidget *parent) :
+GlWidget::GlWidget(QWidget *parent) :
     QOpenGLWidget(parent),
     mpGeometries(0),
-    texture(0),
-    angularSpeed(0),
-    mpOpenGLClient(new OpenGLClient(QUrl(QStringLiteral("ws://localhost:1234")), debug, parent ? parent : this))
-{}
+    texture(0)
+{
+    OpenGLClient::get().registerOpenGLWidget(this);
+}
 
 GlWidget::~GlWidget()
 {
@@ -24,13 +24,13 @@ GlWidget::~GlWidget()
     doneCurrent();
 }
 
-void GlWidget::mousePressEvent(QMouseEvent* event)
+/*void GlWidget::mousePressEvent(QMouseEvent* event)
 {
     // Save mouse press position
     mousePressPosition = QVector2D(event->localPos());
-}
+}*/
 
-void GlWidget::mouseReleaseEvent(QMouseEvent *e)
+/*void GlWidget::mouseReleaseEvent(QMouseEvent *e)
 {
     // Mouse release position - mouse press position
     QVector2D diff = QVector2D(e->localPos()) - mousePressPosition;
@@ -47,13 +47,14 @@ void GlWidget::mouseReleaseEvent(QMouseEvent *e)
 
     // Increase angular speed
     angularSpeed += acc;
-}
+}*/
 
 
 void GlWidget::timerEvent(QTimerEvent *)
 {
-    if (mpOpenGLClient->updatedNeeded())
+    if (OpenGLClient::get().updatedNeeded())
     {
+        setUpdatesEnabled(true);
         update();
     }
 }
@@ -65,7 +66,7 @@ QSize GlWidget::sizeHint() const
 
 void GlWidget::initializeGL()
 {
-    mpOpenGLClient->initialize();
+    OpenGLClient::get().initialize();
 
     glClearColor(0, 0, 0, 1);
 
@@ -84,7 +85,7 @@ void GlWidget::initializeGL()
     timer.start(12, this);
 }
 
-void GlWidget::resizeGL(int width, int height)
+/*void GlWidget::resizeGL(int width, int height)
 {
     // Calculate aspect ratio
     qreal aspect = qreal(width) / qreal(height ? height : 1);
@@ -97,7 +98,7 @@ void GlWidget::resizeGL(int width, int height)
 
     // Set perspective projection
     projection.perspective(fov, aspect, zNear, zFar);
-}
+}*/
 
 void GlWidget::initShaders()
 {
@@ -136,5 +137,6 @@ void GlWidget::initTextures()
 
 void GlWidget::paintGL()
 {
-    mpOpenGLClient->update();
+    OpenGLClient::get().update();
+    setUpdatesEnabled(false);
 }

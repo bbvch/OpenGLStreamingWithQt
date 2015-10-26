@@ -9,18 +9,14 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 
-#include <memory>
-
 #include "GeometryEngine.h"
-
-class OpenGLServer;
 
 class GlWidget : public QOpenGLWidget
 {
     Q_OBJECT
 
 public:
-    GlWidget(bool debug, QWidget *parent = 0);
+    GlWidget(QWidget *parent = 0);
     ~GlWidget();
     QSize sizeHint() const;
 
@@ -50,7 +46,6 @@ private:
     QVector3D rotationAxis;
     qreal angularSpeed;
     QQuaternion rotation;
-    std::unique_ptr<OpenGLServer> mpOpenGLServer;
 };
 
 #endif // GLWIDGET_H
