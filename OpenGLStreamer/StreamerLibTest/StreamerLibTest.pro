@@ -10,7 +10,8 @@ QT      += websockets
 
 SOURCES += main.cpp \
     SerializerTests.cpp \
-    ArchiveTests.cpp
+    ArchiveTests.cpp \
+    HelpersTests.cpp
 
 LIBS += /usr/lib/libgtest.a
 

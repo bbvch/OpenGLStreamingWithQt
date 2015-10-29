@@ -7,6 +7,10 @@
 #ifndef HELPERS
 #define HELPERS
 
+#include <QtGlobal>
+
+#include <cassert>
+
 #define STRINGIFY(STR) #STR
 
 namespace helper
@@ -34,6 +38,9 @@ namespace helper
     {
        typedef seq<S...> type;
     };
+
+    quint16 encodeCOB(const quint8 *srcBuf, quint16 srcLen, quint8 *destBuf);
+    quint16 decodeCOB(const quint8 *srcBuf, quint16 srcLen, quint8 *destBuf);
 }
 
 #endif // HELPERS

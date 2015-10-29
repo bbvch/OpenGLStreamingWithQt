@@ -148,10 +148,10 @@ void GlWidget::initTextures()
 void GlWidget::paintGL()
 {
     // Clear color and depth buffer
-    OPENGL_CALL(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //texture->bind();
-    OPENGL_CALL(glBindTexture, texture->target(), texture->textureId());
+    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glBindTexture, texture->target(), texture->textureId());
 
     // Calculate model view transformation
     QMatrix4x4 matrix;
@@ -160,12 +160,12 @@ void GlWidget::paintGL()
 
     // Set modelview-projection matrix
     //program.setUniformValue("mvp_matrix", projection * matrix);
-    OPENGL_CALL_M(glUniformMatrix, 4, f, OPENGL_CALL(glGetUniformLocation, program.programId(), "mvp_matrix"),
+    OPENGL_CALL_MATRIX(OpenGLProxy::eServerAndClientCall, glUniformMatrix, 4, f, OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glGetUniformLocation, program.programId(), "mvp_matrix"),
                 1, GL_FALSE, (projection * matrix).constData());
 
     // Use texture unit 0 which contains cube.png
     //program.setUniformValue("texture", 0);
-    OPENGL_CALL(glUniform1i, OPENGL_CALL(glGetUniformLocation, program.programId(), "texture"), 0);
+    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glUniform1i, OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glGetUniformLocation, program.programId(), "texture"), 0);
 
     // Draw cube geometry
     mpGeometries->drawCubeGeometry(&program);

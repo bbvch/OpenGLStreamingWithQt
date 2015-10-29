@@ -27,6 +27,13 @@ signals:
     void glFunctionSerialized(const QByteArray &message);
 
 public:
+    enum CallType
+    {
+        eServerCall,
+        eClientCall,
+        eServerAndClientCall
+    };
+
     explicit OpenGLProxy(bool debug = false, QObject *parent = 0)
         : QObject(parent)
         , mDebug(debug)
@@ -38,6 +45,7 @@ public:
         QOpenGLContext *context = QOpenGLContext::currentContext();
         assert(context != nullptr);
         mOpenGLFuncs = context->versionFunctions<QOpenGLFunctions_2_0>();
+        assert(mOpenGLFuncs != nullptr);
     }
 
     void registerOpenGLWidget(QOpenGLWidget *widget)
@@ -59,24 +67,31 @@ public:
 
     template<typename FunctionPtrType, typename... Args>
     typename std::enable_if<std::is_void<typename helper::MethodTraits<FunctionPtrType>::ReturnType>::value, void>::type
-    glCall(FunctionPtrType funcPtr, const char *funcName, std::size_t numElemsIfPtr, Args &&...args)
+    glCall(CallType callType, FunctionPtrType funcPtr, const char *funcName, std::size_t numElemsIfPtr, Args &&...args)
     {
         using FunctionInfo = helper::MethodTraits<decltype(funcPtr)>;
         auto s = typename helper::gens<FunctionInfo::Arity::value>::type();
         typename FunctionInfo::ParameterType params{std::forward<Args>(args)...};
 
-        callHelper(funcPtr, params, s);
-        if (mDebug)
-            qDebug() << "OpenGL function" << funcName << "called";
-
-        serialize(numElemsIfPtr, funcName, params, s);
+        if (callType == eServerCall || callType == eServerAndClientCall)
+        {
+            callHelper(funcPtr, params, s);
+            if (mDebug)
+                qDebug() << "OpenGL function" << funcName << "called";
+        }
+        if (callType == eClientCall || callType == eServerAndClientCall)
+        {
+            serialize(numElemsIfPtr, funcName, params, s);
+        }
     }
 
     template<typename FunctionPtrType, typename... Args>
     typename std::enable_if<!std::is_void<typename helper::MethodTraits<FunctionPtrType>::ReturnType>::value,
     typename helper::MethodTraits<FunctionPtrType>::ReturnType>::type
-    glCall(FunctionPtrType funcPtr, const char *funcName, std::size_t numElemsIfPtr, Args &&...args)
+    glCall(CallType callType, FunctionPtrType funcPtr, const char *funcName, std::size_t numElemsIfPtr, Args &&...args)
     {
+        assert(callType != eClientCall);
+
         using FunctionInfo = helper::MethodTraits<FunctionPtrType>;
         auto s = typename helper::gens<FunctionInfo::Arity::value>::type();
         typename FunctionInfo::ParameterType params{std::forward<Args>(args)...};
@@ -85,7 +100,10 @@ public:
         if (mDebug)
             qDebug() << "OpenGL function" << funcName << "called with return value:" << result;
 
-        serialize(numElemsIfPtr, funcName, params, s);
+        if (callType == eServerAndClientCall)
+        {
+            serialize(numElemsIfPtr, funcName, params, s);
+        }
 
         return result;
     }
@@ -102,7 +120,7 @@ protected:
         using FunctionInfo = helper::MethodTraits<FunctionPtrType>;
         using ParameterType = typename FunctionInfo::ParameterType;
 
-        FunctionCallResolver(FunctionPtrType funcPtr, OpenGLProxy &openGLProxy, std::size_t numElemsIfPtr = 1)
+        FunctionCallResolver(FunctionPtrType funcPtr, OpenGLProxy &openGLProxy, std::size_t numElemsIfPtr = 0)
             : mFuncPtr(funcPtr)
             , mOpenGLProxy(openGLProxy)
             , mNumElemsIfPtr(numElemsIfPtr)
@@ -121,7 +139,7 @@ protected:
         FunctionPtrType mFuncPtr;
         ParameterType mParams;
         OpenGLProxy &mOpenGLProxy;
-        std::size_t mNumElemsIfPtr{1};
+        std::size_t mNumElemsIfPtr{0};
     };
 
 private:

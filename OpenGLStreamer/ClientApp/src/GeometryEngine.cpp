@@ -53,7 +53,7 @@ GeometryEngine::GeometryEngine()
     : indexBuf(QOpenGLBuffer::IndexBuffer)
 {
     // Generate 2 VBOs
-    arrayBuf.create();
+    //arrayBuf.create();
     indexBuf.create();
 
     // Initializes cube geometry and transfers it to VBOs
@@ -62,7 +62,7 @@ GeometryEngine::GeometryEngine()
 
 GeometryEngine::~GeometryEngine()
 {
-    arrayBuf.destroy();
+    //arrayBuf.destroy();
     indexBuf.destroy();
 }
 
@@ -126,8 +126,8 @@ void GeometryEngine::initCubeGeometry()
     };
 
     // Transfer vertex data to VBO 0
-    arrayBuf.bind();
-    arrayBuf.allocate(vertices, 24 * sizeof(VertexData));
+    //arrayBuf.bind();
+    //arrayBuf.allocate(vertices, 24 * sizeof(VertexData));
 
     // Transfer index data to VBO 1
     indexBuf.bind();

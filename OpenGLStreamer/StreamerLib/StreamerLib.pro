@@ -9,7 +9,8 @@ CONFIG += staticlib
 SOURCES += \
     src/OpenGLServer.cpp \
     src/OpenGLClient.cpp \
-    src/Serializer.cpp
+    src/Serializer.cpp \
+    src/Helpers.cpp
 
 HEADERS += \
     src/Archive.h \

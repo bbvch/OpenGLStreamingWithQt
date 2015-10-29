@@ -7,12 +7,15 @@
 #ifndef ARCHIVE_H
 #define ARCHIVE_H
 
+#include "Helpers.h"
+
 #include <QByteArray>
 #include <QPointF>
 #include <QFlag>
 
 #include <algorithm>
 #include <type_traits>
+#include <cstring>
 
 namespace helper
 {
@@ -25,26 +28,25 @@ namespace helper
     template <>
     struct SizeOfHelper<void>
     {
-        constexpr static std::size_t value = 0;
+        constexpr static std::size_t value = 1;
     };
 }
 
 class Archive
 {
 public:
-    explicit Archive(const std::size_t &numElemsIfPtr = 1)
+    explicit Archive(const std::size_t &numElemsIfPtr = 0)
         : mNumElemsIfPtr(numElemsIfPtr)
     {}
 
-    explicit Archive(const QByteArray &data, const std::size_t &numElemsIfPtr = 1, bool skipFunctionName = true)
+    explicit Archive(const QByteArray &data, const std::size_t &numElemsIfPtr = 0, bool skipFunctionName = true)
         : mData(data)
         , mNumElemsIfPtr(numElemsIfPtr)
     {
         mDataPointer = data.constData();
         if (skipFunctionName)
         {
-            while(*(mDataPointer++) != '\0')
-            {}
+            mDataPointer += std::strlen(mDataPointer) + 1;
         }
     }
 
@@ -74,14 +76,20 @@ public:
             mData.append(reinterpret_cast<const char *>(value));
             mData.append('\0');
         }
-        else if(std::is_same<void, Type>::value)
+        else if(std::is_same<void, Type>::value && mNumElemsIfPtr == 0)
         {
-            quintptr ptrValue = reinterpret_cast<quintptr>(value);
-            return operator<<(ptrValue);
+            return operator<<(reinterpret_cast<quintptr>(value));
         }
         else
         {
-            mData.append(reinterpret_cast<const char *>(value), helper::SizeOfHelper<Type>::value*mNumElemsIfPtr);
+            auto nBytes = helper::SizeOfHelper<Type>::value*mNumElemsIfPtr;
+            auto nBytesOverhead = nBytes/254 + 1;
+            quint8 *encodedData = new quint8 [nBytes + nBytesOverhead + 1];
+            auto nBytesEncoded = helper::encodeCOB((const quint8 *)value, nBytes, encodedData);
+            mData.append(reinterpret_cast<const char *>(encodedData), nBytesEncoded);
+            mData.append('\0');
+
+            delete[] encodedData;
         }
         return *this;
     }
@@ -119,10 +127,9 @@ public:
         if (std::is_same<char, Type>::value)
         {
             value = (Type *)mDataPointer;
-            while(*(mDataPointer++) != '\0')
-            {}
+            mDataPointer += std::strlen(mDataPointer) + 1;
         }
-        else if(std::is_same<void, Type>::value)
+        else if(std::is_same<void, Type>::value && mNumElemsIfPtr == 0)
         {
             std::copy(mDataPointer, mDataPointer + sizeof(quintptr), (char*) &value);
             mDataPointer += sizeof(quintptr);
@@ -130,7 +137,9 @@ public:
         else
         {
             value = (Type *)mDataPointer;
-            mDataPointer += helper::SizeOfHelper<Type>::value*mNumElemsIfPtr;
+            auto nBytes = std::strlen(mDataPointer);
+            helper::decodeCOB((const quint8 *)mDataPointer, nBytes, (quint8 *)mDataPointer);
+            mDataPointer += nBytes + 1;
         }
         return *this;
     }
@@ -158,7 +167,7 @@ public:
 
 private:
     QByteArray mData;
-    std::size_t mNumElemsIfPtr;
+    std::size_t mNumElemsIfPtr{0};
     const char *mDataPointer{nullptr};
 };
 

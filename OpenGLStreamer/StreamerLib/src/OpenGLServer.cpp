@@ -51,6 +51,7 @@ void OpenGLServer::onNewConnection()
 
     mClients << pSocket;
 
+    sendOpenGLBuffers();
     updateWidgets();
 }
 
@@ -59,6 +60,33 @@ void OpenGLServer::updateWidgets()
     foreach (QOpenGLWidget *pWidget, mWidgets) {
         pWidget->update();
     }
+}
+
+void OpenGLServer::sendOpenGLBuffers()
+{
+    mWidgets.first()->makeCurrent();
+
+    GLint arrayId;
+    GLint access, mapped, size, usage;
+    OPENGL_CALL(eServerCall, glGetIntegerv, GL_ARRAY_BUFFER_BINDING, &arrayId);
+    OPENGL_CALL(eServerCall, glGetBufferParameteriv, GL_ARRAY_BUFFER, GL_BUFFER_ACCESS, &access);
+    OPENGL_CALL(eServerCall, glGetBufferParameteriv, GL_ARRAY_BUFFER, GL_BUFFER_MAPPED, &mapped);
+    OPENGL_CALL(eServerCall, glGetBufferParameteriv, GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+    OPENGL_CALL(eServerCall, glGetBufferParameteriv, GL_ARRAY_BUFFER, GL_BUFFER_USAGE, &usage);
+
+    if (arrayId > 0 && size > 0)
+    {
+        quint8 *data;
+        data = new quint8 [size];
+        OPENGL_CALL(eServerCall, glGetBufferSubData, GL_ARRAY_BUFFER, 0, size, data);
+        OPENGL_CALL_ARRAY(eClientCall, glBufferData, size, GL_ARRAY_BUFFER, size, data, usage);
+        delete[] data;
+    }
+
+    /*GLint elementArrayId;
+    mOpenGLFuncs->glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &elementArrayId);*/
+
+    mWidgets.first()->doneCurrent();
 }
 
 void OpenGLServer::sendBinaryMessage(const QByteArray &message)

@@ -16,9 +16,10 @@ QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 QT_FORWARD_DECLARE_CLASS(QWebSocket)
 QT_FORWARD_DECLARE_CLASS(QByteArray)
 
-#define OPENGL_CALL(NAME, ...) Singleton<OpenGLServer>::instance().glCall(&QOpenGLFunctions_2_0::NAME, #NAME, 1, __VA_ARGS__)
-#define OPENGL_CALL_V(NAME, VSIZE, DTYPE, ...) Singleton<OpenGLServer>::instance().glCall(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), VSIZE, __VA_ARGS__)
-#define OPENGL_CALL_M(NAME, VSIZE, DTYPE, ...) Singleton<OpenGLServer>::instance().glCall(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), VSIZE*VSIZE, __VA_ARGS__)
+#define OPENGL_CALL(TYPE, NAME, ...) Singleton<OpenGLServer>::instance().glCall(TYPE, &QOpenGLFunctions_2_0::NAME, #NAME, 0, __VA_ARGS__)
+#define OPENGL_CALL_ARRAY(TYPE, NAME, ASIZE, ...) Singleton<OpenGLServer>::instance().glCall(TYPE, &QOpenGLFunctions_2_0::NAME, #NAME, ASIZE, __VA_ARGS__)
+#define OPENGL_CALL_VECTOR(TYPE, NAME, VSIZE, DTYPE, ...) Singleton<OpenGLServer>::instance().glCall(TYPE, &QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), VSIZE, __VA_ARGS__)
+#define OPENGL_CALL_MATRIX(TYPE, NAME, VSIZE, DTYPE, ...) Singleton<OpenGLServer>::instance().glCall(TYPE, &QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, STRINGIFY(NAME##VSIZE##DTYPE##v), VSIZE*VSIZE, __VA_ARGS__)
 
 class OpenGLServer : public OpenGLProxy
 {
@@ -44,6 +45,7 @@ private slots:
 
 private:
     void updateWidgets();
+    void sendOpenGLBuffers();
 
 private:
     QWebSocketServer *mpWebSocketServer;

@@ -17,15 +17,16 @@
 QT_USE_NAMESPACE
 
 #define CREATE_INVOKER(NAME) {#NAME, QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME)>>::create(&QOpenGLFunctions_2_0::NAME, *this)}
-#define CREATE_INVOKER_V(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>::create(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE)}
-#define CREATE_INVOKER_M(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>::create(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE*VSIZE)}
+#define CREATE_INVOKER_ARRAY(NAME) {#NAME, QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME)>>::create(&QOpenGLFunctions_2_0::NAME, *this, 1)}
+#define CREATE_INVOKER_VECTOR(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>::create(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE)}
+#define CREATE_INVOKER_MATRIX(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>::create(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE*VSIZE)}
 
 OpenGLClient::OpenGLClient(const QUrl &url, bool debug, QObject *parent) :
     OpenGLProxy(debug, parent),
     mUrl(url),
     mDebug(debug),
     mOpenGLFunctionInvokers({CREATE_INVOKER(glClear),
-                             CREATE_INVOKER_M(glUniformMatrix, 4, f),
+                             CREATE_INVOKER_MATRIX(glUniformMatrix, 4, f),
                              CREATE_INVOKER(glUniform1i),
                              CREATE_INVOKER(glBindBuffer),
                              CREATE_INVOKER(glGetAttribLocation),
@@ -34,7 +35,7 @@ OpenGLClient::OpenGLClient(const QUrl &url, bool debug, QObject *parent) :
                              CREATE_INVOKER(glDrawElements),
                              CREATE_INVOKER(glGetUniformLocation),
                              CREATE_INVOKER(glBindTexture),
-                             CREATE_INVOKER(glGetBufferSubData)
+                             CREATE_INVOKER_ARRAY(glBufferData)
                             })
 {
     if (mDebug)
