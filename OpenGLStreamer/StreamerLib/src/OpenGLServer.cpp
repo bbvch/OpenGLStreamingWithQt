@@ -79,6 +79,7 @@ void OpenGLServer::sendOpenGLBuffers()
         quint8 *data;
         data = new quint8 [size];
         OPENGL_CALL(eServerCall, glGetBufferSubData, GL_ARRAY_BUFFER, 0, size, data);
+        OPENGL_CALL(eClientCall, glBindBuffer, GL_ARRAY_BUFFER, arrayId);
         OPENGL_CALL_ARRAY(eClientCall, glBufferData, size, GL_ARRAY_BUFFER, size, data, usage);
         delete[] data;
     }

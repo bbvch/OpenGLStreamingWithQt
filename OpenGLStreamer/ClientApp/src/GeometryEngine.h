@@ -53,7 +53,7 @@ public:
 private:
     void initCubeGeometry();
 
-    QOpenGLBuffer arrayBuf;
+    //QOpenGLBuffer arrayBuf;
     QOpenGLBuffer indexBuf;
 };
 
