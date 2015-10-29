@@ -8,7 +8,6 @@
 
 GlWidget::GlWidget(QWidget *parent) :
     QOpenGLWidget(parent),
-    mpGeometries(0),
     texture(0)
 {
     OpenGLClient::get().registerOpenGLWidget(this);
@@ -20,7 +19,6 @@ GlWidget::~GlWidget()
     // and the buffers.
     makeCurrent();
     delete texture;
-    delete mpGeometries;
     doneCurrent();
 }
 
@@ -52,8 +50,6 @@ void GlWidget::initializeGL()
 
     // Enable back face culling
     glEnable(GL_CULL_FACE);
-
-    mpGeometries = new GeometryEngine;
 
     // Use QBasicTimer because its faster than QTimer
     timer.start(12, this);

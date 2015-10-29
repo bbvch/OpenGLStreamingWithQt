@@ -45,7 +45,8 @@ private slots:
 
 private:
     void updateWidgets();
-    void sendOpenGLBuffers();
+    void sendOpenGLBufferObjects();
+    void sendBufferObject(quint32 target, quint32 binding);
 
 private:
     QWebSocketServer *mpWebSocketServer;

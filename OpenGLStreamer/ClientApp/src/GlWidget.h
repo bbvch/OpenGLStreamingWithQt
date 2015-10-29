@@ -2,16 +2,11 @@
 #define GLWIDGET_H
 
 #include <QOpenGLWidget>
-#include <QMatrix4x4>
-#include <QQuaternion>
-#include <QVector2D>
 #include <QBasicTimer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 
 #include <memory>
-
-#include "GeometryEngine.h"
 
 class OpenGLClient;
 
@@ -35,8 +30,6 @@ protected:
 private:
     QBasicTimer timer;
     QOpenGLShaderProgram program;
-    GeometryEngine *mpGeometries;
-
     QOpenGLTexture *texture;
 };
 

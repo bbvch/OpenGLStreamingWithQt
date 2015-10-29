@@ -8,12 +8,10 @@ TEMPLATE = app
 
 SOURCES += \
     src/main.cpp \
-    src/GlWidget.cpp \
-    src/GeometryEngine.cpp
+    src/GlWidget.cpp
 
 HEADERS += \
-    src/GlWidget.h \
-    src/GeometryEngine.h
+    src/GlWidget.h
 
 
 DISTFILES += \
