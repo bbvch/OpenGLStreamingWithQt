@@ -16,10 +16,10 @@
 
 QT_USE_NAMESPACE
 
-#define CREATE_INVOKER(NAME) {#NAME, QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME)>>::create(&QOpenGLFunctions_2_0::NAME, *this)}
-#define CREATE_INVOKER_ARRAY(NAME) {#NAME, QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME)>>::create(&QOpenGLFunctions_2_0::NAME, *this, 1)}
-#define CREATE_INVOKER_VECTOR(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>::create(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE)}
-#define CREATE_INVOKER_MATRIX(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v)>>::create(&QOpenGLFunctions_2_0::NAME##VSIZE##DTYPE##v, *this, VSIZE*VSIZE)}
+#define CREATE_INVOKER(NAME) {#NAME, QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_ES2::NAME)>>::create(&QOpenGLFunctions_ES2::NAME, *this)}
+#define CREATE_INVOKER_ARRAY(NAME) {#NAME, QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_ES2::NAME)>>::create(&QOpenGLFunctions_ES2::NAME, *this, 1)}
+#define CREATE_INVOKER_VECTOR(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_ES2::NAME##VSIZE##DTYPE##v)>>::create(&QOpenGLFunctions_ES2::NAME##VSIZE##DTYPE##v, *this, VSIZE)}
+#define CREATE_INVOKER_MATRIX(NAME, VSIZE, DTYPE) {STRINGIFY(NAME##VSIZE##DTYPE##v), QSharedPointer<FunctionCallResolver<decltype(&QOpenGLFunctions_ES2::NAME##VSIZE##DTYPE##v)>>::create(&QOpenGLFunctions_ES2::NAME##VSIZE##DTYPE##v, *this, VSIZE*VSIZE)}
 
 OpenGLClient::OpenGLClient(const QUrl &url, bool debug, QObject *parent) :
     OpenGLProxy(debug, parent),

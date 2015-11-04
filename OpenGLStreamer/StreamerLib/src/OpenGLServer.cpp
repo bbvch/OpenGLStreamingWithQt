@@ -51,7 +51,7 @@ void OpenGLServer::onNewConnection()
 
     mClients << pSocket;
 
-    sendOpenGLBufferObjects();
+    sendOpenGLInitialization();
     updateWidgets();
 }
 
@@ -62,35 +62,44 @@ void OpenGLServer::updateWidgets()
     }
 }
 
-void OpenGLServer::sendOpenGLBufferObjects()
+void OpenGLServer::sendOpenGLInitialization()
 {
     mWidgets.first()->makeCurrent();
 
-    sendBufferObject(GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING);
-    sendBufferObject(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING);
+    sendOpenGLBufferObject(GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING);
+    sendOpenGLBufferObject(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING);
+
+    sendOpenGLTexture();
 
     mWidgets.first()->doneCurrent();
 }
 
-void OpenGLServer::sendBufferObject(quint32 target, quint32 binding)
+void OpenGLServer::sendOpenGLBufferObject(quint32 target, quint32 binding)
 {
     GLint bufferId;
     GLint access, mapped, size, usage;
     OPENGL_CALL(eServerCall, glGetIntegerv, binding, &bufferId);
-    OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_ACCESS, &access);
-    OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_MAPPED, &mapped);
-    OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_SIZE, &size);
-    OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_USAGE, &usage);
-
-    if (bufferId > 0 && size > 0)
+    if (bufferId > 0)
     {
-        quint8 *data;
-        data = new quint8 [size];
-        OPENGL_CALL(eServerCall, glGetBufferSubData, target, 0, size, data);
-        OPENGL_CALL(eClientCall, glBindBuffer, target, bufferId);
-        OPENGL_CALL_ARRAY(eClientCall, glBufferData, size, target, size, data, usage);
-        delete[] data;
+/*        OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_ACCESS, &access);
+        OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_MAPPED, &mapped);
+        OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_SIZE, &size);
+        OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_USAGE, &usage);
+        if (size > 0)
+        {
+            quint8 *data;
+            data = new quint8 [size];
+            OPENGL_CALL(eServerCall, glGetBufferSubData, target, 0, size, data);
+            OPENGL_CALL(eClientCall, glBindBuffer, target, bufferId);
+            OPENGL_CALL_ARRAY(eClientCall, glBufferData, size, target, size, data, usage);
+            delete[] data;
+        }*/
     }
+}
+
+void OpenGLServer::sendOpenGLTexture()
+{
+
 }
 
 void OpenGLServer::sendBinaryMessage(const QByteArray &message)
