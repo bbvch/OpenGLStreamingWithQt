@@ -3,7 +3,8 @@ TEMPLATE=subdirs
 SUBDIRS= ClientApp \
          ServerApp \
          StreamerLib \
-         StreamerLibTest
+         StreamerLibTest \
+    ApitraceLib
 
 
 # subdir of ClientApp, ServerApp and StreamerLibTest are implicitly set.
