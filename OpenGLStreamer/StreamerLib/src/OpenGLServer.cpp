@@ -21,7 +21,7 @@ QT_USE_NAMESPACE
 
 OpenGLServer::OpenGLServer(quint16 port, bool debug, QObject *parent) :
     OpenGLProxy(debug, parent),
-    mpWebSocketServer(new QWebSocketServer(QStringLiteral("Echo Server"),
+    mpWebSocketServer(new QWebSocketServer(QStringLiteral("OpenGL Server"),
                                             QWebSocketServer::NonSecureMode, this)),
     mClients(),
     mDebug(debug)
@@ -76,12 +76,12 @@ void OpenGLServer::sendOpenGLInitialization()
 
 void OpenGLServer::sendOpenGLBufferObject(quint32 target, quint32 binding)
 {
-    GLint bufferId;
+/*    GLint bufferId;
     GLint access, mapped, size, usage;
     OPENGL_CALL(eServerCall, glGetIntegerv, binding, &bufferId);
     if (bufferId > 0)
     {
-/*        OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_ACCESS, &access);
+        OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_ACCESS, &access);
         OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_MAPPED, &mapped);
         OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_SIZE, &size);
         OPENGL_CALL(eServerCall, glGetBufferParameteriv, target, GL_BUFFER_USAGE, &usage);
@@ -93,8 +93,8 @@ void OpenGLServer::sendOpenGLBufferObject(quint32 target, quint32 binding)
             OPENGL_CALL(eClientCall, glBindBuffer, target, bufferId);
             OPENGL_CALL_ARRAY(eClientCall, glBufferData, size, target, size, data, usage);
             delete[] data;
-        }*/
-    }
+        }
+    }*/
 }
 
 void OpenGLServer::sendOpenGLTexture()

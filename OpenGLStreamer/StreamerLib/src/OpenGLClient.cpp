@@ -39,7 +39,7 @@ OpenGLClient::OpenGLClient(const QUrl &url, bool debug, QObject *parent) :
                             })
 {
     if (mDebug)
-        qDebug() << "WebSocket server:" << url;
+        qDebug() << "OpenGL client:" << url;
     QObject::connect(&mWebSocket, &QWebSocket::connected, this, &OpenGLClient::onConnected);
     QObject::connect(&mWebSocket, &QWebSocket::disconnected, this, &OpenGLClient::onDisconnected);
 
