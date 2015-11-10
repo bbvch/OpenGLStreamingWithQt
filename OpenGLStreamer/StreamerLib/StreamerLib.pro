@@ -1,4 +1,5 @@
 include(../config.pri)
+include($$PWD/../ApitraceCommonLib/ApitraceCommonLib.pri)
 
 QT += gui widgets websockets
 
@@ -29,5 +30,5 @@ unix {
 
 unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceLib/ -lApitraceLib
 
-INCLUDEPATH += $$PWD/../ApitraceLib/src
+INCLUDEPATH += $$PWD/../ApitraceLib/src/trace
 DEPENDPATH += $$PWD/../ApitraceLib/src

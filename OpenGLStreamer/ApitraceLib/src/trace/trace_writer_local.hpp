@@ -37,6 +37,7 @@
 #include "trace_writer.hpp"
 
 #include <QObject>
+#include <QByteArray>
 
 namespace trace {
 
@@ -61,6 +62,12 @@ namespace trace {
 
     signals:
         void glFunctionSerialized(const QByteArray &message);
+
+    private:
+        QByteArray callData;
+
+    private :
+        virtual void onWriteBuffer(const void *sBuffer, size_t dwBytesToWrite) override;
 
     protected:
         /**

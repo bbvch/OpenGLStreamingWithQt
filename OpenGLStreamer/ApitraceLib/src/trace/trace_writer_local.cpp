@@ -82,6 +82,13 @@ LocalWriter::~LocalWriter()
     os::log("apitrace: unloaded from %s\n", process.str());
 }
 
+//virtual
+void
+LocalWriter::onWriteBuffer(const void *sBuffer, size_t dwBytesToWrite)
+{
+    callData.append(static_cast<const char*>(sBuffer), dwBytesToWrite);
+}
+
 void
 LocalWriter::open(void) {
     os::String szFileName;
@@ -188,6 +195,7 @@ unsigned LocalWriter::beginEnter(const FunctionSig *sig, bool fake) {
 
     assert(this_thread_num);
     unsigned thread_id = this_thread_num - 1;
+    callData.clear();
     unsigned call_no = Writer::beginEnter(sig, thread_id);
     if (!fake && os::backtrace_is_needed(sig->name)) {
         std::vector<RawStackFrame> backtrace = os::get_backtrace();

@@ -82,7 +82,7 @@ Writer::open(const char *filename) {
 void inline
 Writer::_write(const void *sBuffer, size_t dwBytesToWrite) {
     m_file->write(sBuffer, dwBytesToWrite);
-    callData.append(static_cast<const char*>(sBuffer), dwBytesToWrite);
+    onWriteBuffer(sBuffer, dwBytesToWrite);
 }
 
 void inline
@@ -173,7 +173,6 @@ void Writer::writeStackFrame(const RawStackFrame *frame) {
 }
 
 unsigned Writer::beginEnter(const FunctionSig *sig, unsigned thread_id) {
-    callData.clear();
     _writeByte(trace::EVENT_ENTER);
     _writeUInt(thread_id);
     _writeUInt(sig->id);

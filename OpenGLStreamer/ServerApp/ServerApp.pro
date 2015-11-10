@@ -30,5 +30,5 @@ DEPENDPATH += $$PWD/../StreamerLib/src
 
 unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceLib/ -lApitraceLib
 
-INCLUDEPATH += $$PWD/../ApitraceLib/src
+INCLUDEPATH += $$PWD/../ApitraceLib/src/trace
 DEPENDPATH += $$PWD/../ApitraceLib/src

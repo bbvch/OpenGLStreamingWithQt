@@ -33,7 +33,6 @@
 #include <stddef.h>
 
 #include <vector>
-#include <QByteArray>
 
 #include "trace_model.hpp"
 
@@ -50,8 +49,6 @@ namespace trace {
         std::vector<bool> enums;
         std::vector<bool> bitmasks;
         std::vector<bool> frames;
-
-        QByteArray callData;
 
     public:
         Writer();
@@ -112,6 +109,8 @@ namespace trace {
         void inline _writeFloat(float value);
         void inline _writeDouble(double value);
         void inline _writeString(const char *str);
+
+        virtual void onWriteBuffer(const void *sBuffer, size_t dwBytesToWrite) {}
 
     };
 
