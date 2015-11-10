@@ -215,6 +215,7 @@ void LocalWriter::beginLeave(unsigned call) {
 void LocalWriter::endLeave(void) {
     Writer::endLeave();
     --acquired;
+    emit glFunctionSerialized(callData);
     mutex.unlock();
 }
 

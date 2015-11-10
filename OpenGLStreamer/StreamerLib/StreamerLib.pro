@@ -2,9 +2,9 @@ include(../config.pri)
 
 QT += gui widgets websockets
 
-TARGET = StreamerLib
+TARGET   = StreamerLib
 TEMPLATE = lib
-CONFIG += staticlib
+CONFIG   += shared
 
 SOURCES += \
     src/OpenGLServer.cpp \
@@ -27,4 +27,7 @@ unix {
     INSTALLS += target
 }
 
-INCLUDEPATH += include
+unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceLib/ -lApitraceLib
+
+INCLUDEPATH += $$PWD/../ApitraceLib/src
+DEPENDPATH += $$PWD/../ApitraceLib/src

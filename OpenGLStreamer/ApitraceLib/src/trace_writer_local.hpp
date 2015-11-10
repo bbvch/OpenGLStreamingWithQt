@@ -36,6 +36,7 @@
 #include "os_process.hpp"
 #include "trace_writer.hpp"
 
+#include <QObject>
 
 namespace trace {
 
@@ -53,7 +54,14 @@ namespace trace {
      * - flushes the output to ensure the last call is traced in event of
      *   abnormal termination
      */
-    class LocalWriter : public Writer {
+    class LocalWriter : public QObject,
+                        public Writer
+    {
+        Q_OBJECT
+
+    signals:
+        void glFunctionSerialized(const QByteArray &message);
+
     protected:
         /**
          * This mutex guarantees that only one thread writes to the trace file

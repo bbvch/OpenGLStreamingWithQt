@@ -33,6 +33,7 @@
 #include <stddef.h>
 
 #include <vector>
+#include <QByteArray>
 
 #include "trace_model.hpp"
 
@@ -49,6 +50,8 @@ namespace trace {
         std::vector<bool> enums;
         std::vector<bool> bitmasks;
         std::vector<bool> frames;
+
+        QByteArray callData;
 
     public:
         Writer();

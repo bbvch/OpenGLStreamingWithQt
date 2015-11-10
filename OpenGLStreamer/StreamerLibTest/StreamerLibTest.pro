@@ -20,18 +20,13 @@ include(deployment.pri)
 qtcAddDeployment()
 
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../StreamerLib/release/ -lStreamerLib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../StreamerLib/debug/ -lStreamerLib
-else:unix: LIBS += -L$$OUT_PWD/../StreamerLib/ -lStreamerLib
 
-#INCLUDEPATH += $$PWD/../StreamerLib
+unix:!macx: LIBS += -L$$OUT_PWD/../StreamerLib/ -lStreamerLib
+
 INCLUDEPATH += $$PWD/../StreamerLib/src
-DEPENDPATH += $$PWD/../StreamerLib
+DEPENDPATH += $$PWD/../StreamerLib/src
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../StreamerLib/release/libStreamerLib.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../StreamerLib/debug/libStreamerLib.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../StreamerLib/release/StreamerLib.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../StreamerLib/debug/StreamerLib.lib
-else:unix: PRE_TARGETDEPS += $$OUT_PWD/../StreamerLib/libStreamerLib.a
+unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceLib/ -lApitraceLib
 
-HEADERS +=
+INCLUDEPATH += $$PWD/../ApitraceLib/src
+DEPENDPATH += $$PWD/../ApitraceLib/src

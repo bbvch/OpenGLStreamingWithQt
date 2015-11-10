@@ -7,12 +7,15 @@
 #include "OpenGLServer.h"
 #include "Events.h"
 
+#include <trace_writer_local.hpp>
+
 #include <QWebSocketServer>
 #include <QCoreApplication>
 #include <QWebSocket>
 #include <QInputEvent>
 #include <QByteArray>
 #include <QDebug>
+
 
 #include <tuple>
 #include <cassert>
@@ -32,7 +35,7 @@ OpenGLServer::OpenGLServer(quint16 port, bool debug, QObject *parent) :
         connect(mpWebSocketServer, &QWebSocketServer::newConnection,
                 this, &OpenGLServer::onNewConnection);
         connect(mpWebSocketServer, &QWebSocketServer::closed, this, &OpenGLServer::closed);
-        connect(this, &OpenGLProxy::glFunctionSerialized, this, &OpenGLServer::sendBinaryMessage);
+        connect(&trace::localWriter, &trace::LocalWriter::glFunctionSerialized, this, &OpenGLServer::sendBinaryMessage);
     }
 }
 

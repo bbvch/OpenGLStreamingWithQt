@@ -4,12 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       -= core gui
+QT       -= gui
+QT       += core
 
 CONFIG += C++11
 
-TARGET = ApitraceLib
+TARGET   = ApitraceLib
 TEMPLATE = lib
+CONFIG   += shared
 
 QMAKE_CXXFLAGS += -Wno-unused-variable -Wno-unused-parameter -Wno-sign-compare
 QMAKE_LFLAGS += -Wl,-Bsymbolic -Wl,-Bsymbolic-functions -Wl,-z,defs
