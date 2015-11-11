@@ -9,7 +9,7 @@
 
 #include <QObject>
 #include <QOpenGLContext>
-#include <QOpenGLFunctions_2_0>
+#include <QOpenGLFunctions_ES2>
 #include <QOpenGLWidget>
 #include <QList>
 
@@ -44,7 +44,7 @@ public:
     {
         QOpenGLContext *context = QOpenGLContext::currentContext();
         assert(context != nullptr);
-        mOpenGLFuncs = context->versionFunctions<QOpenGLFunctions_2_0>();
+        mOpenGLFuncs = context->versionFunctions<QOpenGLFunctions_ES2>();
         assert(mOpenGLFuncs != nullptr);
     }
 
@@ -163,7 +163,7 @@ protected:
     QList<QOpenGLWidget*> mWidgets;
     bool mDebug{false};
     Serializer mSerializer;
-    QOpenGLFunctions_2_0 *mOpenGLFuncs;
+    QOpenGLFunctions_ES2 *mOpenGLFuncs;
 };
 
 #endif // OPENGLPROXY_H

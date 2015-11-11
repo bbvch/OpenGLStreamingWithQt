@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("OpenGLStreamer client example");
+    parser.setApplicationDescription("OpenGLStreamer server example");
     parser.addHelpOption();
 
     QCommandLineOption dbgOption(QStringList() << "d" << "debug",
