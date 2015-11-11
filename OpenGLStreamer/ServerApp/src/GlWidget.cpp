@@ -4,16 +4,12 @@
 
 #include <math.h>
 
-#include "OpenGLServer.h"
-
 GlWidget::GlWidget(QWidget *parent) :
     QOpenGLWidget(parent),
     mpGeometries(0),
     texture(0),
     angularSpeed(0)
-{
-    OpenGLServer::get().registerOpenGLWidget(this);
-}
+{}
 
 GlWidget::~GlWidget()
 {
@@ -76,7 +72,7 @@ QSize GlWidget::sizeHint() const
 
 void GlWidget::initializeGL()
 {
-    OpenGLServer::get().initialize();
+    initializeOpenGLFunctions();
 
     glClearColor(0, 0, 0, 1);
 
@@ -148,10 +144,9 @@ void GlWidget::initTextures()
 void GlWidget::paintGL()
 {
     // Clear color and depth buffer
-    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //texture->bind();
-    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glBindTexture, texture->target(), texture->textureId());
+    texture->bind();
 
     // Calculate model view transformation
     QMatrix4x4 matrix;
@@ -159,13 +154,10 @@ void GlWidget::paintGL()
     matrix.rotate(rotation);
 
     // Set modelview-projection matrix
-    //program.setUniformValue("mvp_matrix", projection * matrix);
-    OPENGL_CALL_MATRIX(OpenGLProxy::eServerAndClientCall, glUniformMatrix, 4, f, OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glGetUniformLocation, program.programId(), "mvp_matrix"),
-                1, GL_FALSE, (projection * matrix).constData());
+    program.setUniformValue("mvp_matrix", projection * matrix);
 
     // Use texture unit 0 which contains cube.png
-    //program.setUniformValue("texture", 0);
-    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glUniform1i, OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glGetUniformLocation, program.programId(), "texture"), 0);
+    program.setUniformValue("texture", 0);
 
     // Draw cube geometry
     mpGeometries->drawCubeGeometry(&program);

@@ -4,9 +4,10 @@
 #
 #-------------------------------------------------
 
-QT       -= core gui
+QT       -= gui
+QT       += core websockets
 
-TARGET = ApitraceRetraceLib
+TARGET   = ApitraceRetraceLib
 TEMPLATE = lib
 CONFIG   += C++11
 CONFIG   += shared
@@ -36,7 +37,8 @@ HEADERS += \
     src/retrace/state_writer.hpp \
     src/retrace/ws.hpp \
     src/retrace/glws_xlib.hpp \
-    src/retrace/json.hpp
+    src/retrace/json.hpp \
+    src/client/openglclient.h
 
 SOURCES += \
     src/retrace/glretrace_cgl.cpp \
@@ -62,7 +64,8 @@ SOURCES += \
     src/retrace/json.cpp \
     src/retrace/glstate_formats.cpp \
     src/retrace/state_writer_ubjson.cpp \
-    src/retrace/retrace_stdc.cpp
+    src/retrace/retrace_stdc.cpp \
+    src/client/openglclient.cpp
 
 unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceCommonLib/ -lApitraceCommonLib
 

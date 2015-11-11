@@ -2,8 +2,10 @@
 #include <QtCore/QCommandLineOption>
 #include <QApplication>
 
-#include "OpenGLServer.h"
+#include <openglserver.h>
+
 #include "GlWidget.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +21,7 @@ int main(int argc, char *argv[])
     parser.process(a);
     bool debug = parser.isSet(dbgOption);
 
-    Singleton<OpenGLServer>::createInstance(1234, debug);
+    OpenGLServer server(1234, true);
     GlWidget w;
 
     w.show();

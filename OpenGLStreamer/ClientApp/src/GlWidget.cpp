@@ -1,10 +1,10 @@
-#include "GlWidget.h"
+/*#include "GlWidget.h"
 
 #include <QMouseEvent>
 
 #include <math.h>
 
-#include "OpenGLClient.h"
+#include "openglclient.h"
 
 GlWidget::GlWidget(QWidget *parent) :
     QOpenGLWidget(parent),
@@ -94,4 +94,4 @@ void GlWidget::paintGL()
 {
     OpenGLClient::get().update();
     setUpdatesEnabled(false);
-}
+}*/

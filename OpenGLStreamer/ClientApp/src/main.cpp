@@ -2,8 +2,8 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
 
-#include "GlWidget.h"
-#include "OpenGLClient.h"
+//#include "GlWidget.h"
+#include <openglclient.h>
 
 int main(int argc, char *argv[])
 {
@@ -19,10 +19,10 @@ int main(int argc, char *argv[])
     parser.process(a);
     bool debug = parser.isSet(dbgOption);
 
-    Singleton<OpenGLClient>::createInstance(QUrl(QStringLiteral("ws://localhost:1234")), debug);
+    OpenGLClient client(QUrl(QStringLiteral("ws://localhost:1234")), debug);
 
-    GlWidget w;
-    w.show();
+    //GlWidget w;
+    //w.show();
 
     return a.exec();
 }
