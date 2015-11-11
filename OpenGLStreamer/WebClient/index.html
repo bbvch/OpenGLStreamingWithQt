@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>bbv Software Services web gles2 client</title>
+    <link rel="stylesheet" href="test.css">
+    
+    <script>
+    
+    function message(msg, type){
+		var log = document.getElementById("log");
+		var newParagraph = document.createElement("p");
+		var newTextNode = document.createTextNode(msg);
+		
+		if( type !== undefined) { 
+			newParagraph.setAttribute("class",type);
+		} 
+		newParagraph.appendChild(newTextNode);
+		log.appendChild(newParagraph);
+		//log.innerHTML+=msg+'</p>';
+	//alert(msg);
+}
+    
+	function connect(){
+    try{
+
+	var socket;
+	var host = "ws://localhost:1234";
+    var socket = new WebSocket(host);
+
+        message('Socket Status: '+socket.readyState, "event");
+
+        socket.onopen = function(){
+       		 message('Socket Status: '+socket.readyState+' (open)', "event");
+        }
+
+        socket.onmessage = function(msg){
+       		 message('Received: '+msg.data);
+        }
+
+        socket.onclose = function(){
+       		 message('Socket Status: '+socket.readyState+' (Closed)', "event");
+        }			
+
+    } catch(exception){
+   		 message('<p>Error'+exception);
+    }
+}
+    
+ 	window.addEventListener("load", connect, true);
+    	
+    </script>
+  </head>
+  <body>
+    <!-- Sichtbarer Dokumentinhalt im body -->
+    
+
+	<div id="wrapper">
+	 
+	    <div id="container">
+	 
+	        <h1>WebSockets Client</h1>
+	 
+	        <div id="log">
+	 
+	        </div><!-- #Log -->
+	       
+	 
+	    </div><!-- #container -->
+ 
+	</div>
+
+
+
+  </body>
+</html>
