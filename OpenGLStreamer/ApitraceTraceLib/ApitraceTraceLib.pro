@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       -= gui
-QT       += core
+QT       += core websockets
 
 CONFIG += C++11
 
@@ -29,6 +29,7 @@ HEADERS += \
     src/trace/trace_writer_local.hpp \
     src/wrappers/config.hpp \
     src/wrappers/gltrace.hpp \
+    src/server/openglserver.h
 
 SOURCES += \
     src/trace/trace_writer_local.cpp \
@@ -37,6 +38,7 @@ SOURCES += \
     src/wrappers/egltrace.cpp \
     src/wrappers/glcaps.cpp \
     src/wrappers/gltrace_state.cpp \
+    src/server/openglserver.cpp
 
 unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceCommonLib/ -lApitraceCommonLib
 

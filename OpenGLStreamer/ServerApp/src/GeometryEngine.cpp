@@ -43,8 +43,6 @@
 #include <QVector2D>
 #include <QVector3D>
 
-#include "OpenGLServer.h"
-
 struct VertexData
 {
     QVector3D position;
@@ -139,33 +137,25 @@ void GeometryEngine::initCubeGeometry()
 void GeometryEngine::drawCubeGeometry(QOpenGLShaderProgram *program)
 {
     // Tell OpenGL which VBOs to use
-    //arrayBuf.bind();
-    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glBindBuffer, arrayBuf.type(), arrayBuf.bufferId());
-    //indexBuf.bind();
-    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glBindBuffer, indexBuf.type(), indexBuf.bufferId());
+    arrayBuf.bind();
+    indexBuf.bind();
 
     // Offset for position
     quintptr offset = 0;
 
     // Tell OpenGL programmable pipeline how to locate vertex position data
-    //int vertexLocation = program->attributeLocation("a_position");
-    int vertexLocation = OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glGetAttribLocation, program->programId(), "a_position");
-    //program->enableAttributeArray(vertexLocation);
-    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glEnableVertexAttribArray, vertexLocation);
-    //program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, sizeof(VertexData));
-    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glVertexAttribPointer, vertexLocation, 3, GL_FLOAT, GL_TRUE, sizeof(VertexData), reinterpret_cast<const void *>(offset));
+    int vertexLocation = program->attributeLocation("a_position");
+    program->enableAttributeArray(vertexLocation);
+    program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, sizeof(VertexData));
 
     // Offset for texture coordinate
     offset += sizeof(QVector3D);
 
     // Tell OpenGL programmable pipeline how to locate vertex texture coordinate data
-    //int texcoordLocation = program->attributeLocation("a_texcoord");
-    int texcoordLocation = OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glGetAttribLocation, program->programId(), "a_texcoord");
-    //program->enableAttributeArray(texcoordLocation);
-    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glEnableVertexAttribArray, texcoordLocation);
-    //program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
-    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glVertexAttribPointer, texcoordLocation, 2, GL_FLOAT, GL_TRUE, sizeof(VertexData), reinterpret_cast<const void *>(offset));
+    int texcoordLocation = program->attributeLocation("a_texcoord");
+    program->enableAttributeArray(texcoordLocation);
+    program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
 
     // Draw cube geometry using indices from VBO 1
-    OPENGL_CALL(OpenGLProxy::eServerAndClientCall, glDrawElements, GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
 }

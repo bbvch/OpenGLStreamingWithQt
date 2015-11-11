@@ -22,12 +22,7 @@ RESOURCES += \
     src/shaders.qrc \
     src/textures.qrc
 
-unix:!macx: LIBS += -L$$OUT_PWD/../StreamerLib/ -lStreamerLib
+unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceRetraceLib/ -lApitraceRetraceLib
 
-INCLUDEPATH += $$PWD/../StreamerLib/src
-DEPENDPATH += $$PWD/../StreamerLib/src
-
-unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceTraceLib/ -lApitraceTraceLib
-
-INCLUDEPATH += $$PWD/../ApitraceTraceLib/src
-DEPENDPATH += $$PWD/../ApitraceTraceLib/src
+INCLUDEPATH += $$PWD/../ApitraceRetraceLib/src/client
+DEPENDPATH += $$PWD/../ApitraceRetraceLib/src
