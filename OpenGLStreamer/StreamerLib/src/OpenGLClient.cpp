@@ -95,7 +95,10 @@ void OpenGLClient::update()
     {
         QByteArray message = mMessageQueue.takeFirst();
 
-        QString funcName(message.data());
+        if (mDebug)
+            qDebug() << "Message recieved:" << message;
+
+        /*QString funcName(message.data());
 
         if (mDebug)
             qDebug() << "OpenGL function" << funcName << "received";
@@ -107,7 +110,7 @@ void OpenGLClient::update()
         if (invoker)
         {
             invoker->glCall(message);
-        }
+        }*/
     }
 }
 
