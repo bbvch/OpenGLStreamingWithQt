@@ -7,6 +7,17 @@
     
     <script>
     
+    function analyze_data(blob)
+	{
+	    var myReader = new FileReader();
+	    myReader.readAsArrayBuffer(blob)
+	    
+	    myReader.addEventListener("loadend", function(e)
+	    {
+	        var buffer = e.srcElement.result;//arraybuffer object
+	    });
+	}
+    
     function message(msg, type){
 		var log = document.getElementById("log");
 		var newParagraph = document.createElement("p");
@@ -15,6 +26,11 @@
 		if( type !== undefined) { 
 			newParagraph.setAttribute("class",type);
 		} 
+		else
+		{
+			analyze_data(msg);
+		}
+			
 		newParagraph.appendChild(newTextNode);
 		log.appendChild(newParagraph);
 		//log.innerHTML+=msg+'</p>';
