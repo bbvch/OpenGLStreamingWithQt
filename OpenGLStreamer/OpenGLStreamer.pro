@@ -4,8 +4,9 @@ SUBDIRS= ClientApp \
          ServerApp \
          StreamerLib \
          StreamerLibTest \
-         ApitraceLib \
-         ApitraceCommonLib
+         ApitraceTraceLib \
+         ApitraceCommonLib \
+         ApitraceRetraceLib
 
 # subdir of ClientApp, ServerApp and StreamerLibTest are implicitly set.
 StreamerLibTest.subdir   = StreamerLibTest
@@ -13,5 +14,7 @@ StreamerLibTest.subdir   = StreamerLibTest
 # Here's where you build up the hierarchical relationship between components.
 
 StreamerLibTest.depends = StreamerLib
-StreamerLib.depends = ApitraceLib
-ApitraceLib.depends = ApitraceCommonLib
+StreamerLib.depends = ApitraceTraceLib
+StreamerLib.depends = ApitraceRetraceLib
+ApitraceTraceLib.depends = ApitraceCommonLib
+ApitraceRetraceLib.depends = ApitraceCommonLib
