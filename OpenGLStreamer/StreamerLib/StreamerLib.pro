@@ -28,7 +28,7 @@ unix {
     INSTALLS += target
 }
 
-unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceLib/ -lApitraceLib
+unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceTraceLib/ -lApitraceTraceLib
 
-INCLUDEPATH += $$PWD/../ApitraceLib/src/trace
-DEPENDPATH += $$PWD/../ApitraceLib/src
+INCLUDEPATH += $$PWD/../ApitraceTraceLib/src/trace
+DEPENDPATH += $$PWD/../ApitraceTraceLib/src

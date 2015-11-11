@@ -9,7 +9,7 @@ QT       += core
 
 CONFIG += C++11
 
-TARGET   = ApitraceLib
+TARGET   = ApitraceTraceLib
 TEMPLATE = lib
 CONFIG   += shared
 
@@ -28,7 +28,7 @@ unix {
 HEADERS += \
     src/trace/trace_writer_local.hpp \
     src/wrappers/config.hpp \
-    src/wrappers/gltrace.hpp
+    src/wrappers/gltrace.hpp \
 
 SOURCES += \
     src/trace/trace_writer_local.cpp \
@@ -36,7 +36,7 @@ SOURCES += \
     src/wrappers/dlsym.cpp \
     src/wrappers/egltrace.cpp \
     src/wrappers/glcaps.cpp \
-    src/wrappers/gltrace_state.cpp
+    src/wrappers/gltrace_state.cpp \
 
 unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceCommonLib/ -lApitraceCommonLib
 
