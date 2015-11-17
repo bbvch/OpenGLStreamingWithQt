@@ -20,9 +20,7 @@ int main(int argc, char *argv[])
     bool debug = parser.isSet(dbgOption);
 
     OpenGLClient client(QUrl(QStringLiteral("ws://localhost:1234")), debug);
-
-    //GlWidget w;
-    //w.show();
+    (void)client;
 
     return a.exec();
 }
