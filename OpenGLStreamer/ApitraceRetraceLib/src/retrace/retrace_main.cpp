@@ -34,6 +34,7 @@
 #include <unistd.h> // for isatty()
 #endif
 
+#include "retrace_main.hpp"
 #include "os_binary.hpp"
 #include "os_crtdbg.hpp"
 #include "os_time.hpp"
@@ -583,6 +584,25 @@ mainLoop() {
     }
 }
 
+void init()
+{
+    setUp();
+    addCallbacks(retracer);
+    parser = new trace::Parser;
+    parser->open(nullptr);
+}
+
+void processCall(const char *callData, uint64_t length)
+{
+    assert(callData);
+
+    parser->setData(callData, length);
+    trace::Call *call = nullptr;
+    while ((call = parser->parse_call())) {
+        retraceCall(call);
+        delete call;
+    }
+}
 
 } /* namespace retrace */
 
@@ -898,4 +918,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-

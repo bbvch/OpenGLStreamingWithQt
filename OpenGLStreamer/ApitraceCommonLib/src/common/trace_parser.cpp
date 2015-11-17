@@ -57,17 +57,29 @@ Parser::~Parser() {
 
 bool Parser::open(const char *filename) {
     assert(!file);
-    file = File::createForRead(filename);
-    if (!file) {
-        return false;
-    }
+    if (filename)
+    {
+        file = File::createForRead(filename);
+        if (!file) {
+            return false;
+        }
 
-    version = read_uint();
-    if (version > TRACE_VERSION) {
-        std::cerr << "error: unsupported trace format version " << version << "\n";
-        delete file;
-        file = NULL;
-        return false;
+        version = read_uint();
+        if (version > TRACE_VERSION) {
+            std::cerr << "error: unsupported trace format version " << version << "\n";
+            delete file;
+            file = NULL;
+            return false;
+        }
+    }
+    else {
+        version = 5; // TODO version is temporary hard coded
+        file = File::createBufferReader();
+        if (!file) {
+            return false;
+        }
+        file->open("", File::Mode::ReadWrite);
+
     }
     api = API_UNKNOWN;
 
@@ -100,10 +112,30 @@ void Parser::close(void) {
     }
 
     deleteAll(calls);
+    resetSignatures();
 
+    next_call_no = 0;
+}
+
+
+void Parser::getBookmark(ParseBookmark &bookmark) {
+    bookmark.offset = file->currentOffset();
+    bookmark.next_call_no = next_call_no;
+}
+
+
+void Parser::setBookmark(const ParseBookmark &bookmark) {
+    file->setCurrentOffset(bookmark.offset);
+    next_call_no = bookmark.next_call_no;
+    
+    // Simply ignore all pending calls
+    deleteAll(calls);
+}
+
+void Parser::resetSignatures()
+{
     // Delete all signature data.  Signatures are mere structures which don't
     // own their own memory, so we need to destroy all data we created here.
-
     for (FunctionMap::iterator it = functions.begin(); it != functions.end(); ++it) {
         FunctionSigState *sig = *it;
         if (sig) {
@@ -141,7 +173,7 @@ void Parser::close(void) {
         }
     }
     enums.clear();
-    
+
     for (BitmaskMap::iterator it = bitmasks.begin(); it != bitmasks.end(); ++it) {
         BitmaskSigState *sig = *it;
         if (sig) {
@@ -153,25 +185,7 @@ void Parser::close(void) {
         }
     }
     bitmasks.clear();
-
-    next_call_no = 0;
 }
-
-
-void Parser::getBookmark(ParseBookmark &bookmark) {
-    bookmark.offset = file->currentOffset();
-    bookmark.next_call_no = next_call_no;
-}
-
-
-void Parser::setBookmark(const ParseBookmark &bookmark) {
-    file->setCurrentOffset(bookmark.offset);
-    next_call_no = bookmark.next_call_no;
-    
-    // Simply ignore all pending calls
-    deleteAll(calls);
-}
-
 
 Call *Parser::parse_call(Mode mode) {
     do {
@@ -193,6 +207,13 @@ Call *Parser::parse_call(Mode mode) {
                 adjust_call_flags(call);
                 return call;
             }
+            break;
+        case trace::EVENT_RESET:
+#if TRACE_VERBOSE
+            std::cerr << "\tRESET\n";
+#endif
+            resetSignatures();
+            next_call_no = 0;
             break;
         default:
             std::cerr << "error: unknown event " << c << "\n";

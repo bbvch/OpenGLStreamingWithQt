@@ -38,7 +38,8 @@ HEADERS += \
     src/retrace/ws.hpp \
     src/retrace/glws_xlib.hpp \
     src/retrace/json.hpp \
-    src/client/openglclient.h
+    src/client/openglclient.h \
+    src/retrace/retrace_main.hpp
 
 SOURCES += \
     src/retrace/glretrace_cgl.cpp \
@@ -69,6 +70,7 @@ SOURCES += \
 
 unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceCommonLib/ -lApitraceCommonLib
 
+INCLUDEPATH += src/retrace
 DEPENDPATH += $$PWD/../ApitraceCommonLib
 
 unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../ApitraceCommonLib/libApitraceCommonLib.a

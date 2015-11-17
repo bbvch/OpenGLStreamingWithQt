@@ -65,12 +65,32 @@ static void exceptionCallback(void)
 LocalWriter::LocalWriter() :
     acquired(0)
 {
+    connect(&m_traceSerializer, &TraceSerializer::initFrameCreated, this, &LocalWriter::glCallSerialized);
+
     os::String process = os::getProcessName();
     os::log("apitrace: loaded into %s\n", process.str());
 
     // Install the signal handlers as early as possible, to prevent
     // interfering with the application's signal handling.
     os::setExceptionCallback(exceptionCallback);
+}
+
+const QByteArray &LocalWriter::getInitFrame()
+{
+    return m_traceSerializer.getInitFrame();
+}
+
+void LocalWriter::resetSignatures()
+{
+    functions.clear();
+    structs.clear();
+    enums.clear();
+    bitmasks.clear();
+    frames.clear();
+
+    call_no = 0;
+
+    m_traceSerializer.resetSignatures();
 }
 
 LocalWriter::~LocalWriter()
@@ -86,7 +106,7 @@ LocalWriter::~LocalWriter()
 void
 LocalWriter::onWriteBuffer(const void *sBuffer, size_t dwBytesToWrite)
 {
-    callData.append(static_cast<const char*>(sBuffer), dwBytesToWrite);
+    m_callData.append(static_cast<const char*>(sBuffer), dwBytesToWrite);
 }
 
 void
@@ -195,7 +215,7 @@ unsigned LocalWriter::beginEnter(const FunctionSig *sig, bool fake) {
 
     assert(this_thread_num);
     unsigned thread_id = this_thread_num - 1;
-    callData.clear();
+    m_callData.clear();
     unsigned call_no = Writer::beginEnter(sig, thread_id);
     if (!fake && os::backtrace_is_needed(sig->name)) {
         std::vector<RawStackFrame> backtrace = os::get_backtrace();
@@ -223,7 +243,14 @@ void LocalWriter::beginLeave(unsigned call) {
 void LocalWriter::endLeave(void) {
     Writer::endLeave();
     --acquired;
-    emit glFunctionSerialized(callData);
+    trace::Call *call = m_traceSerializer.scanSerializedCall(m_callData);
+    if (call) {
+        emit glCallSerialized(m_callData);
+        if (call->flags & trace::CALL_FLAG_END_FRAME) {
+            emit frameEnd();
+        }
+    }
+
     mutex.unlock();
 }
 

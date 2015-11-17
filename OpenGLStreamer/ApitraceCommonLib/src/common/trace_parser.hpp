@@ -50,7 +50,8 @@ class AbstractParser
 {
 public:
     virtual ~AbstractParser() {}
-    virtual  Call *parse_call(void) = 0;
+    virtual Call *parse_call(void) = 0;
+    virtual void setData(const char *callData, uint64_t length) = 0;
     virtual void getBookmark(ParseBookmark &bookmark) = 0;
     virtual void setBookmark(const ParseBookmark &bookmark) = 0;
     virtual bool open(const char *filename) = 0;
@@ -125,6 +126,14 @@ public:
         return parse_call(FULL);
     }
 
+    void setData(const char *callData, uint64_t length)
+    {
+        assert(file);
+        if (file) {
+            file->write(callData, length);
+        }
+    }
+
     bool supportsOffsets() const
     {
         return file->supportsOffsets();
@@ -148,6 +157,7 @@ public:
     }
 
 protected:
+    void resetSignatures();
     Call *parse_call(Mode mode);
 
     FunctionSigFlags *parse_function_sig(void);
@@ -161,8 +171,6 @@ public:
     lookupCallFlags(const char *name);
 
 protected:
-    Call *parse_Call(Mode mode);
-
     void parse_enter(Mode mode);
 
     Call *parse_leave(Mode mode);

@@ -110,7 +110,7 @@ namespace trace {
         void inline _writeDouble(double value);
         void inline _writeString(const char *str);
 
-        virtual void onWriteBuffer(const void *sBuffer, size_t dwBytesToWrite) {}
+        virtual void onWriteBuffer(const void *, size_t ) {}
 
     };
 

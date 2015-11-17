@@ -40,6 +40,7 @@ namespace trace {
 enum Event {
     EVENT_ENTER = 0,
     EVENT_LEAVE,
+    EVENT_RESET,
 };
 
 enum CallDetail {

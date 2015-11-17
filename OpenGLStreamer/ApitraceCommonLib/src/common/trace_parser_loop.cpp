@@ -43,6 +43,7 @@ public:
     }
 
     Call *parse_call(void);
+    void setData(const char */*callData*/, uint64_t /*length*/) {}
 
     // Delegate to Parser
     void getBookmark(ParseBookmark &bookmark) { parser->getBookmark(bookmark); }

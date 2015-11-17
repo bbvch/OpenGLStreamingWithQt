@@ -9,6 +9,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QPair>
 
 QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 QT_FORWARD_DECLARE_CLASS(QWebSocket)
@@ -30,10 +31,11 @@ private slots:
     void processBinaryMessage(const QByteArray &message);
     void socketDisconnected();
     void sendBinaryMessage(const QByteArray &message);
+    void onFrameEnd();
 
 private:
     QWebSocketServer *mpWebSocketServer;
-    QList<QWebSocket *> mClients;
+    QList<QPair<QWebSocket *, bool>> mClients;
     bool mDebug{false};
 };
 
