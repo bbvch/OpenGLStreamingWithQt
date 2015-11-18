@@ -28,3 +28,6 @@ build-*
 *.exe
 *.out
 *.app
+
+# backup files from gedit (html and java script editing)
+*~
