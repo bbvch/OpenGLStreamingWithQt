@@ -65,8 +65,6 @@ static void exceptionCallback(void)
 LocalWriter::LocalWriter() :
     acquired(0)
 {
-    connect(&m_traceSerializer, &TraceSerializer::initFrameCreated, this, &LocalWriter::glCallSerialized);
-
     os::String process = os::getProcessName();
     os::log("apitrace: loaded into %s\n", process.str());
 

@@ -59,8 +59,10 @@ void OpenGLServer::onNewConnection()
 
 void OpenGLServer::sendBinaryMessage(const QByteArray &message)
 {
-    foreach (auto pClient, mClients) {
-        pClient.first->sendBinaryMessage(message);
+    foreach (auto &pClient, mClients) {
+        if (pClient.second) {
+            pClient.first->sendBinaryMessage(message);
+        }
     }
 }
 
@@ -69,11 +71,12 @@ void OpenGLServer::onFrameEnd()
     for (auto &pClient :mClients) {
         if (!pClient.second) {
             trace::localWriter.resetSignatures();
+            pClient.second = true;
             QByteArray data;
             data.append(trace::EVENT_RESET);
             sendBinaryMessage(data);
-            pClient.second = true;
-            connect(&trace::localWriter, &trace::LocalWriter::glCallSerialized, this, &OpenGLServer::sendBinaryMessage);
+            connect(&trace::localWriter, &trace::LocalWriter::glCallSerialized, this, &OpenGLServer::sendBinaryMessage,
+                    static_cast<Qt::ConnectionType>(Qt::AutoConnection | Qt::UniqueConnection));
             break;
         }
     }
