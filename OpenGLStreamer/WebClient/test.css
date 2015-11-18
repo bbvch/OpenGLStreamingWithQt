@@ -23,7 +23,7 @@ body {
     background-color: white;
 }
 
-.warning{
+.exception{
     font-weight:bold;
-    color:#CCC;
+    background-color: red;
 }
