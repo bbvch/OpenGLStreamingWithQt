@@ -28,10 +28,18 @@ trace::Call *TraceSerializer::scanSerializedCall(const QByteArray &callData)
         if (call->flags & trace::CALL_FLAG_END_FRAME) {
             ++m_numInitFrames;
             if (m_numInitFrames == m_totalInitFrames) {
-                emit initFrameCreated(m_initFrame);
+                emit initFrameCreated();
             }
         }
     }
+    if (call && (m_numInitFrames >= m_totalInitFrames)) {
+        m_currentFrame.append(callData);
+        if (call->flags & trace::CALL_FLAG_END_FRAME) {
+            emit frameSerialized(m_currentFrame);
+            m_currentFrame.clear();
+        }
+    }
+
     return call;
 }
 

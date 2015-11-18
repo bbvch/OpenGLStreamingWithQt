@@ -24,10 +24,12 @@ public:
     trace::Call *scanSerializedCall(const QByteArray &callData);
 
 signals:
-    void initFrameCreated(const QByteArray &callData);
+    void initFrameCreated();
+    void frameSerialized(const QByteArray &frameData);
 
 private:
     QByteArray m_initFrame;
+    QByteArray m_currentFrame;
     quint16 m_totalInitFrames{1};
     quint16 m_numInitFrames{0};
     quint16 m_numInitCalls{0};

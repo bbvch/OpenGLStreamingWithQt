@@ -75,8 +75,8 @@ void OpenGLServer::onFrameEnd()
             QByteArray data;
             data.append(trace::EVENT_RESET);
             sendBinaryMessage(data);
-            connect(&trace::localWriter, &trace::LocalWriter::glCallSerialized, this, &OpenGLServer::sendBinaryMessage,
-                    static_cast<Qt::ConnectionType>(Qt::AutoConnection | Qt::UniqueConnection));
+            connect(&trace::localWriter, &trace::LocalWriter::glFrameSerialized, this, &OpenGLServer::sendBinaryMessage,
+                    static_cast<Qt::ConnectionType>(Qt::DirectConnection | Qt::UniqueConnection));
             break;
         }
     }

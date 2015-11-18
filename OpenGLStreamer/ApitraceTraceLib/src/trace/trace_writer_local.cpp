@@ -71,6 +71,9 @@ LocalWriter::LocalWriter() :
     // Install the signal handlers as early as possible, to prevent
     // interfering with the application's signal handling.
     os::setExceptionCallback(exceptionCallback);
+
+    connect(&m_traceSerializer, &TraceSerializer::frameSerialized,
+            this, &LocalWriter::glFrameSerialized, Qt::DirectConnection);
 }
 
 const QByteArray &LocalWriter::getInitFrame()
@@ -243,7 +246,6 @@ void LocalWriter::endLeave(void) {
     --acquired;
     trace::Call *call = m_traceSerializer.scanSerializedCall(m_callData);
     if (call) {
-        emit glCallSerialized(m_callData);
         if (call->flags & trace::CALL_FLAG_END_FRAME) {
             emit frameEnd();
         }
