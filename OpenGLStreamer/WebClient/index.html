@@ -6,11 +6,14 @@
     <link rel="stylesheet" href="test.css">
     
     <script>
-    
+
+	
+   
     function analyze_data(blob)
 	{
 	    var myReader = new FileReader();
-	    myReader.readAsArrayBuffer(blob)
+	    myReader.readAsArrayBuffer(blob);
+
 	    
 	    myReader.addEventListener("loadend", function(e)
 	    {
@@ -19,22 +22,27 @@
 	}
     
     function message(msg, type){
+	
 		var log = document.getElementById("log");
 		var newParagraph = document.createElement("p");
 		var newTextNode = document.createTextNode(msg);
 		
 		if( type !== undefined) { 
 			newParagraph.setAttribute("class",type);
+			if(type=='data')
+			{ 
+				first = false;
+			}
 		} 
 		else
 		{
 			analyze_data(msg);
 		}
+	
 			
 		newParagraph.appendChild(newTextNode);
 		log.appendChild(newParagraph);
-		//log.innerHTML+=msg+'</p>';
-	//alert(msg);
+	
 }
     
 	function connect(){
@@ -51,7 +59,7 @@
         }
 
         socket.onmessage = function(msg){
-       		 message('Received: '+msg.data);
+       		 message('Received: '+msg.data, "data");
         }
 
         socket.onclose = function(){

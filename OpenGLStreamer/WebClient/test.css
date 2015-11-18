@@ -18,6 +18,11 @@ body {
     
     background-color: gray;
 }
+
+.data {
+    background-color: white;
+}
+
 .warning{
     font-weight:bold;
     color:#CCC;
