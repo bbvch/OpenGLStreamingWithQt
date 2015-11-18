@@ -99,9 +99,12 @@ void OpenGLServer::socketDisconnected()
     if (mDebug)
         qDebug() << "socketDisconnected:" << pClient;
     if (pClient) {
-        std::find_if(mClients.begin(), mClients.end(), [pClient](const decltype(mClients)::value_type &client) {
-            return client.first == pClient;
+        Clients::iterator it = std::find_if(mClients.begin(), mClients.end(), [pClient](const ClientEntry &clientEntry) {
+            return clientEntry.first == pClient;
         });
+        if (it != mClients.end() ) {
+            mClients.removeAll(*it);
+        }
         pClient->deleteLater();
     }
 }
