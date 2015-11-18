@@ -41,7 +41,8 @@ class File {
 public:
     enum Mode {
         Read,
-        Write
+        Write,
+        ReadWrite
     };
     struct Offset {
         Offset(uint64_t _chunk = 0, uint32_t _offsetInChunk = 0)
@@ -57,6 +58,7 @@ public:
     static File *createSnappy(void);
     static File *createForRead(const char *filename);
     static File *createForWrite(const char *filename);
+    static File *createBufferReader();
 public:
     File(const std::string &filename = std::string(),
          File::Mode mode = File::Read);
@@ -65,6 +67,8 @@ public:
     bool isOpened() const;
     File::Mode mode() const;
 
+    inline bool canRead() { return (m_mode == File::Read || m_mode == File::ReadWrite);}
+    inline bool canWrite() { return (m_mode == File::Write || m_mode == File::ReadWrite);}
     bool open(const std::string &filename, File::Mode mode);
     bool write(const void *buffer, size_t length);
     size_t read(void *buffer, size_t length);
@@ -115,7 +119,7 @@ inline bool File::open(const std::string &filename, File::Mode mode)
 
 inline bool File::write(const void *buffer, size_t length)
 {
-    if (!m_isOpened || m_mode != File::Write) {
+    if (!m_isOpened || !canWrite()) {
         return false;
     }
     return rawWrite(buffer, length);
@@ -123,7 +127,7 @@ inline bool File::write(const void *buffer, size_t length)
 
 inline size_t File::read(void *buffer, size_t length)
 {
-    if (!m_isOpened || m_mode != File::Read) {
+    if (!m_isOpened || !canRead()) {
         return 0;
     }
     return rawRead(buffer, length);
@@ -131,7 +135,7 @@ inline size_t File::read(void *buffer, size_t length)
 
 inline int File::percentRead()
 {
-    if (!m_isOpened || m_mode != File::Read) {
+    if (!m_isOpened || !canRead()) {
         return 0;
     }
     return rawPercentRead();
@@ -147,14 +151,14 @@ inline void File::close()
 
 inline void File::flush(void)
 {
-    if (m_mode == File::Write) {
+    if (canWrite()) {
         rawFlush();
     }
 }
 
 inline int File::getc()
 {
-    if (!m_isOpened || m_mode != File::Read) {
+    if (!m_isOpened || !canRead()) {
         return -1;
     }
     return rawGetc();
@@ -162,7 +166,7 @@ inline int File::getc()
 
 inline bool File::skip(size_t length)
 {
-    if (!m_isOpened || m_mode != File::Read) {
+    if (!m_isOpened || !canRead()) {
         return false;
     }
     return rawSkip(length);

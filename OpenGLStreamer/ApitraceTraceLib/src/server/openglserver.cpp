@@ -15,6 +15,7 @@
 #include <QDebug>
 
 #include <tuple>
+#include <algorithm>
 #include <cassert>
 
 QT_USE_NAMESPACE
@@ -32,14 +33,15 @@ OpenGLServer::OpenGLServer(quint16 port, bool debug, QObject *parent) :
         connect(mpWebSocketServer, &QWebSocketServer::newConnection,
                 this, &OpenGLServer::onNewConnection);
         connect(mpWebSocketServer, &QWebSocketServer::closed, this, &OpenGLServer::closed);
-        connect(&trace::localWriter, &trace::LocalWriter::glFunctionSerialized, this, &OpenGLServer::sendBinaryMessage);
     }
 }
 
 OpenGLServer::~OpenGLServer()
 {
     mpWebSocketServer->close();
-    qDeleteAll(mClients.begin(), mClients.end());
+    foreach (auto pClient, mClients) {
+        delete pClient.first;
+    }
 }
 
 void OpenGLServer::onNewConnection()
@@ -48,14 +50,32 @@ void OpenGLServer::onNewConnection()
 
     connect(pSocket, &QWebSocket::binaryMessageReceived, this, &OpenGLServer::processBinaryMessage);
     connect(pSocket, &QWebSocket::disconnected, this, &OpenGLServer::socketDisconnected);
+    connect(&trace::localWriter, &trace::LocalWriter::frameEnd, this, &OpenGLServer::onFrameEnd);
 
-    mClients << pSocket;
+
+    mClients << qMakePair(pSocket, false);
+    pSocket->sendBinaryMessage(trace::localWriter.getInitFrame());
 }
 
 void OpenGLServer::sendBinaryMessage(const QByteArray &message)
 {
-    foreach (QWebSocket *pClient, mClients) {
-        pClient->sendBinaryMessage(message);
+    foreach (auto pClient, mClients) {
+        pClient.first->sendBinaryMessage(message);
+    }
+}
+
+void OpenGLServer::onFrameEnd()
+{
+    for (auto &pClient :mClients) {
+        if (!pClient.second) {
+            trace::localWriter.resetSignatures();
+            QByteArray data;
+            data.append(trace::EVENT_RESET);
+            sendBinaryMessage(data);
+            pClient.second = true;
+            connect(&trace::localWriter, &trace::LocalWriter::glCallSerialized, this, &OpenGLServer::sendBinaryMessage);
+            break;
+        }
     }
 }
 
@@ -79,7 +99,9 @@ void OpenGLServer::socketDisconnected()
     if (mDebug)
         qDebug() << "socketDisconnected:" << pClient;
     if (pClient) {
-        mClients.removeAll(pClient);
+        std::find_if(mClients.begin(), mClients.end(), [pClient](const decltype(mClients)::value_type &client) {
+            return client.first == pClient;
+        });
         pClient->deleteLater();
     }
 }

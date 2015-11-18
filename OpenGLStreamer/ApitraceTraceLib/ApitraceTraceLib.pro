@@ -29,7 +29,8 @@ HEADERS += \
     src/trace/trace_writer_local.hpp \
     src/wrappers/config.hpp \
     src/wrappers/gltrace.hpp \
-    src/server/openglserver.h
+    src/server/openglserver.h \
+    src/trace/trace_serializer.h
 
 SOURCES += \
     src/trace/trace_writer_local.cpp \
@@ -38,7 +39,8 @@ SOURCES += \
     src/wrappers/egltrace.cpp \
     src/wrappers/glcaps.cpp \
     src/wrappers/gltrace_state.cpp \
-    src/server/openglserver.cpp
+    src/server/openglserver.cpp \
+    src/trace/trace_serializer.cpp
 
 unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceCommonLib/ -lApitraceCommonLib
 

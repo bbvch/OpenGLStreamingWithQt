@@ -113,7 +113,7 @@ public:
     {
         XVisualInfo *visinfo = static_cast<const EglVisual *>(visual)->visinfo;
 
-        const char *name = "eglretrace";
+        const char *name = "ClientApp";
         window = createWindow(visinfo, name, width, height);
 
         eglWaitNative(EGL_CORE_NATIVE_ENGINE);

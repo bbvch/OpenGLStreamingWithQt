@@ -35,6 +35,7 @@
 #include "os_thread.hpp"
 #include "os_process.hpp"
 #include "trace_writer.hpp"
+#include "trace_serializer.h"
 
 #include <QObject>
 #include <QByteArray>
@@ -61,10 +62,12 @@ namespace trace {
         Q_OBJECT
 
     signals:
-        void glFunctionSerialized(const QByteArray &message);
+        void glCallSerialized(const QByteArray &message);
+        void frameEnd();
 
     private:
-        QByteArray callData;
+        TraceSerializer m_traceSerializer;
+        QByteArray m_callData;
 
     private :
         virtual void onWriteBuffer(const void *sBuffer, size_t dwBytesToWrite) override;
@@ -101,6 +104,9 @@ namespace trace {
         ~LocalWriter();
 
         void open(void);
+
+        const QByteArray &getInitFrame();
+        void resetSignatures();
 
         /**
          * It will acquire the mutex.

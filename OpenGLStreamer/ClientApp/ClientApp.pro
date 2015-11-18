@@ -1,26 +1,15 @@
 include(../config.pri)
 
-QT       += core gui widgets websockets
+QT       += core widgets websockets
 
 TARGET  = ClientApp
 
 TEMPLATE = app
 
 SOURCES += \
-    src/main.cpp \
-    src/GlWidget.cpp
+    src/main.cpp
 
-HEADERS += \
-    src/GlWidget.h
-
-
-DISTFILES += \
-    src/vertexShader.vsh \
-    src/fragmentShader.fsh
-
-RESOURCES += \
-    src/shaders.qrc \
-    src/textures.qrc
+HEADERS +=
 
 unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceRetraceLib/ -lApitraceRetraceLib
 

@@ -83,7 +83,8 @@ SOURCES += \
     src/common/trace_parser_flags.cpp \
     src/common/trace_file_read.cpp \
     src/common/trace_file_zlib.cpp \
-    src/common/trace_parser_loop.cpp
+    src/common/trace_parser_loop.cpp \
+    src/common/trace_file_buffer.cpp
 
 HEADERS += \
     src/common/os.hpp \
