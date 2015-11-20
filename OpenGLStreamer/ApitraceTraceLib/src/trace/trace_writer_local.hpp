@@ -62,7 +62,7 @@ namespace trace {
         Q_OBJECT
 
     signals:
-        void glFrameSerialized(const QByteArray &frameData);
+        void glFrameSerialized(const QByteArray frameData);
         void frameEnd();
 
     private:

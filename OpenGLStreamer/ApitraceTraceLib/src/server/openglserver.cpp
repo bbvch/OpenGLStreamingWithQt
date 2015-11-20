@@ -62,6 +62,9 @@ void OpenGLServer::sendBinaryMessage(const QByteArray &message)
     foreach (auto &pClient, mClients) {
         if (pClient.second) {
             pClient.first->sendBinaryMessage(message);
+            if (mDebug)
+                qDebug() << "Message sent. Size:" << message.size();
+
         }
     }
 }
@@ -76,7 +79,7 @@ void OpenGLServer::onFrameEnd()
             data.append(trace::EVENT_RESET);
             sendBinaryMessage(data);
             connect(&trace::localWriter, &trace::LocalWriter::glFrameSerialized, this, &OpenGLServer::sendBinaryMessage,
-                    static_cast<Qt::ConnectionType>(Qt::DirectConnection | Qt::UniqueConnection));
+                    static_cast<Qt::ConnectionType>(Qt::AutoConnection | Qt::UniqueConnection));
             break;
         }
     }

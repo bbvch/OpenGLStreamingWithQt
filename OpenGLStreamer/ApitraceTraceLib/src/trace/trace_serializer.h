@@ -25,7 +25,7 @@ public:
 
 signals:
     void initFrameCreated();
-    void frameSerialized(const QByteArray &frameData);
+    void frameSerialized(const QByteArray frameData);
 
 private:
     QByteArray m_initFrame;

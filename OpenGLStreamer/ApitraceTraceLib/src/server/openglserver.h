@@ -21,8 +21,8 @@ class OpenGLServer : public QObject
 
 public:
     explicit OpenGLServer(quint16 port, bool debug = false, QObject *parent = Q_NULLPTR);
-    using ClientEntry = QPair<QWebSocket *, bool>;
-    using Clients = QList<ClientEntry>;
+    typedef QPair<QWebSocket *, bool> ClientEntry;
+    typedef QList<ClientEntry> Clients;
     ~OpenGLServer();
 
 signals:
@@ -38,7 +38,7 @@ private slots:
 private:
     QWebSocketServer *mpWebSocketServer;
     Clients mClients;
-    bool mDebug{false};
+    bool mDebug;
 };
 
 #endif //OPENGLSERVER_H

@@ -72,8 +72,7 @@ LocalWriter::LocalWriter() :
     // interfering with the application's signal handling.
     os::setExceptionCallback(exceptionCallback);
 
-    connect(&m_traceSerializer, &TraceSerializer::frameSerialized,
-            this, &LocalWriter::glFrameSerialized, Qt::DirectConnection);
+    connect(&m_traceSerializer, &TraceSerializer::frameSerialized, this, &LocalWriter::glFrameSerialized);
 }
 
 const QByteArray &LocalWriter::getInitFrame()
