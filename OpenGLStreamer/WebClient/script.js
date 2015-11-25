@@ -1,59 +1,34 @@
+function connectWebSocket() {
+	try {
+	    var socket = new WebSocket("ws://localhost:1234");
+	    var processCall = Module.cwrap('processCall', null, ['number','number']);
+	    console.log('Socket Status: '+socket.readyState, "event");
 
-   
-    function analyze_data(blob)
+	    socket.onopen = function(){
+	        console.log('Socket Status: '+socket.readyState+' (open)', "event");
+	    };
+	    socket.onclose = function(){
+	        console.log('Socket Status: '+socket.readyState+' (closed)', "event");
+	    };
+	    socket.onmessage = function(msg){
+	        var myReader = new FileReader();
+	        myReader.addEventListener("loadend", function(e) {
+	            var data = new Uint8Array(this.result);
+	            var nDataBytes = data.length * data.BYTES_PER_ELEMENT;
+	            var dataPtr = Module._malloc(nDataBytes);
+	            var dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
+	            dataHeap.set(data);
+	            processCall(dataHeap.byteOffset, data.length);
+	            console.log("Frame processed");
+	            Module._free(dataHeap.byteOffset);
+
+	        });
+	        myReader.readAsArrayBuffer(msg.data);
+	    };
+	}
+	catch(exception)
 	{
-	    var myReader = new FileReader();
-	    myReader.readAsArrayBuffer(blob);
-	   
-	    myReader.addEventListener("loadend", function(e)
-	    {			
-			message(this.result.byteLength, "data");
-	    });
-
+	    console.log('Error'+exception, "exception");
 	}
-    
-    function message(msg, type){
-		
-		var log = document.getElementById("log");
-		var newParagraph = document.createElement("p");
-		var newTextNode = document.createTextNode(msg);
-		
-		if( type !== undefined) { 
-			newParagraph.setAttribute("class",type);
-		} 
-		
-		newParagraph.appendChild(newTextNode);
-		log.appendChild(newParagraph);
-	
-	}
-    
-	function connect(){
-    try{
-
-	var socket;
-	var host = "ws://localhost:1234";
-    var socket = new WebSocket(host);
-
-        message('Socket Status: '+socket.readyState, "event");
-
-        socket.onopen = function(){
-       		 message('Socket Status: '+socket.readyState+' (open)', "event");
-        }
-
-        socket.onmessage = function(msg){
-       		 //message(msg.data, "data");
-		analyze_data(msg.data);
-        }
-
-        socket.onclose = function(){
-       		 message('Socket Status: '+socket.readyState+' (Closed)', "event");
-        }			
-
-    } catch(exception){
-   		 message('Error'+exception, "exception");
-    }
-}
-    
- 	window.addEventListener("load", connect, true);
-    	
+} 
    

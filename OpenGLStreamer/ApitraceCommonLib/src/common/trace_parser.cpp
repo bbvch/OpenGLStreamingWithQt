@@ -59,7 +59,9 @@ bool Parser::open(const char *filename) {
     assert(!file);
     if (filename)
     {
+#ifndef __EMSCRIPTEN__
         file = File::createForRead(filename);
+#endif
         if (!file) {
             return false;
         }
