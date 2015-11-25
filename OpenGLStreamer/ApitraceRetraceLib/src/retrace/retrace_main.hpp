@@ -3,8 +3,8 @@
 
 namespace retrace {
 
-void init();
-void processCall(const char *callData, uint64_t length);
+extern "C" void init();
+extern "C" void processCall(const char *callData, uint64_t length);
 
 }
 

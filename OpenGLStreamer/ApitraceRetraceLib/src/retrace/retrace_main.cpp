@@ -47,6 +47,9 @@
 #include "state_writer.hpp"
 #include "ws.hpp"
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 static bool waitOnFinish = false;
 
@@ -586,7 +589,9 @@ mainLoop() {
 
 void init()
 {
+#ifndef __EMSCRIPTEN__
     setUp();
+#endif
     addCallbacks(retracer);
     parser = new trace::Parser;
     parser->open(nullptr);
@@ -594,18 +599,26 @@ void init()
 
 void processCall(const char *callData, uint64_t length)
 {
-    assert(callData);
+    assert(callData && length);
 
     parser->setData(callData, length);
     trace::Call *call = nullptr;
     while ((call = parser->parse_call())) {
-        retraceCall(call);
+        //retraceCall(call);
         delete call;
     }
 }
 
 } /* namespace retrace */
 
+#ifdef __EMSCRIPTEN__
+extern "C"
+int main()
+{
+    retrace::init();
+    EM_ASM(connectWebSocket(););
+}
+#endif
 
 static void
 usage(const char *argv0) {
@@ -698,7 +711,7 @@ static void exceptionCallback(void)
     std::cerr << retrace::callNo << ": error: caught an unhandled exception\n";
 }
 
-
+/*
 extern "C"
 int main(int argc, char **argv)
 {
@@ -787,14 +800,14 @@ int main(int argc, char **argv)
                 os::setBinaryMode(stdout);
                 retrace::verbosity = -2;
             } else {
-                /*
-                 * Create the snapshot directory if it does not exist.
-                 *
-                 * We can't just use trimFilename() because when applied to
-                 * "/foo/boo/" it would merely return "/foo".
-                 *
-                 * XXX: create nested directories.
-                 */
+                //
+                // Create the snapshot directory if it does not exist.
+                //
+                // We can't just use trimFilename() because when applied to
+                // "/foo/boo/" it would merely return "/foo".
+                //
+                // XXX: create nested directories.
+                //
                 os::String prefix(snapshotPrefix);
                 os::String::iterator sep = prefix.rfindSep(false);
                 if (sep != prefix.end()) {
@@ -918,3 +931,4 @@ int main(int argc, char **argv)
 
     return 0;
 }
+*/
