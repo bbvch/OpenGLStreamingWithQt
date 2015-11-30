@@ -604,7 +604,7 @@ void processCall(const char *callData, uint64_t length)
     parser->setData(callData, length);
     trace::Call *call = nullptr;
     while ((call = parser->parse_call())) {
-        //retraceCall(call);
+        retraceCall(call);
         delete call;
     }
 }
