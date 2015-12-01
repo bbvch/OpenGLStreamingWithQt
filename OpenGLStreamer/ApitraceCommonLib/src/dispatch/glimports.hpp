@@ -40,6 +40,11 @@
 #  include <X11/Xlib.h>
 #endif /* !_WIN32 */
 
+#ifdef __EMSCRIPTEN__
+#include <GLES2/gl2.h>
+#include <GLES/gl.h>
+#undef __gl_h_
+#endif
 
 #include <GL/gl.h>
 #include <GL/glext.h>

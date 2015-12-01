@@ -76,7 +76,7 @@ trace::Profiler profiler;
 
 
 int verbosity = 0;
-unsigned debug = 1;
+unsigned debug = 0;
 bool forceWindowed = true;
 bool dumpingState = false;
 bool dumpingSnapshots = false;
@@ -107,12 +107,14 @@ void
 frameComplete(trace::Call &call) {
     ++frameNo;
 
+#ifndef __EMSCRIPTEN__
     if (!(call.flags & trace::CALL_FLAG_END_FRAME) &&
         snapshotFrequency.contains(call)) {
         // This call doesn't have the end of frame flag, so take any snapshot
         // now.
         takeSnapshot(call.no);
     }
+#endif
 }
 
 
@@ -589,9 +591,7 @@ mainLoop() {
 
 void init()
 {
-#ifndef __EMSCRIPTEN__
     setUp();
-#endif
     addCallbacks(retracer);
     parser = new trace::Parser;
     parser->open(nullptr);

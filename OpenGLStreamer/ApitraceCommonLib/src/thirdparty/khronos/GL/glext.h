@@ -465,8 +465,10 @@ GLAPI void APIENTRY glBlendEquation (GLenum mode);
 #ifndef GL_VERSION_1_5
 #define GL_VERSION_1_5 1
 #include <stddef.h>
+#ifndef __EMSCRIPTEN__
 typedef ptrdiff_t GLsizeiptr;
 typedef ptrdiff_t GLintptr;
+#endif
 #define GL_BUFFER_SIZE                    0x8764
 #define GL_BUFFER_USAGE                   0x8765
 #define GL_QUERY_COUNTER_BITS             0x8864

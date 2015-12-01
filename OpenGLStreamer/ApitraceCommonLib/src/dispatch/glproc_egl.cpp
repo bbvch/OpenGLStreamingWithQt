@@ -62,6 +62,7 @@ void *_libGlHandle = NULL;
  * the API specific libraries.
  *
  */
+#ifndef __EMSCRIPTEN__
 void *
 _getPublicProcAddress(const char *procName)
 {
@@ -180,5 +181,6 @@ _getPrivateProcAddress(const char *procName)
 
     return proc;
 }
+#endif //__EMSCRIPTEN__
 
 #endif

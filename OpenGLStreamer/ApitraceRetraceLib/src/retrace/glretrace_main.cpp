@@ -400,8 +400,10 @@ initContext() {
                 glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
                 glDebugMessageCallback(&debugOutputCallback, currentContext);
             } else {
+#ifndef __EMSCRIPTEN__
                 glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
                 glDebugMessageCallbackKHR(&debugOutputCallback, currentContext);
+#endif
             }
 
             if (DEBUG_OUTPUT_SYNCHRONOUS) {
@@ -646,7 +648,9 @@ retrace::setFeatureLevel(const char *featureLevel)
 void
 retrace::setUp(void) {
     glws::init();
+#ifndef __EMSCRIPTEN__
     dumper = &glDumper;
+#endif
 }
 
 
@@ -655,8 +659,10 @@ retrace::addCallbacks(retrace::Retracer &retracer)
 {
     retracer.addCallbacks(glretrace::gl_callbacks);
     retracer.addCallbacks(glretrace::glx_callbacks);
+#ifndef __EMSCRIPTEN__
     retracer.addCallbacks(glretrace::wgl_callbacks);
     retracer.addCallbacks(glretrace::cgl_callbacks);
+#endif //__EMSCRIPTEN__
     retracer.addCallbacks(glretrace::egl_callbacks);
 }
 

@@ -33,6 +33,9 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef __EMSCRIPTEN__
+#include <iostream>
+#endif
 
 #ifdef _WIN32
 #ifndef snprintf
@@ -48,11 +51,28 @@
 
 namespace os {
 
+#ifndef __EMSCRIPTEN__
 void log(const char *format, ...)
 #ifdef __GNUC__
     __attribute__ ((format (printf, 1, 2)))
 #endif
 ;
+#else
+
+template<typename Last>
+void log(Last && last)
+{
+    std::cerr << std::forward<Last>(last);
+}
+
+template<typename First, typename ...Rest>
+void log(First && first, Rest && ...rest)
+{
+    std::cerr << std::forward<First>(first);
+    log(std::forward<Rest>(rest)...);
+}
+#endif
+
 
 #if defined _WIN32 || defined __CYGWIN__
   /* We always use .def files on windows for now */

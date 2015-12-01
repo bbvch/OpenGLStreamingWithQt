@@ -77,7 +77,9 @@ processEvent(XEvent &event) {
         {
             char buffer[32];
             KeySym keysym;
+#ifndef __EMSCRIPTEN__
             XLookupString(&event.xkey, buffer, sizeof buffer - 1, &keysym, NULL);
+#endif
             if (keysym == XK_Escape) {
                 exit(0);
             }
@@ -110,6 +112,7 @@ static int (*oldErrorHandler)(Display *, XErrorEvent *) = NULL;
 void
 initX(void)
 {
+#ifndef __EMSCRIPTEN__
 #ifndef NDEBUG
     _Xdebug = 1;
 #endif
@@ -117,10 +120,13 @@ initX(void)
     XInitThreads();
 
     oldErrorHandler = XSetErrorHandler(errorHandler);
+#endif // __EMSCRIPTEN__
 
     display = XOpenDisplay(NULL);
     if (!display) {
+#ifndef __EMSCRIPTEN__
         std::cerr << "error: unable to open display " << XDisplayName(NULL) << "\n";
+#endif
         exit(1);
     }
 
@@ -130,6 +136,7 @@ initX(void)
 void
 cleanupX(void)
 {
+#ifndef __EMSCRIPTEN__
     if (display) {
         XCloseDisplay(display);
         display = NULL;
@@ -137,6 +144,7 @@ cleanupX(void)
 
     XSetErrorHandler(oldErrorHandler);
     oldErrorHandler = NULL;
+#endif
 }
 
 
@@ -166,10 +174,12 @@ waitForEvent(Window window, int type)
 void
 processKeys(Window window)
 {
+#ifndef __EMSCRIPTEN__
     XEvent event;
     while (XCheckWindowEvent(display, window, StructureNotifyMask | KeyPressMask, &event)) {
         processEvent(event);
     }
+#endif
 }
 
 
@@ -184,7 +194,9 @@ createWindow(XVisualInfo *visinfo,
     XSetWindowAttributes attr;
     attr.background_pixel = 0;
     attr.border_pixel = 0;
+#ifndef __EMSCRIPTEN__
     attr.colormap = XCreateColormap(display, root, visinfo->visual, AllocNone);
+#endif
     attr.event_mask = StructureNotifyMask | KeyPressMask;
 
     unsigned long mask;
@@ -196,12 +208,21 @@ createWindow(XVisualInfo *visinfo,
         display, root,
         x, y, width, height,
         0,
+#ifndef __EMSCRIPTEN__
         visinfo->depth,
+#else
+        CopyFromParent,
+#endif
         InputOutput,
+#ifndef __EMSCRIPTEN__
         visinfo->visual,
+#else
+        CopyFromParent,
+#endif
         mask,
         &attr);
 
+#ifndef __EMSCRIPTEN__
     XSizeHints sizehints;
     sizehints.x = x;
     sizehints.y = y;
@@ -213,6 +234,7 @@ createWindow(XVisualInfo *visinfo,
     XSetStandardProperties(
         display, window, name, name,
         None, (char **)NULL, 0, &sizehints);
+#endif
 
     return window;
 }
@@ -221,6 +243,7 @@ createWindow(XVisualInfo *visinfo,
 void
 resizeWindow(Window window, int w, int h)
 {
+#ifndef __EMSCRIPTEN__
     // Tell the window manager to respect the requested size
     XSizeHints size_hints;
     size_hints.max_width  = size_hints.min_width  = w;
@@ -231,18 +254,21 @@ resizeWindow(Window window, int w, int h)
     XResizeWindow(display, window, w, h);
 
     waitForEvent(window, ConfigureNotify);
+#endif
 }
 
 
 void
 showWindow(Window window)
 {
+#ifndef __EMSCRIPTEN__
     // FIXME: This works for DRI drivers, but not NVIDIA proprietary drivers,
     // for which the only solution seems to be to use Pbuffers.
     if (true || !ws::headless) {
         XMapWindow(display, window);
         waitForEvent(window, MapNotify);
     }
+#endif
 }
 
 

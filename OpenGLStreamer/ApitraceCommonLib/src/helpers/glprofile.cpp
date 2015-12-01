@@ -208,6 +208,11 @@ malformed:
     return profile;
 }
 
+#ifdef __EMSCRIPTEN__
+#define _glGetString glGetString
+#define _glGetStringi glGetStringi
+#define _glGetIntegerv glGetIntegerv
+#endif
 
 /*
  * Get the profile of the current context.
@@ -221,8 +226,13 @@ getCurrentContextProfile(void)
     assert(parseVersion("3.3 (Core Profile) Mesa 10.3.2") == Profile(API_GL, 3, 3));
     assert(parseVersion("4.4.0 NVIDIA 331.89") == Profile(API_GL, 4, 4));
     assert(parseVersion("OpenGL ES 3.0 Mesa 10.3.2") == Profile(API_GLES, 3, 0));
+    assert(parseVersion("OpenGL ES 2.0") == Profile(API_GLES, 2, 0));
 
+#ifndef __EMSCRIPTEN__
     const char *version = (const char *)_glGetString(GL_VERSION);
+#else
+    const char *version = "OpenGL ES 2.0";
+#endif
     if (!version) {
         os::log("apitrace: warning: got null GL_VERSION\n");
         return profile;

@@ -23409,7 +23409,7 @@ static void retrace_glVertexAttribDivisorANGLE(trace::Call &call) {
         glretrace::checkGlError(call);
     }
 }
-
+/*
 static void retrace_glGenQueriesANGLE(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -23449,9 +23449,9 @@ static void retrace_glGenQueriesANGLE(trace::Call &call) {
     }
         }
     }
-}
+}*/
 
-static void retrace_glDeleteQueriesANGLE(trace::Call &call) {
+/*static void retrace_glDeleteQueriesANGLE(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
     GLsizei n;
@@ -23489,9 +23489,9 @@ static void retrace_glDeleteQueriesANGLE(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
-static void retrace_glBeginQueryANGLE(trace::Call &call) {
+/*static void retrace_glBeginQueryANGLE(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
     GLenum target;
@@ -23523,9 +23523,9 @@ static void retrace_glBeginQueryANGLE(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
-static void retrace_glEndQueryANGLE(trace::Call &call) {
+/*static void retrace_glEndQueryANGLE(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
     GLenum target;
@@ -23550,9 +23550,9 @@ static void retrace_glEndQueryANGLE(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
-static void retrace_glQueryCounterANGLE(trace::Call &call) {
+/*static void retrace_glQueryCounterANGLE(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
     GLuint id;
@@ -23584,7 +23584,7 @@ static void retrace_glQueryCounterANGLE(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
 static void retrace_glCopyTextureLevelsAPPLE(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
@@ -24137,7 +24137,7 @@ static void retrace_glFlushMappedBufferRangeAPPLE(trace::Call &call) {
         glretrace::checkGlError(call);
     }
 }
-
+/*
 static void retrace_glFlushRenderAPPLE(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -25026,7 +25026,7 @@ static void retrace_glMapVertexAttrib2fAPPLE(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
 static void retrace_glReleaseShaderCompiler(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
@@ -67772,7 +67772,7 @@ if (glretrace::supportsARBShaderObjects) {
         std::cout << "program " << _origResult << " -> " << _result << "\n";
     }
 }
-
+/*
 static void retrace_glActiveShaderProgramEXT(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -67813,8 +67813,8 @@ if (glretrace::supportsARBShaderObjects) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
-
+}*/
+/*
 static void retrace_glBindProgramPipelineEXT(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -67847,9 +67847,9 @@ static void retrace_glBindProgramPipelineEXT(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
-static void retrace_glCreateShaderProgramvEXT(trace::Call &call) {
+/*static void retrace_glCreateShaderProgramvEXT(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
     GLenum type;
@@ -67936,9 +67936,9 @@ if (glretrace::supportsARBShaderObjects) {
     if (retrace::verbosity >= 2) {
         std::cout << "program " << _origResult << " -> " << _result << "\n";
     }
-}
+}*/
 
-static void retrace_glDeleteProgramPipelinesEXT(trace::Call &call) {
+/*static void retrace_glDeleteProgramPipelinesEXT(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
     GLsizei n;
@@ -67972,8 +67972,8 @@ static void retrace_glDeleteProgramPipelinesEXT(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
-
+}*/
+/*
 static void retrace_glGenProgramPipelinesEXT(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -68013,9 +68013,9 @@ static void retrace_glGenProgramPipelinesEXT(trace::Call &call) {
     }
         }
     }
-}
+}*/
 
-static void retrace_glUseProgramStagesEXT(trace::Call &call) {
+/*static void retrace_glUseProgramStagesEXT(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
     GLuint pipeline;
@@ -68058,9 +68058,9 @@ if (glretrace::supportsARBShaderObjects) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
-static void retrace_glValidateProgramPipelineEXT(trace::Call &call) {
+/*static void retrace_glValidateProgramPipelineEXT(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
     GLuint pipeline;
@@ -68089,7 +68089,7 @@ static void retrace_glValidateProgramPipelineEXT(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
 static void retrace_glBindImageTextureEXT(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
@@ -72486,7 +72486,7 @@ static void retrace_glObjectPtrLabel(trace::Call &call) {
         glretrace::checkGlError(call);
     }
 }
-
+/*
 static void retrace_glDebugMessageControlKHR(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -72533,8 +72533,8 @@ static void retrace_glDebugMessageControlKHR(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
-
+}*/
+/*
 static void retrace_glDebugMessageInsertKHR(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -72575,8 +72575,8 @@ static void retrace_glDebugMessageInsertKHR(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
-
+}*/
+/*
 static void retrace_glPushDebugGroupKHR(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -72611,8 +72611,8 @@ static void retrace_glPushDebugGroupKHR(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
-
+}*/
+/*
 static void retrace_glPopDebugGroupKHR(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -72635,8 +72635,8 @@ static void retrace_glPopDebugGroupKHR(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
-
+}*/
+/*
 static void retrace_glObjectLabelKHR(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -72710,7 +72710,7 @@ static void retrace_glObjectPtrLabelKHR(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
 static void retrace_glReadnPixels(trace::Call &call) {
     GLint _pack_buffer = 0;
@@ -72764,7 +72764,7 @@ static void retrace_glReadnPixels(trace::Call &call) {
         glretrace::checkGlError(call);
     }
 }
-
+/*
 static void retrace_glNewBufferRegion(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -72798,8 +72798,8 @@ static void retrace_glNewBufferRegion(trace::Call &call) {
     if (retrace::verbosity >= 2) {
         std::cout << "region " << _origResult << " -> " << _result << "\n";
     }
-}
-
+}*/
+/*
 static void retrace_glDeleteBufferRegion(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -72829,8 +72829,8 @@ static void retrace_glDeleteBufferRegion(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
-
+}*/
+/*
 static void retrace_glReadBufferRegion(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -72872,8 +72872,8 @@ static void retrace_glReadBufferRegion(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
-
+}*/
+/*
 static void retrace_glDrawBufferRegion(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -72921,7 +72921,7 @@ static void retrace_glDrawBufferRegion(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
 static void retrace_glResizeBuffersMESA(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
@@ -74521,7 +74521,7 @@ static void retrace_glCopyImageSubDataNV(trace::Call &call) {
     }
 }
 
-static void retrace_glCoverageMaskNV(trace::Call &call) {
+/*static void retrace_glCoverageMaskNV(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
     GLboolean mask;
@@ -74546,8 +74546,8 @@ static void retrace_glCoverageMaskNV(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
-
+}*/
+/*
 static void retrace_glCoverageOperationNV(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -74573,7 +74573,7 @@ static void retrace_glCoverageOperationNV(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
 static void retrace_glDepthRangedNV(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
@@ -94265,7 +94265,7 @@ static void retrace_glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN(tra
         glretrace::checkGlError(call);
     }
 }
-
+/*
 static void retrace_glAddSwapHintRectWIN(trace::Call &call) {
     retrace::ScopedAllocator _allocator;
     (void)_allocator;
@@ -94300,7 +94300,7 @@ static void retrace_glAddSwapHintRectWIN(trace::Call &call) {
     if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {
         glretrace::checkGlError(call);
     }
-}
+}*/
 
 const retrace::Entry glretrace::gl_callbacks[] = {
     {"glCullFace", &retrace_glCullFace},
@@ -95053,12 +95053,12 @@ const retrace::Entry glretrace::gl_callbacks[] = {
     {"glDrawArraysInstancedANGLE", &retrace_glDrawArraysInstancedANGLE},
     {"glDrawElementsInstancedANGLE", &retrace_glDrawElementsInstancedANGLE},
     {"glVertexAttribDivisorANGLE", &retrace_glVertexAttribDivisorANGLE},
-    {"glGenQueriesANGLE", &retrace_glGenQueriesANGLE},
-    {"glDeleteQueriesANGLE", &retrace_glDeleteQueriesANGLE},
+    {"glGenQueriesANGLE", &retrace::ignore/*&retrace_glGenQueriesANGLE*/},
+    {"glDeleteQueriesANGLE", &retrace::ignore/*&&retrace_glDeleteQueriesANGLE*/},
     {"glIsQueryANGLE", &retrace::ignore},
-    {"glBeginQueryANGLE", &retrace_glBeginQueryANGLE},
-    {"glEndQueryANGLE", &retrace_glEndQueryANGLE},
-    {"glQueryCounterANGLE", &retrace_glQueryCounterANGLE},
+    {"glBeginQueryANGLE", &retrace::ignore/*&retrace_glBeginQueryANGLE*/},
+    {"glEndQueryANGLE", &retrace::ignore/*&retrace_glEndQueryANGLE*/},
+    {"glQueryCounterANGLE", &retrace::ignore/*&retrace_glQueryCounterANGLE*/},
     {"glGetQueryivANGLE", &retrace::ignore},
     {"glGetQueryObjectivANGLE", &retrace::ignore},
     {"glGetQueryObjectuivANGLE", &retrace::ignore},
@@ -95081,7 +95081,7 @@ const retrace::Entry glretrace::gl_callbacks[] = {
     {"glFinishObjectAPPLE", &retrace_glFinishObjectAPPLE},
     {"glBufferParameteriAPPLE", &retrace_glBufferParameteriAPPLE},
     {"glFlushMappedBufferRangeAPPLE", &retrace_glFlushMappedBufferRangeAPPLE},
-    {"glFlushRenderAPPLE", &retrace_glFlushRenderAPPLE},
+    /*{"glFlushRenderAPPLE", &retrace_glFlushRenderAPPLE},
     {"glFinishRenderAPPLE", &retrace_glFinishRenderAPPLE},
     {"glSwapAPPLE", &retrace_glSwapAPPLE},
     {"glRenderbufferStorageMultisampleAPPLE", &retrace_glRenderbufferStorageMultisampleAPPLE},
@@ -95111,7 +95111,7 @@ const retrace::Entry glretrace::gl_callbacks[] = {
     {"glMapVertexAttrib1dAPPLE", &retrace_glMapVertexAttrib1dAPPLE},
     {"glMapVertexAttrib1fAPPLE", &retrace_glMapVertexAttrib1fAPPLE},
     {"glMapVertexAttrib2dAPPLE", &retrace_glMapVertexAttrib2dAPPLE},
-    {"glMapVertexAttrib2fAPPLE", &retrace_glMapVertexAttrib2fAPPLE},
+    {"glMapVertexAttrib2fAPPLE", &retrace_glMapVertexAttrib2fAPPLE},*/
     {"glReleaseShaderCompiler", &retrace_glReleaseShaderCompiler},
     {"glShaderBinary", &retrace_glShaderBinary},
     {"glGetShaderPrecisionFormat", &retrace::ignore},
@@ -96331,16 +96331,16 @@ const retrace::Entry glretrace::gl_callbacks[] = {
     {"glUseShaderProgramEXT", &retrace_glUseShaderProgramEXT},
     {"glActiveProgramEXT", &retrace_glActiveProgramEXT},
     {"glCreateShaderProgramEXT", &retrace_glCreateShaderProgramEXT},
-    {"glActiveShaderProgramEXT", &retrace_glActiveShaderProgramEXT},
-    {"glBindProgramPipelineEXT", &retrace_glBindProgramPipelineEXT},
-    {"glCreateShaderProgramvEXT", &retrace_glCreateShaderProgramvEXT},
-    {"glDeleteProgramPipelinesEXT", &retrace_glDeleteProgramPipelinesEXT},
-    {"glGenProgramPipelinesEXT", &retrace_glGenProgramPipelinesEXT},
+    //{"glActiveShaderProgramEXT", &retrace_glActiveShaderProgramEXT},
+    //{"glBindProgramPipelineEXT", &retrace_glBindProgramPipelineEXT},
+    //{"glCreateShaderProgramvEXT", &retrace_glCreateShaderProgramvEXT},
+    //{"glDeleteProgramPipelinesEXT", &retrace_glDeleteProgramPipelinesEXT},
+    //{"glGenProgramPipelinesEXT", &retrace_glGenProgramPipelinesEXT},
     {"glGetProgramPipelineInfoLogEXT", &retrace::ignore},
     {"glGetProgramPipelineivEXT", &retrace::ignore},
     {"glIsProgramPipelineEXT", &retrace::ignore},
-    {"glUseProgramStagesEXT", &retrace_glUseProgramStagesEXT},
-    {"glValidateProgramPipelineEXT", &retrace_glValidateProgramPipelineEXT},
+    //{"glUseProgramStagesEXT", &retrace_glUseProgramStagesEXT},
+    //{"glValidateProgramPipelineEXT", &retrace_glValidateProgramPipelineEXT},
     {"glBindImageTextureEXT", &retrace_glBindImageTextureEXT},
     {"glMemoryBarrierEXT", &retrace_glMemoryBarrierEXT},
     {"glStencilClearTagEXT", &retrace_glStencilClearTagEXT},
@@ -96493,15 +96493,15 @@ const retrace::Entry glretrace::gl_callbacks[] = {
     {"glGetObjectLabel", &retrace::ignore},
     {"glObjectPtrLabel", &retrace_glObjectPtrLabel},
     {"glGetObjectPtrLabel", &retrace::ignore},
-    {"glDebugMessageControlKHR", &retrace_glDebugMessageControlKHR},
-    {"glDebugMessageInsertKHR", &retrace_glDebugMessageInsertKHR},
+    //{"glDebugMessageControlKHR", &retrace_glDebugMessageControlKHR},
+    //{"glDebugMessageInsertKHR", &retrace_glDebugMessageInsertKHR},
     {"glDebugMessageCallbackKHR", &retrace::ignore},
     {"glGetDebugMessageLogKHR", &retrace::ignore},
-    {"glPushDebugGroupKHR", &retrace_glPushDebugGroupKHR},
-    {"glPopDebugGroupKHR", &retrace_glPopDebugGroupKHR},
-    {"glObjectLabelKHR", &retrace_glObjectLabelKHR},
+    //{"glPushDebugGroupKHR", &retrace_glPushDebugGroupKHR},
+    //{"glPopDebugGroupKHR", &retrace_glPopDebugGroupKHR},
+    //{"glObjectLabelKHR", &retrace_glObjectLabelKHR},
     {"glGetObjectLabelKHR", &retrace::ignore},
-    {"glObjectPtrLabelKHR", &retrace_glObjectPtrLabelKHR},
+    //{"glObjectPtrLabelKHR", &retrace_glObjectPtrLabelKHR},
     {"glGetObjectPtrLabelKHR", &retrace::ignore},
     {"glGetPointervKHR", &retrace::ignore},
     {"glGetGraphicsResetStatus", &retrace::ignore},
@@ -96509,10 +96509,10 @@ const retrace::Entry glretrace::gl_callbacks[] = {
     {"glGetnUniformfv", &retrace::ignore},
     {"glGetnUniformiv", &retrace::ignore},
     {"glGetnUniformuiv", &retrace::ignore},
-    {"glNewBufferRegion", &retrace_glNewBufferRegion},
-    {"glDeleteBufferRegion", &retrace_glDeleteBufferRegion},
-    {"glReadBufferRegion", &retrace_glReadBufferRegion},
-    {"glDrawBufferRegion", &retrace_glDrawBufferRegion},
+    //{"glNewBufferRegion", &retrace_glNewBufferRegion},
+    //{"glDeleteBufferRegion", &retrace_glDeleteBufferRegion},
+    //{"glReadBufferRegion", &retrace_glReadBufferRegion},
+    //{"glDrawBufferRegion", &retrace_glDrawBufferRegion},
     {"glBufferRegionEnabled", &retrace::ignore},
     {"glResizeBuffersMESA", &retrace_glResizeBuffersMESA},
     {"glWindowPos2dMESA", &retrace_glWindowPos2dMESA},
@@ -96561,8 +96561,8 @@ const retrace::Entry glretrace::gl_callbacks[] = {
     {"glBeginConditionalRenderNV", &retrace_glBeginConditionalRenderNV},
     {"glEndConditionalRenderNV", &retrace_glEndConditionalRenderNV},
     {"glCopyImageSubDataNV", &retrace_glCopyImageSubDataNV},
-    {"glCoverageMaskNV", &retrace_glCoverageMaskNV},
-    {"glCoverageOperationNV", &retrace_glCoverageOperationNV},
+    //{"glCoverageMaskNV", &retrace_glCoverageMaskNV},
+    //{"glCoverageOperationNV", &retrace_glCoverageOperationNV},
     {"glDepthRangedNV", &retrace_glDepthRangedNV},
     {"glClearDepthdNV", &retrace_glClearDepthdNV},
     {"glDepthBoundsdNV", &retrace_glDepthBoundsdNV},
@@ -97177,7 +97177,7 @@ const retrace::Entry glretrace::gl_callbacks[] = {
     {"glReplacementCodeuiTexCoord2fNormal3fVertex3fvSUN", &retrace_glReplacementCodeuiTexCoord2fNormal3fVertex3fvSUN},
     {"glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fSUN", &retrace_glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fSUN},
     {"glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN", &retrace_glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN},
-    {"glAddSwapHintRectWIN", &retrace_glAddSwapHintRectWIN},
+    //{"glAddSwapHintRectWIN", &retrace_glAddSwapHintRectWIN},
     {NULL, NULL}
 };
 

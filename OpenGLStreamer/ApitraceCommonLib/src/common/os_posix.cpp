@@ -244,7 +244,7 @@ int execute(char * const * args)
 
 static volatile bool logging = false;
 
-#ifndef HAVE_EXTERNAL_OS_LOG
+#if !defined(HAVE_EXTERNAL_OS_LOG) && !defined(__EMSCRIPTEN__)
 void
 log(const char *format, ...)
 {
@@ -278,7 +278,9 @@ long long timeFrequency = 0LL;
 void
 abort(void)
 {
+#ifndef __EMSCRIPTEN__
     _exit(1);
+#endif
 }
 
 

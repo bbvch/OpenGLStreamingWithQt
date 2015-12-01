@@ -94,7 +94,9 @@ public:
     {}
 
     ~EglVisual() {
+#ifndef __EMSCRIPTEN__
         XFree(visinfo);
+#endif
     }
 };
 
@@ -125,7 +127,9 @@ public:
     ~EglDrawable() {
         eglDestroySurface(eglDisplay, surface);
         eglWaitClient();
+#ifndef __EMSCRIPTEN__
         XDestroyWindow(display, window);
+#endif
         eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     }
 
@@ -156,6 +160,7 @@ public:
 
     void
     resize(int w, int h) {
+#ifndef __EMSCRIPTEN__
         if (w == width && h == height) {
             return;
         }
@@ -193,6 +198,7 @@ public:
 
         assert(eglWidth == width);
         assert(eglHeight == height);
+#endif
     }
 
     void show(void) {
@@ -239,10 +245,12 @@ public:
 static void
 load(const char *filename)
 {
+#ifndef __EMSCRIPTEN__
     if (!dlopen(filename, RTLD_GLOBAL | RTLD_LAZY)) {
         std::cerr << "error: unable to open " << filename << "\n";
         exit(1);
     }
+#endif
 }
 
 void
@@ -266,14 +274,18 @@ init(void) {
 
     if (eglDisplay == EGL_NO_DISPLAY) {
         std::cerr << "error: unable to get EGL display\n";
+#ifndef __EMSCRIPTEN__
         XCloseDisplay(display);
+#endif
         exit(1);
     }
 
     EGLint major, minor;
     if (!eglInitialize(eglDisplay, &major, &minor)) {
         std::cerr << "error: unable to initialize EGL display\n";
+#ifndef __EMSCRIPTEN__
         XCloseDisplay(display);
+#endif
         exit(1);
     }
 
@@ -385,8 +397,10 @@ createVisual(bool doubleBuffer, unsigned samples, Profile profile) {
     XVisualInfo templ;
     int num_visuals = 0;
     templ.visualid = visual_id;
+#ifndef __EMSCRIPTEN__
     visual->visinfo = XGetVisualInfo(display, VisualIDMask, &templ, &num_visuals);
     assert(visual->visinfo);
+#endif
 
     return visual;
 }
