@@ -160,7 +160,6 @@ public:
 
     void
     resize(int w, int h) {
-#ifndef __EMSCRIPTEN__
         if (w == width && h == height) {
             return;
         }
@@ -198,7 +197,6 @@ public:
 
         assert(eglWidth == width);
         assert(eglHeight == height);
-#endif
     }
 
     void show(void) {

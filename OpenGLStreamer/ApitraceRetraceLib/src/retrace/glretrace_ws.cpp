@@ -76,7 +76,7 @@ getVisual(glprofile::Profile profile) {
 
 
 static glws::Drawable *
-createDrawableHelper(glprofile::Profile profile, int width = 32, int height = 32,
+createDrawableHelper(glprofile::Profile profile, int width = 320, int height = 480,
                      const glws::pbuffer_info *pbInfo = NULL) {
     glws::Visual *visual = getVisual(profile);
     glws::Drawable *draw = glws::createDrawable(visual, width, height, pbInfo);
