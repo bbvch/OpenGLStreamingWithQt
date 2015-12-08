@@ -12,5 +12,5 @@ StreamerLibTest.subdir   = StreamerLibTest
 # Here's where you build up the hierarchical relationship between components.
 ApitraceTraceLib.depends = ApitraceCommonLib
 ApitraceRetraceLib.depends = ApitraceCommonLib
-ClientApp.depends = ApitraceTraceLib
-ServerApp.depends = ApitraceRetraceLib
+ClientApp.depends = ApitraceRetraceLib
+ServerApp.depends = ApitraceTraceLib
