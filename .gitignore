@@ -29,5 +29,8 @@ build-*
 *.out
 *.app
 
+# Python
+*.pyc
+
 # backup files from gedit (html and java script editing)
 *~

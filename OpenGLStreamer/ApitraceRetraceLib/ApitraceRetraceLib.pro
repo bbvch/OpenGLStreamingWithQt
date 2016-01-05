@@ -66,7 +66,8 @@ SOURCES += \
     src/retrace/glstate_formats.cpp \
     src/retrace/state_writer_ubjson.cpp \
     src/retrace/retrace_stdc.cpp \
-    src/client/openglclient.cpp
+    src/client/openglclient.cpp \
+    src/retrace/glretrace_gles2.cpp
 
 unix:!macx: LIBS += -L$$OUT_PWD/../ApitraceCommonLib/ -lApitraceCommonLib
 
