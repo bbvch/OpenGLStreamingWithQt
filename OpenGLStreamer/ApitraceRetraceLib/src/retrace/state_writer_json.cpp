@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include "state_writer.hpp"
 
@@ -124,3 +124,5 @@ createJSONStateWriter(std::ostream &os)
 {
     return new JSONStateWriter(os);
 }
+
+#endif

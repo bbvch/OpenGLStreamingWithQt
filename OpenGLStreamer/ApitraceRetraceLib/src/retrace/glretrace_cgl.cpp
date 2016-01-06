@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include <string.h>
 
@@ -493,3 +493,4 @@ const retrace::Entry glretrace::cgl_callbacks[] = {
     {NULL, NULL},
 };
 
+#endif

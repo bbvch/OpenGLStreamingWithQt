@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include <assert.h>
 #include <string.h>
@@ -1508,3 +1508,5 @@ dumpFramebuffer(StateWriter &writer, Context &context)
 
 
 } /* namespace glstate */
+
+#endif

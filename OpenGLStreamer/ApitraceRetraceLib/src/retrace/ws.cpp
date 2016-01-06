@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include "ws.hpp"
 
@@ -35,4 +35,6 @@ headless = false;
 
 
 } // namespace ws
+
+#endif
 

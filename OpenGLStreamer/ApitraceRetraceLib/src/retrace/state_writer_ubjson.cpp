@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include "state_writer.hpp"
 
@@ -218,3 +218,5 @@ createUBJSONStateWriter(std::ostream &os)
 {
     return new UBJSONStateWriter(os);
 }
+
+#endif

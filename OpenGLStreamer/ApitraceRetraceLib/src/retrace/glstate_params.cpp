@@ -1,3 +1,4 @@
+#if 0
 #include <assert.h>
 #include <string.h>
 
@@ -24421,3 +24422,4 @@ void dumpParameters(StateWriter &writer, Context &context)
 }
 
 } /*namespace glstate */
+#endif

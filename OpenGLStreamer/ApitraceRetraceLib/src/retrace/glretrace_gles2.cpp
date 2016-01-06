@@ -1,5 +1,3 @@
-#ifdef __EMSCRIPTEN__
-
 #include <string.h>
 
 #include "glproc.hpp"
@@ -4079,7 +4077,8 @@ static void retrace_glCheckFramebufferStatus(trace::Call &call) {
     GLint _origResult = call.ret->toSInt();
     if (_origResult == GL_FRAMEBUFFER_COMPLETE &&
         _result != GL_FRAMEBUFFER_COMPLETE) {
-        retrace::warning(call) << "incomplete framebuffer (" << glstate::enumToString(_result) << ")\n";
+        // TODO akasi
+        //retrace::warning(call) << "incomplete framebuffer (" << glstate::enumToString(_result) << ")\n";
     }
     }
 }
@@ -4412,5 +4411,3 @@ _validateActiveProgram(trace::Call &call)
         }
     }
 }
-
-#endif // __EMSCRIPTEN__

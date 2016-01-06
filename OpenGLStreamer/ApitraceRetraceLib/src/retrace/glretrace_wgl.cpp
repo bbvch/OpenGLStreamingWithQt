@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include "glproc.hpp"
 #include "retrace.hpp"
@@ -406,3 +406,4 @@ const retrace::Entry glretrace::wgl_callbacks[] = {
     {NULL, NULL}
 };
 
+#endif

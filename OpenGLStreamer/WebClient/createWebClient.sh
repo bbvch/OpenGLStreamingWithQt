@@ -22,22 +22,29 @@ FLAGS="-g3 -std=c++11
 
 source ~/.emscripten 2&>>/dev/null
 
-SRC_COMMON="${PATH_COMMON_LIB}/common/trace_parser.cpp
-			${PATH_COMMON_LIB}/common/trace_model.cpp
-			${PATH_COMMON_LIB}/common/trace_file_buffer.cpp"
+#SRC_COMMON="${PATH_COMMON_LIB}/common/trace_parser.cpp
+#			${PATH_COMMON_LIB}/common/trace_model.cpp
+#			${PATH_COMMON_LIB}/common/trace_file_buffer.cpp"
 
-SRC_RETRACE="${PATH_RETRACE_LIB}/retrace.cpp
-			 ${PATH_RETRACE_LIB}/glretrace_main.cpp
-			 ${PATH_RETRACE_LIB}/retrace_stdc.cpp
-			 ${PATH_RETRACE_LIB}/retrace_main.cpp
-			 ${PATH_RETRACE_LIB}/glretrace_gles2.cpp
-			 ${PATH_RETRACE_LIB}/glws_egl_xlib.cpp
-			 ${PATH_RETRACE_LIB}/glretrace_glx.cpp
-			 ${PATH_RETRACE_LIB}/glretrace_ws.cpp
-			 ${PATH_RETRACE_LIB}/glretrace_egl.cpp
-			 ${PATH_RETRACE_LIB}/glws_xlib.cpp"
+#SRC_RETRACE="${PATH_RETRACE_LIB}/retrace.cpp
+#			 ${PATH_RETRACE_LIB}/glretrace_main.cpp
+#			 ${PATH_RETRACE_LIB}/retrace_stdc.cpp
+#			 ${PATH_RETRACE_LIB}/retrace_main.cpp
+#			 ${PATH_RETRACE_LIB}/glretrace_gles2.cpp
+#			 ${PATH_RETRACE_LIB}/glws_egl_xlib.cpp
+#			 ${PATH_RETRACE_LIB}/glretrace_glx.cpp
+#			 ${PATH_RETRACE_LIB}/glretrace_ws.cpp
+#			 ${PATH_RETRACE_LIB}/glretrace_egl.cpp
+#			 ${PATH_RETRACE_LIB}/glws_xlib.cpp"
 
-SRC="${SRC_COMMON} ${SRC_RETRACE}"
+#SRC="${SRC_COMMON} ${SRC_RETRACE}"
+
+SRC_COMMON=`find ${PATH_COMMON_LIB} -name "*.cpp"` 
+SRC_RETRACE=`find ${PATH_RETRACE_LIB} -name "*.cpp"`
+
+SRC="$SRC_COMMON \
+     $SRC_RETRACE"
+
 
 echo "Compiling the code..."
-$EMSCRIPTEN_ROOT/emcc ${FLAGS} ${SRC} --post-js script.js --shell-file shell_minimal.html -o index.html ${LIBS} -s EXPORTED_FUNCTIONS="['_processCall', '_main']" -s NO_EXIT_RUNTIME=1 -s FULL_ES2=1
+$EMSCRIPTEN_ROOT/emcc ${FLAGS} ${SRC} --post-js script.js --shell-file shell_minimal.html -o index.html ${LIBS} -s EXPORTED_FUNCTIONS="['_processCall', '_main']" -s NO_EXIT_RUNTIME=1

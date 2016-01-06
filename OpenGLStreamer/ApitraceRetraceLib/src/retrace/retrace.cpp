@@ -27,62 +27,18 @@
 #include <string.h>
 #include <iostream>
 
-#include "os_time.hpp"
 #include "retrace.hpp"
-
-#ifdef _WIN32
-#include <dxerr.h>
-#endif
-
 
 namespace retrace {
 
-
-trace::DumpFlags dumpFlags = trace::DUMP_FLAG_THREAD_IDS;
-
-
-static bool call_dumped = false;
-
-
-static void dumpCall(trace::Call &call) {
-    if (verbosity >= 0 && !call_dumped) {
-        trace::dump(call, std::cout, dumpFlags);
-        std::cout.flush();
-        call_dumped = true;
-    }
-}
-
-
 std::ostream &warning(trace::Call &call) {
-    dumpCall(call);
+    //dumpCall(call);
 
     std::cerr << call.no << ": ";
     std::cerr << "warning: ";
 
     return std::cerr;
 }
-
-
-#ifdef _WIN32
-void
-failed(trace::Call &call, HRESULT hr)
-{
-    std::ostream &os = warning(call);
-
-    os << "failed with 0x" << std::hex << hr << std::dec;
-
-    LPCSTR lpszErrorString = DXGetErrorStringA(hr);
-    assert(lpszErrorString);
-    os << " (" << lpszErrorString << "): ";
-
-    char szErrorDesc[512];
-    DXGetErrorDescriptionA(hr, szErrorDesc, sizeof szErrorDesc);
-    os << szErrorDesc;
-
-    os << "\n";
-}
-#endif /* _WIN32 */
-
 
 void
 checkMismatch(trace::Call &call, const char *expr, trace::Value *traceValue, long actualValue)
@@ -121,7 +77,7 @@ void Retracer::addCallbacks(const Entry *entries) {
 
 
 void Retracer::retrace(trace::Call &call) {
-    call_dumped = false;
+    //call_dumped = false;
 
     Callback callback = 0;
 
@@ -145,14 +101,6 @@ void Retracer::retrace(trace::Call &call) {
 
     assert(callback);
     assert(callbacks[id] == callback);
-
-    if (verbosity >= 1) {
-        if (verbosity >= 2 ||
-            (!(call.flags & trace::CALL_FLAG_VERBOSE) &&
-             callback != &ignore)) {
-            dumpCall(call);
-        }
-    }
 
     callback(call);
 }

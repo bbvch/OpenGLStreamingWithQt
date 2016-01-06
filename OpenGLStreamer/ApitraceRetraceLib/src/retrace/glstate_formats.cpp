@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include "glstate_internal.hpp"
 
@@ -677,3 +677,5 @@ getPixelFormat(GLenum internalFormat)
 
 
 } /* namespace glstate */
+
+#endif

@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include "state_writer.hpp"
 
@@ -79,3 +79,5 @@ StateWriter::writeImage(image::Image *image,
 
     endObject();
 }
+
+#endif

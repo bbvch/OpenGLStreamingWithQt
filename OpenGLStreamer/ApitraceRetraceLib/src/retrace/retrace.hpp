@@ -157,10 +157,6 @@ extern trace::DumpFlags dumpFlags;
 
 std::ostream &warning(trace::Call &call);
 
-#ifdef _WIN32
-void failed(trace::Call &call, HRESULT hr);
-#endif
-
 void checkMismatch(trace::Call &call, const char *expr, trace::Value *traceValue, long actualValue);
 
 void ignore(trace::Call &call);

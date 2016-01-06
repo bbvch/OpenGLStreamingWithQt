@@ -32,11 +32,7 @@
 
 #include "retrace.hpp"
 #include "glproc.hpp"
-#include "glstate.hpp"
 #include "glretrace.hpp"
-#include "os_time.hpp"
-#include "os_memory.hpp"
-#include "highlight.hpp"
 
 
 /* Synchronous debug output may reduce performance however,
@@ -142,11 +138,11 @@ checkGlError(trace::Call &call) {
         error = glGetError();
     }
 }
-
+/*
 static inline int64_t
 getCurrentTime(void) {
     if (retrace::profilingGpuTimes && supportsTimestamp) {
-        /* Get the current GL time without stalling */
+        // Get the current GL time without stalling
         GLint64 timestamp = 0;
         glGetInteger64v(GL_TIMESTAMP, &timestamp);
         return timestamp;
@@ -172,7 +168,7 @@ getCurrentVsize(int64_t& vsize) {
 static inline void
 getCurrentRss(int64_t& rss) {
     rss = os::getRss();
-}
+}*/
 
 static void
 completeCallQuery(CallQuery& query) {
@@ -205,7 +201,7 @@ completeCallQuery(CallQuery& query) {
     } else {
         pixels = -1;
     }
-
+/*
     if (retrace::profilingCpuTimes) {
         double cpuTimeScale = 1.0E9 / getTimeFrequency();
         cpuDuration = (query.cpuEnd - query.cpuStart) * cpuTimeScale;
@@ -215,7 +211,7 @@ completeCallQuery(CallQuery& query) {
     if (retrace::profilingMemoryUsage) {
         vsizeDuration = query.vsizeEnd - query.vsizeStart;
         rssDuration = query.rssEnd - query.rssStart;
-    }
+    }*/
 
     glDeleteQueries(NUM_QUERIES, query.ids);
 
@@ -263,28 +259,28 @@ beginProfile(trace::Call &call, bool isDraw) {
     callQueries.push_back(query);
 
     /* CPU profiling for all calls */
-    if (retrace::profilingCpuTimes) {
+    /*if (retrace::profilingCpuTimes) {
         CallQuery& query = callQueries.back();
         query.cpuStart = getCurrentTime();
-    }
+    }*/
 
-    if (retrace::profilingMemoryUsage) {
+    /*if (retrace::profilingMemoryUsage) {
         CallQuery& query = callQueries.back();
         query.vsizeStart = os::getVsize();
         query.rssStart = os::getRss();
-    }
+    }*/
 }
 
 void
 endProfile(trace::Call &call, bool isDraw) {
 
     /* CPU profiling for all calls */
-    if (retrace::profilingCpuTimes) {
+    /*if (retrace::profilingCpuTimes) {
         CallQuery& query = callQueries.back();
         query.cpuEnd = getCurrentTime();
     }
 
-    /* GPU profiling only for draw calls */
+    // GPU profiling only for draw calls
     if (isDraw) {
         if (retrace::profilingGpuTimes) {
             glEndQuery(GL_TIME_ELAPSED);
@@ -299,7 +295,7 @@ endProfile(trace::Call &call, bool isDraw) {
         CallQuery& query = callQueries.back();
         query.vsizeEnd = os::getVsize();
         query.rssEnd = os::getRss();
-    }
+    }*/
 }
 
 
@@ -316,7 +312,9 @@ blockOnFence(trace::Call &call, GLsync sync, GLbitfield flags) {
     case GL_CONDITION_SATISFIED:
         break;
     default:
-        retrace::warning(call) << "got " << glstate::enumToString(result) << "\n";
+        // TODO akasi
+        //retrace::warning(call) << "got " << glstate::enumToString(result) << "\n";
+        break;
     }
 
     return result;
@@ -359,20 +357,20 @@ initContext() {
 
     /* Ensure we have adequate extension support */
     glprofile::Profile currentProfile = currentContext->actualProfile();
-    supportsTimestamp   = currentProfile.versionGreaterOrEqual(glprofile::API_GL, 3, 3) ||
-                          currentContext->hasExtension("GL_ARB_timer_query");
-    supportsElapsed     = currentContext->hasExtension("GL_EXT_timer_query") || supportsTimestamp;
-    supportsOcclusion   = currentProfile.versionGreaterOrEqual(glprofile::API_GL, 1, 5);
+    //supportsTimestamp   = currentProfile.versionGreaterOrEqual(glprofile::API_GL, 3, 3) ||
+    //                      currentContext->hasExtension("GL_ARB_timer_query");
+    //supportsElapsed     = currentContext->hasExtension("GL_EXT_timer_query") || supportsTimestamp;
+    //supportsOcclusion   = currentProfile.versionGreaterOrEqual(glprofile::API_GL, 1, 5);
     supportsARBShaderObjects = currentContext->hasExtension("GL_ARB_shader_objects");
 
-#ifdef __APPLE__
+/*#ifdef __APPLE__
     // GL_TIMESTAMP doesn't work on Apple.  GL_TIME_ELAPSED still does however.
     // http://lists.apple.com/archives/mac-opengl/2014/Nov/threads.html#00001
     supportsTimestamp   = false;
-#endif
+#endif*/
 
     /* Check for timer query support */
-    if (retrace::profilingGpuTimes) {
+    /*if (retrace::profilingGpuTimes) {
         if (!supportsTimestamp && !supportsElapsed) {
             std::cout << "error: cannot profile, GL_ARB_timer_query or GL_EXT_timer_query extensions are not supported." << std::endl;
             exit(-1);
@@ -385,16 +383,16 @@ initContext() {
             std::cout << "error: cannot profile, GL_QUERY_COUNTER_BITS == 0." << std::endl;
             exit(-1);
         }
-    }
+    }*/
 
     /* Check for occlusion query support */
-    if (retrace::profilingPixelsDrawn && !supportsOcclusion) {
+    /*if (retrace::profilingPixelsDrawn && !supportsOcclusion) {
         std::cout << "error: cannot profile, GL_ARB_occlusion_query extension is not supported (" << currentProfile << ")" << std::endl;
         exit(-1);
-    }
+    }*/
 
     /* Setup debug message call back */
-    if (retrace::debug) {
+    /*if (retrace::debug) {
         if (currentContext->hasExtension("GL_KHR_debug")) {
             if (currentProfile.desktop()) {
                 glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
@@ -417,10 +415,10 @@ initContext() {
                 glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
             }
         }
-    }
+    }*/
 
     /* Sync the gpu and cpu start times */
-    if (retrace::profilingCpuTimes || retrace::profilingGpuTimes) {
+    /*if (retrace::profilingCpuTimes || retrace::profilingGpuTimes) {
         if (!retrace::profiler.hasBaseTimes()) {
             double cpuTimeScale = 1.0E9 / getTimeFrequency();
             GLint64 currentTime = getCurrentTime() * cpuTimeScale;
@@ -435,7 +433,7 @@ initContext() {
         retrace::profiler.setBaseVsizeUsage(currentVsize);
         getCurrentRss(currentRss);
         retrace::profiler.setBaseRssUsage(currentRss);
-    }
+    }*/
 }
 
 void
@@ -464,7 +462,7 @@ frame_complete(trace::Call &call) {
     }
 }
 
-
+/*
 static std::map< uint64_t, unsigned > messageCounts;
 
 
@@ -472,14 +470,14 @@ static void APIENTRY
 debugOutputCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
                     GLsizei length, const GLchar* message, const void *userParam)
 {
-    /* Ignore application messages while dumping state. */
+    // Ignore application messages while dumping state.
     if (retrace::dumpingState &&
         source == GL_DEBUG_SOURCE_APPLICATION) {
         return;
     }
 
-    /* Ignore NVIDIA's "Buffer detailed info:" messages, as they seem to be
-     * purely informative, and high frequency. */
+    // Ignore NVIDIA's "Buffer detailed info:" messages, as they seem to be
+    // purely informative, and high frequency.
     if (source == GL_DEBUG_SOURCE_API &&
         type == GL_DEBUG_TYPE_OTHER &&
         severity == GL_DEBUG_SEVERITY_LOW &&
@@ -562,7 +560,7 @@ debugOutputCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
         break;
     default:
         assert(0);
-        /* fall-through */
+        // fall-through
     case GL_DEBUG_TYPE_OTHER:
         typeStr = " issue";
         break;
@@ -603,12 +601,12 @@ debugOutputCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
          message[messageLen - 1] != '\r')) {
        std::cerr << std::endl;
     }
-}
+}*/
 
 } /* namespace glretrace */
 
 
-class GLDumper : public retrace::Dumper {
+/*class GLDumper : public retrace::Dumper {
 public:
     image::Image *
     getSnapshot(void) {
@@ -633,9 +631,9 @@ public:
     dumpState(StateWriter &writer) {
         glstate::dumpCurrentContext(writer);
     }
-};
+};*/
 
-static GLDumper glDumper;
+//static GLDumper glDumper;
 
 
 void
@@ -649,7 +647,7 @@ void
 retrace::setUp(void) {
     glws::init();
 #ifndef __EMSCRIPTEN__
-    dumper = &glDumper;
+    //dumper = &glDumper;
 #endif
 }
 
@@ -660,8 +658,8 @@ retrace::addCallbacks(retrace::Retracer &retracer)
     retracer.addCallbacks(glretrace::gl_callbacks);
     retracer.addCallbacks(glretrace::glx_callbacks);
 #ifndef __EMSCRIPTEN__
-    retracer.addCallbacks(glretrace::wgl_callbacks);
-    retracer.addCallbacks(glretrace::cgl_callbacks);
+    //retracer.addCallbacks(glretrace::wgl_callbacks);
+    //retracer.addCallbacks(glretrace::cgl_callbacks);
 #endif //__EMSCRIPTEN__
     retracer.addCallbacks(glretrace::egl_callbacks);
 }
@@ -686,9 +684,9 @@ retrace::finishRendering(void) {
 void
 retrace::waitForInput(void) {
     flushRendering();
-    while (glws::processEvents()) {
+    /*while (glws::processEvents()) {
         os::sleep(100*1000);
-    }
+    }*/
 }
 
 void

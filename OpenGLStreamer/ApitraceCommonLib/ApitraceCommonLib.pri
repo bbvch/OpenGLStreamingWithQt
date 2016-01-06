@@ -4,5 +4,4 @@ DEFINES += HAVE_X11 \
 INCLUDEPATH += $$PWD/../ApitraceCommonLib/src/common \
                $$PWD/../ApitraceCommonLib/src/dispatch \
                $$PWD/../ApitraceCommonLib/src/helpers \
-               $$PWD/../ApitraceCommonLib/src/image \
                $$PWD/../ApitraceCommonLib/src/thirdparty/khronos

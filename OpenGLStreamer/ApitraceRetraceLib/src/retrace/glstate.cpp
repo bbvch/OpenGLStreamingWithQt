@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include <string.h>
 
@@ -525,3 +525,4 @@ void dumpCurrentContext(StateWriter &writer)
 
 
 } /* namespace glstate */
+#endif

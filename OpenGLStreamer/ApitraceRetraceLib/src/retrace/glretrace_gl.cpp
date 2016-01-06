@@ -1,4 +1,4 @@
-
+#if 0
 #include <string.h>
 
 #include "glproc.hpp"
@@ -97254,4 +97254,5 @@ _validateActiveProgram(trace::Call &call)
     }
 }
 
+#endif
 

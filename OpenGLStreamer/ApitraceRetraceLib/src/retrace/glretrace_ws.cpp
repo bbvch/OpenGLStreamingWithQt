@@ -76,7 +76,7 @@ getVisual(glprofile::Profile profile) {
 
 
 static glws::Drawable *
-createDrawableHelper(glprofile::Profile profile, int width = 320, int height = 480,
+createDrawableHelper(glprofile::Profile profile, int width = 640, int height = 480,
                      const glws::pbuffer_info *pbInfo = NULL) {
     glws::Visual *visual = getVisual(profile);
     glws::Drawable *draw = glws::createDrawable(visual, width, height, pbInfo);
@@ -234,7 +234,7 @@ updateDrawable(int width, int height) {
     currentDrawable->show();
 
     // Ensure the drawable dimensions, as perceived by glstate match.
-    if (retrace::debug) {
+    /*if (retrace::debug) {
         GLint newWidth = 0;
         GLint newHeight = 0;
         if (glstate::getDrawableBounds(&newWidth, &newHeight) &&
@@ -244,7 +244,7 @@ updateDrawable(int width, int height) {
                 << "expected " << width << "x" << height << ", "
                 << "got " << newWidth << "x" << newHeight << "\n";
         }
-    }
+    }*/
 
     glScissor(0, 0, width, height);
 }

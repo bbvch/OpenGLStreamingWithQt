@@ -50,7 +50,7 @@ File::createForRead(const char *filename)
     if (byte1 == SNAPPY_BYTE1 && byte2 == SNAPPY_BYTE2) {
         file = File::createSnappy();
     } else if (byte1 == 0x1f && byte2 == 0x8b) {
-        file = File::createZLib();
+        //file = File::createZLib();
     } else  {
         os::log("error: %s: unkwnown compression\n", filename);
         return NULL;

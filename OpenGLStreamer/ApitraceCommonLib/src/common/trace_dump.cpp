@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include <limits>
 
@@ -334,3 +334,4 @@ void dump(Call &call, std::ostream &os, DumpFlags flags) {
 
 
 } /* namespace trace */
+#endif

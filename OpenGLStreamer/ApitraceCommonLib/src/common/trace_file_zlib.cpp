@@ -1,3 +1,4 @@
+#if 0
 /**************************************************************************
  *
  * Copyright 2011 Zack Rusin
@@ -179,3 +180,4 @@ int ZLibFile::rawPercentRead()
 File * File::createZLib(void) {
     return new ZLibFile;
 }
+#endif

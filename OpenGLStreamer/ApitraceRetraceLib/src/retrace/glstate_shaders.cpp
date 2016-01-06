@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  **************************************************************************/
-
+#if 0
 
 #include <assert.h>
 #include <string.h>
@@ -955,3 +955,4 @@ isGeometryShaderBound(Context &context)
 
 
 } /* namespace glstate */
+#endif

@@ -26,7 +26,7 @@
 /*
  * JSON writing functions.
  */
-
+#if 0
 
 #include <assert.h>
 #include <string.h>
@@ -298,3 +298,5 @@ JSONWriter::writeBool(bool b) {
     value = true;
     space = ' ';
 }
+
+#endif
