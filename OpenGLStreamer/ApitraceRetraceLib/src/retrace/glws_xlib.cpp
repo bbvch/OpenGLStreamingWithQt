@@ -31,8 +31,6 @@
 
 #include "glproc.hpp"
 #include "glws.hpp"
-#include "ws.hpp"
-
 
 namespace glws {
 
@@ -264,7 +262,7 @@ showWindow(Window window)
 #ifndef __EMSCRIPTEN__
     // FIXME: This works for DRI drivers, but not NVIDIA proprietary drivers,
     // for which the only solution seems to be to use Pbuffers.
-    if (true || !ws::headless) {
+    if (true) {
         XMapWindow(display, window);
         waitForEvent(window, MapNotify);
     }

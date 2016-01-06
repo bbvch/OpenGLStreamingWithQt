@@ -2,7 +2,7 @@
 
 #include "glproc.hpp"
 #include "glretrace.hpp"
-#include "glstate.hpp"
+//#include "glstate.hpp"
 
 
 static bool _pipelineHasBeenBound = false;

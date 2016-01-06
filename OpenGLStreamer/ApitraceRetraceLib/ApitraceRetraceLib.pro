@@ -28,43 +28,26 @@ unix {
 
 HEADERS += \
     src/retrace/glretrace.hpp \
-    src/retrace/glstate.hpp \
-    src/retrace/glstate_internal.hpp \
     src/retrace/glws.hpp \
     src/retrace/retrace.hpp \
     src/retrace/retrace_swizzle.hpp \
     src/retrace/scoped_allocator.hpp \
-    src/retrace/state_writer.hpp \
-    src/retrace/ws.hpp \
     src/retrace/glws_xlib.hpp \
-    src/retrace/json.hpp \
     src/client/openglclient.h \
     src/retrace/retrace_main.hpp
 
 SOURCES += \
-    src/retrace/glretrace_cgl.cpp \
     src/retrace/glretrace_egl.cpp \
     src/retrace/glretrace_gl.cpp \
     src/retrace/glretrace_glx.cpp \
     src/retrace/glretrace_main.cpp \
-    src/retrace/glretrace_wgl.cpp \
     src/retrace/glretrace_ws.cpp \
-    src/retrace/glstate.cpp \
     src/retrace/glws.cpp \
     src/retrace/retrace.cpp \
     src/retrace/retrace_swizzle.cpp \
-    src/retrace/state_writer.cpp \
     src/retrace/retrace_main.cpp \
-    src/retrace/ws.cpp \
-    src/retrace/glstate_params.cpp \
-    src/retrace/glstate_images.cpp \
-    src/retrace/glstate_shaders.cpp \
     src/retrace/glws_egl_xlib.cpp \
     src/retrace/glws_xlib.cpp \
-    src/retrace/state_writer_json.cpp \
-    src/retrace/json.cpp \
-    src/retrace/glstate_formats.cpp \
-    src/retrace/state_writer_ubjson.cpp \
     src/retrace/retrace_stdc.cpp \
     src/client/openglclient.cpp \
     src/retrace/glretrace_gles2.cpp
