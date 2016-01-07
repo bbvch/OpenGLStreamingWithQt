@@ -98,8 +98,7 @@ HEADERS += \
     src/common/trace_callset.hpp \
     src/common/trace_option.hpp \
     src/common/trace_fast_callset.hpp \
-    src/common/trace_lookup.hpp \
-    src/common/ubjson.hpp
+    src/common/trace_lookup.hpp
 unix {
     target.path = /usr/lib
     INSTALLS += target

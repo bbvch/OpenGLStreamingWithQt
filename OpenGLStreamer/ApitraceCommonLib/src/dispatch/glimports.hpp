@@ -42,7 +42,7 @@
 
 #ifdef __EMSCRIPTEN__
 #include <GLES2/gl2.h>
-#include <GLES/gl.h>
+#include <GLES2/gl2ext.h>
 #undef __gl_h_
 #endif
 

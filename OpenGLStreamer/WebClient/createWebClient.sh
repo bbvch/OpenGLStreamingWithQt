@@ -22,9 +22,13 @@ FLAGS="-g3 -std=c++11
 
 source ~/.emscripten 2&>>/dev/null
 
-#SRC_COMMON="${PATH_COMMON_LIB}/common/trace_parser.cpp
-#			${PATH_COMMON_LIB}/common/trace_model.cpp
-#			${PATH_COMMON_LIB}/common/trace_file_buffer.cpp"
+SRC_COMMON="${PATH_COMMON_LIB}/common/trace_parser.cpp
+			${PATH_COMMON_LIB}/common/trace_model.cpp
+			${PATH_COMMON_LIB}/common/trace_file.cpp
+			${PATH_COMMON_LIB}/common/trace_file_buffer.cpp
+			${PATH_COMMON_LIB}/common/trace_profiler.cpp
+			${PATH_COMMON_LIB}/common/trace_parser_flags.cpp
+			${PATH_COMMON_LIB}/helpers/glprofile.cpp"
 
 #SRC_RETRACE="${PATH_RETRACE_LIB}/retrace.cpp
 #			 ${PATH_RETRACE_LIB}/glretrace_main.cpp
@@ -39,7 +43,7 @@ source ~/.emscripten 2&>>/dev/null
 
 #SRC="${SRC_COMMON} ${SRC_RETRACE}"
 
-SRC_COMMON=`find ${PATH_COMMON_LIB} -name "*.cpp"` 
+#SRC_COMMON=`find ${PATH_COMMON_LIB} -name "*.cpp"` 
 SRC_RETRACE=`find ${PATH_RETRACE_LIB} -name "*.cpp"`
 
 SRC="$SRC_COMMON \

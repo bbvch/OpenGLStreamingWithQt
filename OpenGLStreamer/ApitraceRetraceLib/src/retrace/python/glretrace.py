@@ -197,19 +197,19 @@ class GlRetracer(Retracer):
             # then just blit to the drawable without ever calling glViewport.
             print '    glretrace::updateDrawable(std::max(dstX0, dstX1), std::max(dstY0, dstY1));'
 
-        if function.name.startswith('gl') and not function.name.startswith('glX'):
+        #if function.name.startswith('gl') and not function.name.startswith('glX'):
             # The Windows OpenGL runtime will skip calls when there's no
             # context bound to the current context, but this might cause
             # crashes on other systems, particularly with NVIDIA Linux drivers.
-            print r'    glretrace::Context *currentContext = glretrace::getCurrentContext();'
-            print r'    if (!currentContext) {'
-            print r'        if (retrace::debug) {'
-            print r'            retrace::warning(call) << "no current context\n";'
-            print r'        }'
-            print r'#ifndef _WIN32'
-            print r'        return;'
-            print r'#endif'
-            print r'    }'
+            #print r'    glretrace::Context *currentContext = glretrace::getCurrentContext();'
+            #print r'    if (!currentContext) {'
+            #print r'        if (retrace::debug) {'
+            #print r'            retrace::warning(call) << "no current context\n";'
+            #print r'        }'
+            #print r'#ifndef _WIN32'
+            #print r'        return;'
+            #print r'#endif'
+            #print r'    }'
 
         if function.name == "glEnd":
             print r'    if (currentContext) {'
@@ -269,6 +269,7 @@ class GlRetracer(Retracer):
 
         # Keep track of active program for call lists
         if function.name in ('glUseProgram', 'glUseProgramObjectARB'):
+            print r'    glretrace::Context *currentContext = glretrace::getCurrentContext();'
             print r'    if (currentContext) {'
             print r'        currentContext->activeProgram = call.arg(0).toUInt();'
             print r'    }'
@@ -292,13 +293,13 @@ class GlRetracer(Retracer):
             print r'        _validateActiveProgram(call);'
             print r'    }'
 
-        if function.name != 'glEnd':
-            print r'    if (currentContext && !currentContext->insideList && !currentContext->insideBeginEnd && retrace::profiling) {'
-            if profileDraw:
-                print r'        glretrace::beginProfile(call, true);'
-            else:
-                print r'        glretrace::beginProfile(call, false);'
-            print r'    }'
+        #if function.name != 'glEnd':
+        #    print r'    if (currentContext && !currentContext->insideList && !currentContext->insideBeginEnd && retrace::profiling) {'
+        #    if profileDraw:
+        #        print r'        glretrace::beginProfile(call, true);'
+        #    else:
+        #        print r'        glretrace::beginProfile(call, false);'
+        #    print r'    }'
 
         if function.name in ('glCreateShaderProgramv', 'glCreateShaderProgramEXT', 'glCreateShaderProgramvEXT'):
             # When dumping state, break down glCreateShaderProgram* so that the
@@ -358,103 +359,103 @@ class GlRetracer(Retracer):
             print '        currentContext->insideBeginEnd = true;'
             print '    }'
 
-        print r'    if (currentContext && !currentContext->insideList && !currentContext->insideBeginEnd && retrace::profiling) {'
-        if profileDraw:
-            print r'        glretrace::endProfile(call, true);'
-        else:
-            print r'        glretrace::endProfile(call, false);'
-        print r'    }'
-
-        # Error checking
-        if function.name.startswith('gl'):
-            # glGetError is not allowed inside glBegin/glEnd
-            print '    if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {'
-            print '        glretrace::checkGlError(call);'
-            if function.name in ('glProgramStringARB', 'glLoadProgramNV'):
-                print r'        GLint error_position = -1;'
-                print r'        glGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &error_position);'
-                print r'        if (error_position != -1) {'
-                print r'            const char *error_string = (const char *)glGetString(GL_PROGRAM_ERROR_STRING_ARB);'
-                print r'            retrace::warning(call) << "error in position " << error_position << ": " << error_string << "\n";'
-                print r'        }'
-            if function.name == 'glCompileShader':
-                print r'        GLint compile_status = 0;'
-                print r'        glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_status);'
-                print r'        if (!compile_status) {'
-                print r'             retrace::warning(call) << "compilation failed\n";'
-                print r'        }'
-                print r'        GLint info_log_length = 0;'
-                print r'        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);'
-                print r'        if (info_log_length > 1) {'
-                print r'             GLchar *infoLog = new GLchar[info_log_length];'
-                print r'             glGetShaderInfoLog(shader, info_log_length, NULL, infoLog);'
-                print r'             retrace::warning(call) << infoLog << "\n";'
-                print r'             delete [] infoLog;'
-                print r'        }'
-            if function.name in ('glLinkProgram', 'glCreateShaderProgramv', 'glCreateShaderProgramEXT', 'glCreateShaderProgramvEXT', 'glProgramBinary', 'glProgramBinaryOES'):
-                if function.name.startswith('glCreateShaderProgram'):
-                    print r'        GLuint program = _result;'
-                print r'        GLint link_status = 0;'
-                print r'        glGetProgramiv(program, GL_LINK_STATUS, &link_status);'
-                print r'        if (!link_status) {'
-                print r'             retrace::warning(call) << "link failed\n";'
-                print r'        }'
-                print r'        GLint info_log_length = 0;'
-                print r'        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);'
-                print r'        if (info_log_length > 1) {'
-                print r'             GLchar *infoLog = new GLchar[info_log_length];'
-                print r'             glGetProgramInfoLog(program, info_log_length, NULL, infoLog);'
-                print r'             retrace::warning(call) << infoLog << "\n";'
-                print r'             delete [] infoLog;'
-                print r'        }'
-            if function.name == 'glCompileShaderARB':
-                print r'        GLint compile_status = 0;'
-                print r'        glGetObjectParameterivARB(shaderObj, GL_OBJECT_COMPILE_STATUS_ARB, &compile_status);'
-                print r'        if (!compile_status) {'
-                print r'             retrace::warning(call) << "compilation failed\n";'
-                print r'        }'
-                print r'        GLint info_log_length = 0;'
-                print r'        glGetObjectParameterivARB(shaderObj, GL_OBJECT_INFO_LOG_LENGTH_ARB, &info_log_length);'
-                print r'        if (info_log_length > 1) {'
-                print r'             GLchar *infoLog = new GLchar[info_log_length];'
-                print r'             glGetInfoLogARB(shaderObj, info_log_length, NULL, infoLog);'
-                print r'             retrace::warning(call) << infoLog << "\n";'
-                print r'             delete [] infoLog;'
-                print r'        }'
-            if function.name == 'glLinkProgramARB':
-                print r'        GLint link_status = 0;'
-                print r'        glGetObjectParameterivARB(programObj, GL_OBJECT_LINK_STATUS_ARB, &link_status);'
-                print r'        if (!link_status) {'
-                print r'             retrace::warning(call) << "link failed\n";'
-                print r'        }'
-                print r'        GLint info_log_length = 0;'
-                print r'        glGetObjectParameterivARB(programObj, GL_OBJECT_INFO_LOG_LENGTH_ARB, &info_log_length);'
-                print r'        if (info_log_length > 1) {'
-                print r'             GLchar *infoLog = new GLchar[info_log_length];'
-                print r'             glGetInfoLogARB(programObj, info_log_length, NULL, infoLog);'
-                print r'             retrace::warning(call) << infoLog << "\n";'
-                print r'             delete [] infoLog;'
-                print r'        }'
-            if self.map_function_regex.match(function.name):
-                print r'        if (!_result) {'
-                print r'             retrace::warning(call) << "failed to map buffer\n";'
-                print r'        }'
-            if self.unmap_function_regex.match(function.name) and function.type is not stdapi.Void:
-                print r'        if (!_result) {'
-                print r'             retrace::warning(call) << "failed to unmap buffer\n";'
-                print r'        }'
-            if function.name in ('glGetAttribLocation', 'glGetAttribLocationARB'):
-                print r'    GLint _origResult = call.ret->toSInt();'
-                print r'    if (_result != _origResult) {'
-                print r'        retrace::warning(call) << "vertex attrib location mismatch " << _origResult << " -> " << _result << "\n";'
-                print r'    }'
-            if function.name in ('glCheckFramebufferStatus', 'glCheckFramebufferStatusEXT', 'glCheckNamedFramebufferStatus', 'glCheckNamedFramebufferStatusEXT'):
-                print r'    GLint _origResult = call.ret->toSInt();'
-                print r'    if (_origResult == GL_FRAMEBUFFER_COMPLETE &&'
-                print r'        _result != GL_FRAMEBUFFER_COMPLETE) {'
-                print r'        retrace::warning(call) << "incomplete framebuffer (" << glstate::enumToString(_result) << ")\n";'
-                print r'    }'
-            print '    }'
+        #print r'    if (currentContext && !currentContext->insideList && !currentContext->insideBeginEnd && retrace::profiling) {'
+        #if profileDraw:
+        #    print r'        glretrace::endProfile(call, true);'
+        #else:
+        #    print r'        glretrace::endProfile(call, false);'
+        #print r'    }'
+#
+        ## Error checking
+        #if function.name.startswith('gl'):
+        #    # glGetError is not allowed inside glBegin/glEnd
+        #    print '    if (retrace::debug && currentContext && !currentContext->insideBeginEnd) {'
+        #    print '        glretrace::checkGlError(call);'
+        #    if function.name in ('glProgramStringARB', 'glLoadProgramNV'):
+        #        print r'        GLint error_position = -1;'
+        #        print r'        glGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &error_position);'
+        #        print r'        if (error_position != -1) {'
+        #        print r'            const char *error_string = (const char *)glGetString(GL_PROGRAM_ERROR_STRING_ARB);'
+        #        print r'            retrace::warning(call) << "error in position " << error_position << ": " << error_string << "\n";'
+        #        print r'        }'
+        #    if function.name == 'glCompileShader':
+        #        print r'        GLint compile_status = 0;'
+        #        print r'        glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_status);'
+        #        print r'        if (!compile_status) {'
+        #        print r'             retrace::warning(call) << "compilation failed\n";'
+        #        print r'        }'
+        #        print r'        GLint info_log_length = 0;'
+        #        print r'        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);'
+        #        print r'        if (info_log_length > 1) {'
+        #        print r'             GLchar *infoLog = new GLchar[info_log_length];'
+        #        print r'             glGetShaderInfoLog(shader, info_log_length, NULL, infoLog);'
+        #        print r'             retrace::warning(call) << infoLog << "\n";'
+        #        print r'             delete [] infoLog;'
+        #        print r'        }'
+        #    if function.name in ('glLinkProgram', 'glCreateShaderProgramv', 'glCreateShaderProgramEXT', 'glCreateShaderProgramvEXT', 'glProgramBinary', 'glProgramBinaryOES'):
+        #        if function.name.startswith('glCreateShaderProgram'):
+        #            print r'        GLuint program = _result;'
+        #        print r'        GLint link_status = 0;'
+        #        print r'        glGetProgramiv(program, GL_LINK_STATUS, &link_status);'
+        #        print r'        if (!link_status) {'
+        #        print r'             retrace::warning(call) << "link failed\n";'
+        #        print r'        }'
+        #        print r'        GLint info_log_length = 0;'
+        #        print r'        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);'
+        #        print r'        if (info_log_length > 1) {'
+        #        print r'             GLchar *infoLog = new GLchar[info_log_length];'
+        #        print r'             glGetProgramInfoLog(program, info_log_length, NULL, infoLog);'
+        #        print r'             retrace::warning(call) << infoLog << "\n";'
+        #        print r'             delete [] infoLog;'
+        #        print r'        }'
+        #    if function.name == 'glCompileShaderARB':
+        #        print r'        GLint compile_status = 0;'
+        #        print r'        glGetObjectParameterivARB(shaderObj, GL_OBJECT_COMPILE_STATUS_ARB, &compile_status);'
+        #        print r'        if (!compile_status) {'
+        #        print r'             retrace::warning(call) << "compilation failed\n";'
+        #        print r'        }'
+        #        print r'        GLint info_log_length = 0;'
+        #        print r'        glGetObjectParameterivARB(shaderObj, GL_OBJECT_INFO_LOG_LENGTH_ARB, &info_log_length);'
+        #        print r'        if (info_log_length > 1) {'
+        #        print r'             GLchar *infoLog = new GLchar[info_log_length];'
+        #        print r'             glGetInfoLogARB(shaderObj, info_log_length, NULL, infoLog);'
+        #        print r'             retrace::warning(call) << infoLog << "\n";'
+        #        print r'             delete [] infoLog;'
+        #        print r'        }'
+        #    if function.name == 'glLinkProgramARB':
+        #        print r'        GLint link_status = 0;'
+        #        print r'        glGetObjectParameterivARB(programObj, GL_OBJECT_LINK_STATUS_ARB, &link_status);'
+        #        print r'        if (!link_status) {'
+        #        print r'             retrace::warning(call) << "link failed\n";'
+        #        print r'        }'
+        #        print r'        GLint info_log_length = 0;'
+        #        print r'        glGetObjectParameterivARB(programObj, GL_OBJECT_INFO_LOG_LENGTH_ARB, &info_log_length);'
+        #        print r'        if (info_log_length > 1) {'
+        #        print r'             GLchar *infoLog = new GLchar[info_log_length];'
+        #        print r'             glGetInfoLogARB(programObj, info_log_length, NULL, infoLog);'
+        #        print r'             retrace::warning(call) << infoLog << "\n";'
+        #        print r'             delete [] infoLog;'
+        #        print r'        }'
+        #    if self.map_function_regex.match(function.name):
+        #        print r'        if (!_result) {'
+        #        print r'             retrace::warning(call) << "failed to map buffer\n";'
+        #        print r'        }'
+        #    if self.unmap_function_regex.match(function.name) and function.type is not stdapi.Void:
+        #        print r'        if (!_result) {'
+        #        print r'             retrace::warning(call) << "failed to unmap buffer\n";'
+        #        print r'        }'
+        #    if function.name in ('glGetAttribLocation', 'glGetAttribLocationARB'):
+        #        print r'    GLint _origResult = call.ret->toSInt();'
+        #        print r'    if (_result != _origResult) {'
+        #        print r'        retrace::warning(call) << "vertex attrib location mismatch " << _origResult << " -> " << _result << "\n";'
+        #        print r'    }'
+        #    if function.name in ('glCheckFramebufferStatus', 'glCheckFramebufferStatusEXT', 'glCheckNamedFramebufferStatus', 'glCheckNamedFramebufferStatusEXT'):
+        #        print r'    GLint _origResult = call.ret->toSInt();'
+        #        print r'    if (_origResult == GL_FRAMEBUFFER_COMPLETE &&'
+        #        print r'        _result != GL_FRAMEBUFFER_COMPLETE) {'
+        #        print r'        retrace::warning(call) << "incomplete framebuffer (" << glstate::enumToString(_result) << ")\n";'
+        #        print r'    }'
+        #    print '    }'
 
         # Query the buffer length for whole buffer mappings
         if self.map_function_regex.match(function.name):
@@ -535,7 +536,7 @@ if __name__ == '__main__':
 
 #include "glproc.hpp"
 #include "glretrace.hpp"
-#include "glstate.hpp"
+//#include "glstate.hpp"
 
 
 static bool _pipelineHasBeenBound = false;
