@@ -51,4 +51,4 @@ SRC="$SRC_COMMON \
 
 
 echo "Compiling the code..."
-$EMSCRIPTEN_ROOT/emcc ${FLAGS} ${SRC} --post-js script.js --shell-file shell_minimal.html -o index.html ${LIBS} -s EXPORTED_FUNCTIONS="['_processCall', '_main']" -s NO_EXIT_RUNTIME=1
+$EMSCRIPTEN_ROOT/emcc ${FLAGS} ${SRC} --post-js script.js --shell-file shell_minimal.html -o index.html ${LIBS} -s EXPORTED_FUNCTIONS="['_processCall', '_main']" -s NO_EXIT_RUNTIME=1 -s FULL_ES2=1
