@@ -54,8 +54,10 @@
 // OpenGL ES 2.0
 
 // avoid conflicting with GL_NV_multisample_coverage
+#ifndef __EMSCRIPTEN__
 #define GL_NV_coverage_sample
 #include "GLES2/gl2ext.h"
+#endif
 
 // GLDEBUGPROCKHR is not defined because GL_KHR_debug was already defined
 typedef void (GL_APIENTRY  *GLDEBUGPROCKHR)(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,const void *userParam);

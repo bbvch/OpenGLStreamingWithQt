@@ -32,5 +32,9 @@ build-*
 # Python
 *.pyc
 
+# WebClient generated files 
+OpenGLStreamer/WebClient/index.html
+OpenGLStreamer/WebClient/index.js
+
 # backup files from gedit (html and java script editing)
 *~
