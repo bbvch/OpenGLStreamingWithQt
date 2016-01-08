@@ -1,6 +1,6 @@
 include(../config.pri)
 
-QT       += core gui widgets websockets
+QT       += core websockets opengl
 
 TARGET  = ServerApp
 

@@ -2037,6 +2037,11 @@ static void retrace_glRenderbufferStorage(trace::Call &call) {
     GLsizei height;
     height = (call.arg(3)).toSInt();
 
+    // akasi this is a hack
+    #ifdef __EMSCRIPTEN__
+    internalformat = GL_DEPTH_STENCIL;
+    #endif
+
     glRenderbufferStorage(target, internalformat, width, height);
 }
 
@@ -2156,6 +2161,11 @@ static void retrace_glFramebufferRenderbuffer(trace::Call &call) {
         std::cout << "renderbuffer " << size_t(renderbuffer) << " <- " << size_t(_renderbuffer_map[renderbuffer]) << "\n";
     }
     renderbuffer = _renderbuffer_map[renderbuffer];
+
+    // akasi this is a hack
+    #ifdef __EMSCRIPTEN__
+    attachment = GL_DEPTH_STENCIL_ATTACHMENT;
+    #endif
 
     glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
 }
